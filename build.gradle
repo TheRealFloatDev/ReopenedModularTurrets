@@ -1,10 +1,12 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1"
+    //id 'org.jetbrains.gradle.plugin.idea-ext' //version "1.1"
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
+
+
 
 version = _version
 group = 'com.ommods' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -121,12 +123,33 @@ repositories {
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
+    maven { // Registrate
+        url "https://maven.tterrag.com/"
+    }
+    mavenLocal()
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
     // flatDir {
     //     dir 'libs'
     // }
 }
+jarJar.enable()
 
+reobf {
+    jarJar { }
+}
+
+tasks.jarJar.finalizedBy('reobfJarJar')
+
+tasks.jarJar.configure {
+    // remove '-all' from jarJar jar file
+    classifier ''
+}
+
+jar {
+    // this now conflicts with jarJar as filenames are the same
+    // append a `-slim` to this jar, as this jar contains no pre-packaged libs
+    classifier 'slim'
+}
 //configurations.configureEach {
 //    if (it.name.startsWith("_") && rootProject.extensions) {
 //        // You must exclude the same modules you substitute here, because ForgeGradle
@@ -159,8 +182,16 @@ dependencies {
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-    implementation fg.deobf("com.ommods:omlib:${_libversion}")
-    //runtimeOnly fg.deobf("com.ommods:omlib:${_libversion}")
+    //implementation fg.deobf("com.ommods:omlib:${_libversion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
+    // Real mod deobf dependency examples - these get remapped to your current mappings
+    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
+    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
+    implementation fg.deobf("com.tterrag.registrate:Registrate:MC1.19.3-${_registrateversion}") // Adds registrate as a dependency
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[MC1.19.2,MC1.20)")
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 

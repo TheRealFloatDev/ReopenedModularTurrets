@@ -1,0 +1,30 @@
+{
+  "result": {
+    "item": "openmodularturrets:addon_meta",
+    "data": 1
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "A": {
+      "item": "#INGOTSTEEL"
+    },
+    "B": {
+      "item": "#MEKELITECIRCUIT"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "alloyElite"
+    }
+  },
+  "conditions": [
+    {
+      "type": "openmodularturrets:recipetype",
+      "mod": "mekanism"
+    }
+  ]
+}

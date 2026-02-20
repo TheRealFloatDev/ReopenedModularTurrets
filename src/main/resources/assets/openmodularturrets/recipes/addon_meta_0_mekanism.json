@@ -1,0 +1,32 @@
+{
+  "result": {
+    "item": "openmodularturrets:addon_meta",
+    "data": 0
+  },
+  "pattern": [
+    "ABA",
+    "BCD",
+    "ABA"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "A": {
+      "item": "#INGOTSTEEL"
+    },
+    "B": {
+      "item": "#MEKBASICCIRCUIT"
+    },
+    "C": {
+      "item": "#CHESTWOOD"
+    },
+    "D": {
+      "item": "#IOBUS"
+    }
+  },
+  "conditions": [
+    {
+      "type": "openmodularturrets:recipetype",
+      "mod": "mekanism"
+    }
+  ]
+}
