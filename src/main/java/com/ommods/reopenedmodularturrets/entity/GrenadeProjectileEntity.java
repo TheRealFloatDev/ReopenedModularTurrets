@@ -1,0 +1,52 @@
+package com.ommods.reopenedmodularturrets.entity;
+
+import com.ommods.reopenedmodularturrets.registry.ModEntityTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+
+public class GrenadeProjectileEntity extends ThrowableItemProjectile {
+    private float damage = 6.0F;
+
+    public GrenadeProjectileEntity(EntityType<? extends GrenadeProjectileEntity> type, Level level) {
+        super(type, level);
+    }
+
+    public GrenadeProjectileEntity(Level level) {
+        super(ModEntityTypes.GRENADE_PROJECTILE.get(), level);
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return Items.TNT;
+    }
+
+    @Override
+    protected void onHit(HitResult result) {
+        super.onHit(result);
+        if (level() instanceof ServerLevel serverLevel) {
+            serverLevel.explode(this, getX(), getY(), getZ(), damage, Level.ExplosionInteraction.MOB);
+            discard();
+        }
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        if (level() instanceof ServerLevel serverLevel) {
+            if (result.getEntity() instanceof LivingEntity living) {
+                living.hurtServer(serverLevel, serverLevel.damageSources().mobProjectile(this, null), damage);
+            }
+            discard();
+        }
+    }
+}

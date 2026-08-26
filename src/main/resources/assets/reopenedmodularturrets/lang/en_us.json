@@ -1,0 +1,14 @@
+{
+  "itemGroup.reopenedmodularturrets": "Reopened Modular Turrets",
+  "block.reopenedmodularturrets.turret_base_tier_1": "Turret Base Tier 1",
+  "block.reopenedmodularturrets.turret_base_tier_2": "Turret Base Tier 2",
+  "block.reopenedmodularturrets.turret_base_tier_3": "Turret Base Tier 3",
+  "block.reopenedmodularturrets.turret_base_tier_4": "Turret Base Tier 4",
+  "block.reopenedmodularturrets.turret_base_tier_5": "Turret Base Tier 5",
+  "block.reopenedmodularturrets.gun_turret": "Gun Turret",
+  "block.reopenedmodularturrets.grenade_turret": "Grenade Turret",
+  "block.reopenedmodularturrets.addon_solar": "Solar Addon",
+  "item.reopenedmodularturrets.bullet": "Bullet",
+  "item.reopenedmodularturrets.grenade": "Grenade",
+  "menu.reopenedmodularturrets.turret_base": "Turret Base"
+}

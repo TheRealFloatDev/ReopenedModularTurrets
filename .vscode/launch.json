@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - ReopenedModularTurrets",
+        "order": 0
+      },
+      "projectName": "ReopenedModularTurrets",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dreopenedmodularturrets%%/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - ReopenedModularTurrets",
+        "order": 1
+      },
+      "projectName": "ReopenedModularTurrets",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dreopenedmodularturrets%%/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - ReopenedModularTurrets",
+        "order": 2
+      },
+      "projectName": "ReopenedModularTurrets",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dreopenedmodularturrets%%/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - ReopenedModularTurrets",
+        "order": 3
+      },
+      "projectName": "ReopenedModularTurrets",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/build/moddev/serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dreopenedmodularturrets%%/Volumes/Samsung/Privat/Development/ReopenedModularTurrets/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

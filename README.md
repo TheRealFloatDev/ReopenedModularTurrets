@@ -1,9 +1,42 @@
-OpenModularTurrets [![Build Status](https://travis-ci.org/OpenModularTurretsTeam/OpenModularTurrets.svg?branch=1.12)](https://travis-ci.org/OpenModularTurretsTeam/OpenModularTurrets)
-==================
+# Reopened Modular Turrets
 
-Repo for [OpenModularTurrets](https://minecraft.curseforge.com/projects/openmodularturrets) for Minecraft. It adds modular turrets that can be used to defend your base from players and mobs. This mod should be fairly well documented ingame, if you need any more help, ask us in our [Discord](https://discord.gg/SEG695u).  
-Dev-Builds are available here (be careful, those are experimental and can break your save): [Click here](https://jenkins.ironhide.de/job/OMTTeam/job/OpenModularTurrets-1.12/)
+NeoForge 26.2 revival of [OpenModularTurrets](https://www.curseforge.com/minecraft/mc-mods/openmodularturrets).
 
-The source code is licensed under the [MIT license](https://opensource.org/license/mit/), the mods art is licenced under the [CC-BY-NC license](https://creativecommons.org/licenses/by-nc/2.0/)
-  
+Modular automated defense: turret bases, gun and grenade turrets, solar addon, energy, ammo storage, and targeting GUI.
 
+## Requirements
+
+- **Minecraft** 26.2
+- **NeoForge** 26.2.0.67+ (see `gradle.properties`)
+- **Java 25** toolchain (Gradle downloads via Foojay resolver)
+- **Gradle** 9.2.1+ (wrapper included)
+
+For local Gradle runs, use Java 21+ for the Gradle daemon if Java 26 is not supported by your Gradle version:
+
+```bash
+export JAVA_HOME=/path/to/java-21
+./gradlew runClient
+```
+
+## Development
+
+```bash
+./gradlew build          # compile + jar
+./gradlew runClient      # test client
+./gradlew runServer      # test server
+```
+
+Mod id: `reopenedmodularturrets`
+
+## Current feature set (MVP)
+
+- 5 turret base tiers with energy storage and internal ammo magazines
+- Gun turret (hitscan) and grenade turret (projectile + explosion)
+- Solar addon (sky-visible FE generation)
+- Base GUI with ammo slots and targeting toggles (mobs / players / neutral)
+- Ownership on block place
+- No separate OMLib dependency (core helpers are internal)
+
+## License
+
+Source code: MIT. Art assets: CC-BY-NC (legacy OMT assets where applicable).
