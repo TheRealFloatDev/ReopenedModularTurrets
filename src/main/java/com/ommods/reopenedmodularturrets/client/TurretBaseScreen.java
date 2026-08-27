@@ -214,6 +214,7 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
+        renderTooltip(graphics, mouseX, mouseY);
         if (isHoveringEnergyBar(mouseX, mouseY)) {
             renderEnergyTooltip(graphics, mouseX, mouseY);
         }
