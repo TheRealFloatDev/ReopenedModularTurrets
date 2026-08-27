@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "B": {
-      "id": "minecraft:gunpowder"
-    },
-    "C": {
-      "tag": "c:ingotConductiveIron"
-    }
+    "A": "#c:ingotElectricalSteel",
+    "B": "minecraft:gunpowder",
+    "C": "#c:ingotConductiveIron"
   },
   "result": {
     "count": 64,

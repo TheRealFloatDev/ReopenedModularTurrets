@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:gems/quartz"
-    },
-    "B": {
-      "id": "minecraft:flint"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:gems/quartz",
+    "B": "minecraft:flint",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

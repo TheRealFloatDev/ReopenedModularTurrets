@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:itemEnhancedChassiParts"
-    },
-    "B": {
-      "tag": "c:itemVibrantCrystal"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemEnhancedChassiParts",
+    "B": "#c:itemVibrantCrystal",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

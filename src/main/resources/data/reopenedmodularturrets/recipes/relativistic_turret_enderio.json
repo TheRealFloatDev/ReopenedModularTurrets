@@ -6,18 +6,10 @@
     "CDC"
   ],
   "key": {
-    "A": {
-      "id": "minecraft:ender_pearl"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "C": {
-      "tag": "c:ingotDarkSteel"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "minecraft:ender_pearl",
+    "B": "reopenedmodularturrets:sensor_tier_3",
+    "C": "#c:ingotDarkSteel",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

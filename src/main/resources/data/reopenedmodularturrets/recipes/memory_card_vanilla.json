@@ -6,15 +6,9 @@
     " P "
   ],
   "key": {
-    "P": {
-      "id": "minecraft:paper"
-    },
-    "I": {
-      "id": "reopenedmodularturrets:io_bus"
-    },
-    "G": {
-      "tag": "c:ingots/gold"
-    }
+    "P": "minecraft:paper",
+    "I": "reopenedmodularturrets:io_bus",
+    "G": "#c:ingots/gold"
   },
   "result": {
     "count": 1,

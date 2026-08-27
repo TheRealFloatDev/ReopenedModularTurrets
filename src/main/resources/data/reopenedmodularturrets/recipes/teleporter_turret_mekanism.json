@@ -6,21 +6,11 @@
     "CDC"
   ],
   "key": {
-    "A": {
-      "tag": "c:gemDiamond"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "C": {
-      "id": "minecraft:ender_eye"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "E": {
-      "tag": "c:gemDiamond"
-    }
+    "A": "#c:gemDiamond",
+    "B": "reopenedmodularturrets:sensor_tier_4",
+    "C": "minecraft:ender_eye",
+    "D": "#reopenedmodularturrets:io_bus",
+    "E": "#c:gemDiamond"
   },
   "result": {
     "count": 1,

@@ -6,12 +6,8 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_1"
-    }
+    "A": "#c:ingotElectricalSteel",
+    "B": "reopenedmodularturrets:barrel_tier_1"
   },
   "result": {
     "count": 1,

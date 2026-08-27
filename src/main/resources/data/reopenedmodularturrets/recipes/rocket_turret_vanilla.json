@@ -6,21 +6,11 @@
     "EDE"
   ],
   "key": {
-    "A": {
-      "id": "reopenedmodularturrets:barrel_tier_4"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_4"
-    },
-    "C": {
-      "tag": "c:gems/quartz"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "E": {
-      "tag": "c:gemDiamond"
-    }
+    "A": "reopenedmodularturrets:barrel_tier_4",
+    "B": "reopenedmodularturrets:chamber_tier_4",
+    "C": "#c:gems/quartz",
+    "D": "#reopenedmodularturrets:io_bus",
+    "E": "#c:gemDiamond"
   },
   "result": {
     "count": 1,

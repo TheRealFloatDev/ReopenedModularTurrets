@@ -158,17 +158,17 @@ def map_item(item: str, data: int | None = None) -> str | dict:
 def convert_ingredient(raw) -> dict | str:
     if isinstance(raw, str):
         if raw.startswith("#"):
-            return {"tag": CONSTANT_TAGS[raw[1:]]}
+            return f"#{CONSTANT_TAGS[raw[1:]]}"
         return raw
     if "type" in raw and raw["type"] == "forge:ore_dict":
         ore = raw["ore"]
-        return {"tag": TAG_MAP.get(ore, f"c:{ore}")}
+        return f"#{TAG_MAP.get(ore, f'c:{ore}')}"
     if "item" in raw:
         data = raw.get("data")
         mapped = map_item(raw["item"], data)
         if isinstance(mapped, dict):
             return mapped
-        return {"id": mapped}
+        return mapped
     return raw
 
 

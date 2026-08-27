@@ -6,18 +6,10 @@
     "ABA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotEnergeticAlloy"
-    },
-    "B": {
-      "tag": "c:gearVibrant"
-    },
-    "C": {
-      "tag": "c:itemChassiParts"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotEnergeticAlloy",
+    "B": "#c:gearVibrant",
+    "C": "#c:itemChassiParts",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

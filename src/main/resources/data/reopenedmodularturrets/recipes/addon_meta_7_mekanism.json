@@ -6,18 +6,10 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:alloyElite"
-    },
-    "B": {
-      "tag": "c:circuits/elite"
-    },
-    "C": {
-      "tag": "c:circuits/basic"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:alloyElite",
+    "B": "#c:circuits/elite",
+    "C": "#c:circuits/basic",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

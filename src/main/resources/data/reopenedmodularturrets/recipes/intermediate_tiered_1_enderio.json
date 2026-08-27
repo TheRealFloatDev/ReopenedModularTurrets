@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_1"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotElectricalSteel",
+    "B": "reopenedmodularturrets:sensor_tier_1",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

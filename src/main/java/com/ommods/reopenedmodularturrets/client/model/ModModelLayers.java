@@ -9,6 +9,22 @@ public final class ModModelLayers {
             new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "gun_turret"), "main");
     public static final ModelLayerLocation GRENADE_TURRET =
             new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "grenade_turret"), "main");
+    public static final ModelLayerLocation DISPOSABLE_ITEM_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "disposable_item_turret"), "main");
+    public static final ModelLayerLocation INCENDIARY_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "incendiary_turret"), "main");
+    public static final ModelLayerLocation ROCKET_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "rocket_turret"), "main");
+    public static final ModelLayerLocation LASER_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "laser_turret"), "main");
+    public static final ModelLayerLocation POTATO_CANNON_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "potato_cannon_turret"), "main");
+    public static final ModelLayerLocation RAIL_GUN_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "rail_gun_turret"), "main");
+    public static final ModelLayerLocation RELATIVISTIC_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "relativistic_turret"), "main");
+    public static final ModelLayerLocation TELEPORTER_TURRET =
+            new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "teleporter_turret"), "main");
     public static final ModelLayerLocation SOLAR_ADDON =
             new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "addon_solar"), "main");
     public static final ModelLayerLocation REDSTONE_REACTOR_ADDON =

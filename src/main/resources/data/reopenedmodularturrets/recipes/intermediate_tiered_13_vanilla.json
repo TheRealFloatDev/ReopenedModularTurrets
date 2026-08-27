@@ -6,15 +6,9 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:gemDiamond"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_3"
-    },
-    "C": {
-      "tag": "c:gems/quartz"
-    }
+    "A": "#c:gemDiamond",
+    "B": "reopenedmodularturrets:barrel_tier_3",
+    "C": "#c:gems/quartz"
   },
   "result": {
     "count": 1,

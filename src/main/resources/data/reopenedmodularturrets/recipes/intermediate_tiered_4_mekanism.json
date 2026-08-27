@@ -6,18 +6,10 @@
     " C "
   ],
   "key": {
-    "A": {
-      "id": "mekanism:atomicalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "id": "mekanism:controlcircuit"
-    }
+    "A": "mekanism:atomicalloy",
+    "B": "reopenedmodularturrets:sensor_tier_4",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "mekanism:controlcircuit"
   },
   "result": {
     "count": 1,

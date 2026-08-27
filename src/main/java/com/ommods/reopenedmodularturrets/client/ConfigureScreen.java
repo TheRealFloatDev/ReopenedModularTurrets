@@ -115,6 +115,7 @@ public class ConfigureScreen extends Screen {
         int tier = menu.getBase() != null ? menu.getBase().getTier() : 1;
         if (tier > 3) {
             graphics.drawString(font, Component.translatable("text.reopenedmodularturrets.gui.light_values"), leftPos + 10, topPos + 145, 0x404040, false);
+            graphics.drawString(font, Component.translatable("text.reopenedmodularturrets.gui.light_help"), leftPos + 10, topPos + 200, 0x606060, false);
         }
         refreshFilterButtons();
         super.render(graphics, mouseX, mouseY, partialTick);

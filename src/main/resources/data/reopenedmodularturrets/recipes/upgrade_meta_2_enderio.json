@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:gearVibrant"
-    },
-    "B": {
-      "tag": "c:itemVibrantCrystal"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:gearVibrant",
+    "B": "#c:itemVibrantCrystal",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

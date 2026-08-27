@@ -6,21 +6,11 @@
     "EDE"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "id": "minecraft:glowstone_dust"
-    },
-    "E": {
-      "tag": "c:obsidians"
-    }
+    "A": "#c:ingots/gold",
+    "B": "reopenedmodularturrets:sensor_tier_4",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "minecraft:glowstone_dust",
+    "E": "#c:obsidians"
   },
   "result": {
     "count": 1,

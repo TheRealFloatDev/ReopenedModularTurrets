@@ -6,21 +6,11 @@
     "DED"
   ],
   "key": {
-    "A": {
-      "tag": "c:paneGlassColorless"
-    },
-    "B": {
-      "tag": "c:dustRefinedObsidian"
-    },
-    "C": {
-      "tag": "c:itemEnrichedAlloy"
-    },
-    "D": {
-      "tag": "c:ingots/steel"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:paneGlassColorless",
+    "B": "#c:dustRefinedObsidian",
+    "C": "#c:itemEnrichedAlloy",
+    "D": "#c:ingots/steel",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

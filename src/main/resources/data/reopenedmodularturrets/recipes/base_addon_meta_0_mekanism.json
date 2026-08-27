@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/osmium"
-    },
-    "B": {
-      "tag": "c:itemAlloyEnriched"
-    },
-    "C": {
-      "tag": "c:circuits/basic"
-    },
-    "D": {
-      "tag": "c:ingots/refined_obsidian"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingots/osmium",
+    "B": "#c:itemAlloyEnriched",
+    "C": "#c:circuits/basic",
+    "D": "#c:ingots/refined_obsidian",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

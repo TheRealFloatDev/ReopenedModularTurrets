@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotDarkSteel"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_2"
-    },
-    "C": {
-      "id": "enderio:item_basic_capacitor"
-    }
+    "A": "#c:ingotDarkSteel",
+    "B": "reopenedmodularturrets:chamber_tier_2",
+    "C": "enderio:item_basic_capacitor"
   },
   "result": {
     "count": 1,

@@ -6,18 +6,10 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:itemEnhancedChassiParts"
-    },
-    "B": {
-      "tag": "c:skullEnderResonator"
-    },
-    "C": {
-      "tag": "c:itemPrecientCrystal"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemEnhancedChassiParts",
+    "B": "#c:skullEnderResonator",
+    "C": "#c:itemPrecientCrystal",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

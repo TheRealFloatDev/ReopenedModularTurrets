@@ -6,18 +6,10 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:storage_blocks/redstone"
-    },
-    "B": {
-      "id": "minecraft:ender_eye"
-    },
-    "C": {
-      "tag": "c:gems/quartz"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:storage_blocks/redstone",
+    "B": "minecraft:ender_eye",
+    "C": "#c:gems/quartz",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

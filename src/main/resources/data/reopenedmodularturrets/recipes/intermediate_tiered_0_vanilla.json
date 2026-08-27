@@ -6,12 +6,8 @@
     " A "
   ],
   "key": {
-    "A": {
-      "tag": "c:dusts/redstone"
-    },
-    "B": {
-      "tag": "minecraft:planks"
-    }
+    "A": "#c:dusts/redstone",
+    "B": "#minecraft:planks"
   },
   "result": {
     "count": 1,

@@ -13,6 +13,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import com.ommods.reopenedmodularturrets.util.CamoHelper;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -107,14 +108,12 @@ public class TurretBaseBlock extends BaseEntityBlock {
             InteractionHand hand,
             BlockHitResult hitResult
     ) {
-        if (!level.isClientSide() && !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
+        if (!level.isClientSide() && CamoHelper.canApplyCamo(stack, level, pos)) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof TurretBaseBlockEntity base && base.canAccess(player)) {
-                BlockState camoState = blockItem.getBlock().defaultBlockState();
-                if (!camoState.isAir()) {
-                    base.setCamoState(camoState);
-                    return ItemInteractionResult.SUCCESS;
-                }
+                BlockState camoState = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
+                base.setCamoState(camoState);
+                return ItemInteractionResult.SUCCESS;
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

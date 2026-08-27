@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/osmium"
-    },
-    "B": {
-      "id": "minecraft:gunpowder"
-    },
-    "C": {
-      "tag": "c:ingots/iron"
-    }
+    "A": "#c:ingots/osmium",
+    "B": "minecraft:gunpowder",
+    "C": "#c:ingots/iron"
   },
   "result": {
     "count": 64,

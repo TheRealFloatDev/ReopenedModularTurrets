@@ -6,18 +6,10 @@
     "DAD"
   ],
   "key": {
-    "A": {
-      "tag": "c:gemDiamond"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_3"
-    },
-    "C": {
-      "id": "enderio:item_basic_capacitor"
-    },
-    "D": {
-      "tag": "c:ingotSoularium"
-    }
+    "A": "#c:gemDiamond",
+    "B": "reopenedmodularturrets:chamber_tier_3",
+    "C": "enderio:item_basic_capacitor",
+    "D": "#c:ingotSoularium"
   },
   "result": {
     "count": 1,

@@ -6,15 +6,9 @@
     " A "
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichedalloy"
-    },
-    "B": {
-      "id": "minecraft:flint"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "mekanism:enrichedalloy",
+    "B": "minecraft:flint",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 16,

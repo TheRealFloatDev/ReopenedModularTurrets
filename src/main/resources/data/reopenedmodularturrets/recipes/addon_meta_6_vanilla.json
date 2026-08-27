@@ -6,21 +6,11 @@
     "DED"
   ],
   "key": {
-    "A": {
-      "tag": "c:glass_panes"
-    },
-    "B": {
-      "tag": "c:storage_blocks/lapis"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    },
-    "D": {
-      "tag": "c:ingots/iron"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:glass_panes",
+    "B": "#c:storage_blocks/lapis",
+    "C": "#c:dusts/redstone",
+    "D": "#c:ingots/iron",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

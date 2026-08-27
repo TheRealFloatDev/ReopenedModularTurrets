@@ -6,21 +6,11 @@
     "DBD"
   ],
   "key": {
-    "A": {
-      "id": "reopenedmodularturrets:barrel_tier_5"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_5"
-    },
-    "C": {
-      "tag": "c:gearVibrant"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "E": {
-      "tag": "c:itemChassiParts"
-    }
+    "A": "reopenedmodularturrets:barrel_tier_5",
+    "B": "reopenedmodularturrets:chamber_tier_5",
+    "C": "#c:gearVibrant",
+    "D": "#reopenedmodularturrets:io_bus",
+    "E": "#c:itemChassiParts"
   },
   "result": {
     "count": 1,

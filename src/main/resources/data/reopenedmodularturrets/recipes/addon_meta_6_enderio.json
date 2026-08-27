@@ -6,21 +6,11 @@
     "DED"
   ],
   "key": {
-    "A": {
-      "tag": "c:paneGlassColorless"
-    },
-    "B": {
-      "tag": "c:itemPowderPhotovoltaic"
-    },
-    "C": {
-      "tag": "c:nuggetEnergeticAlloy"
-    },
-    "D": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:paneGlassColorless",
+    "B": "#c:itemPowderPhotovoltaic",
+    "C": "#c:nuggetEnergeticAlloy",
+    "D": "#c:ingotElectricalSteel",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:itemVibrantCrystal"
-    },
-    "B": {
-      "tag": "c:skullEnderResonator"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemVibrantCrystal",
+    "B": "#c:skullEnderResonator",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

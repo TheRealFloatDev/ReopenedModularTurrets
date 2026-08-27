@@ -6,15 +6,9 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:gemDiamond"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_3"
-    },
-    "C": {
-      "tag": "c:ingotSoularium"
-    }
+    "A": "#c:gemDiamond",
+    "B": "reopenedmodularturrets:barrel_tier_3",
+    "C": "#c:ingotSoularium"
   },
   "result": {
     "count": 1,

@@ -6,15 +6,9 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:atomicalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_4"
-    },
-    "C": {
-      "tag": "c:ingots/refined_obsidian"
-    }
+    "A": "mekanism:atomicalloy",
+    "B": "reopenedmodularturrets:barrel_tier_4",
+    "C": "#c:ingots/refined_obsidian"
   },
   "result": {
     "count": 1,

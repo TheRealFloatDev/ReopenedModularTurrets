@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:alloyUltimate"
-    },
-    "B": {
-      "tag": "c:circuitUltimate"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:alloyUltimate",
+    "B": "#c:circuitUltimate",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

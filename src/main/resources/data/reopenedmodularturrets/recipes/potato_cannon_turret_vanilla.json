@@ -6,18 +6,10 @@
     "DBD"
   ],
   "key": {
-    "A": {
-      "id": "reopenedmodularturrets:barrel_tier_1"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_1"
-    },
-    "C": {
-      "tag": "c:cobblestone"
-    },
-    "D": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "reopenedmodularturrets:barrel_tier_1",
+    "B": "reopenedmodularturrets:chamber_tier_1",
+    "C": "#c:cobblestone",
+    "D": "#c:dusts/redstone"
   },
   "result": {
     "count": 1,

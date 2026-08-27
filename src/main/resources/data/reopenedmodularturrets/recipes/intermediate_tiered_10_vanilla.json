@@ -6,12 +6,8 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:cobblestone"
-    },
-    "B": {
-      "tag": "minecraft:planks"
-    }
+    "A": "#c:cobblestone",
+    "B": "#minecraft:planks"
   },
   "result": {
     "count": 1,

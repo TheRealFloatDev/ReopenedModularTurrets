@@ -6,18 +6,10 @@
     " C "
   ],
   "key": {
-    "A": {
-      "id": "mekanism:reinforcedalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "id": "mekanism:controlcircuit"
-    }
+    "A": "mekanism:reinforcedalloy",
+    "B": "reopenedmodularturrets:sensor_tier_3",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "mekanism:controlcircuit"
   },
   "result": {
     "count": 1,

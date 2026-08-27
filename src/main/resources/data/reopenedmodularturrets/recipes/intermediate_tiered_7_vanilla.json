@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_2"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingots/gold",
+    "B": "reopenedmodularturrets:chamber_tier_2",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

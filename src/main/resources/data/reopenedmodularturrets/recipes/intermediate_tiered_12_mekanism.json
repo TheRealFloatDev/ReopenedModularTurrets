@@ -6,15 +6,9 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichedalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_2"
-    },
-    "C": {
-      "tag": "c:ingots/steel"
-    }
+    "A": "mekanism:enrichedalloy",
+    "B": "reopenedmodularturrets:barrel_tier_2",
+    "C": "#c:ingots/steel"
   },
   "result": {
     "count": 1,

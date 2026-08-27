@@ -6,15 +6,9 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:reinforcedalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_3"
-    },
-    "C": {
-      "tag": "c:ingots/refined_glowstone"
-    }
+    "A": "mekanism:reinforcedalloy",
+    "B": "reopenedmodularturrets:barrel_tier_3",
+    "C": "#c:ingots/refined_glowstone"
   },
   "result": {
     "count": 1,

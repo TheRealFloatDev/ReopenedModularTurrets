@@ -6,18 +6,10 @@
     "ABA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "B": {
-      "tag": "c:itemChassiParts"
-    },
-    "C": {
-      "tag": "c:chests/wooden"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotElectricalSteel",
+    "B": "#c:itemChassiParts",
+    "C": "#c:chests/wooden",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

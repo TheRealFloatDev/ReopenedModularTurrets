@@ -6,12 +6,8 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_2"
-    }
+    "A": "#c:ingots/gold",
+    "B": "reopenedmodularturrets:barrel_tier_2"
   },
   "result": {
     "count": 1,

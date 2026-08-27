@@ -6,15 +6,9 @@
     "ACA"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichediron"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_1"
-    },
-    "C": {
-      "tag": "c:ingots/tin"
-    }
+    "A": "mekanism:enrichediron",
+    "B": "reopenedmodularturrets:chamber_tier_1",
+    "C": "#c:ingots/tin"
   },
   "result": {
     "count": 1,

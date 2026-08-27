@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:cobblestone"
-    },
-    "B": {
-      "tag": "minecraft:planks"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "#c:cobblestone",
+    "B": "#minecraft:planks",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 1,

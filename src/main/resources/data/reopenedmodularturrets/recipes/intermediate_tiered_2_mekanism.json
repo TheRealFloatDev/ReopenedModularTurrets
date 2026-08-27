@@ -6,18 +6,10 @@
     " C "
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichedalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_2"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "id": "mekanism:controlcircuit"
-    }
+    "A": "mekanism:enrichedalloy",
+    "B": "reopenedmodularturrets:sensor_tier_2",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "mekanism:controlcircuit"
   },
   "result": {
     "count": 1,

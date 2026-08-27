@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/iron"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_1"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "#c:ingots/iron",
+    "B": "reopenedmodularturrets:chamber_tier_1",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 1,

@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-public class GrenadeTurretModel extends PartModel {
+public class GrenadeTurretModel extends PartModel implements AnimatedTurretModel {
     private final ModelPart base;
     private final ModelPart pole;
     private final ModelPart boxUnder;
@@ -75,6 +75,7 @@ public class GrenadeTurretModel extends PartModel {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
+    @Override
     public void setupAnim(DirectedTurretModelState state) {
         base.xRot = state.baseFitRotationX();
         base.yRot = state.baseFitRotationZ();
@@ -95,5 +96,10 @@ public class GrenadeTurretModel extends PartModel {
         chamber.yRot = rotationZ;
         muzzle.xRot = rotationX;
         muzzle.yRot = rotationZ;
+    }
+
+    @Override
+    public PartModel asPartModel() {
+        return this;
     }
 }

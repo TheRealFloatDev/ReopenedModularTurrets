@@ -6,9 +6,7 @@
     "A  "
   ],
   "key": {
-    "A": {
-      "tag": "c:cobblestone"
-    }
+    "A": "#c:cobblestone"
   },
   "result": {
     "count": 1,

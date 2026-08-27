@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reopenedmodularturrets:item/base_addon_loot_deleter"
+    "layer0": "reopenedmodularturrets:item/base_addon_loot_deleter_top"
   }
 }

@@ -5,6 +5,7 @@ import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
+import com.ommods.reopenedmodularturrets.registry.ModBlocks;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.entity.LaserBeamEntity;
 import com.ommods.reopenedmodularturrets.registry.ModSounds;
@@ -13,7 +14,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public enum TurretKind {
     DISPOSABLE_ITEM(1, false),
@@ -51,11 +55,34 @@ public enum TurretKind {
         return directed;
     }
 
+    @Nullable
+    public static TurretKind fromItem(Item item) {
+        if (!(item instanceof BlockItem blockItem)) {
+            return null;
+        }
+        var block = blockItem.getBlock();
+        if (block == ModBlocks.GUN_TURRET.get()) return GUN;
+        if (block == ModBlocks.GRENADE_TURRET.get()) return GRENADE;
+        if (block == ModBlocks.DISPOSABLE_ITEM_TURRET.get()) return DISPOSABLE_ITEM;
+        if (block == ModBlocks.POTATO_CANNON_TURRET.get()) return POTATO_CANNON;
+        if (block == ModBlocks.INCENDIARY_TURRET.get()) return INCENDIARY;
+        if (block == ModBlocks.ROCKET_TURRET.get()) return ROCKET;
+        if (block == ModBlocks.RELATIVISTIC_TURRET.get()) return RELATIVISTIC;
+        if (block == ModBlocks.TELEPORTER_TURRET.get()) return TELEPORTER;
+        if (block == ModBlocks.LASER_TURRET.get()) return LASER;
+        if (block == ModBlocks.RAIL_GUN_TURRET.get()) return RAIL_GUN;
+        if (block == ModBlocks.PLASMA_TURRET.get()) return PLASMA;
+        if (block == ModBlocks.ARC_TURRET.get()) return ARC;
+        if (block == ModBlocks.MELEE_TURRET.get()) return MELEE;
+        if (block == ModBlocks.CROSSBOW_TURRET.get()) return CROSSBOW;
+        return null;
+    }
+
     public String textureName() {
         return switch (this) {
             case GUN -> "gun_turret";
-            case GRENADE -> "grenade_turret";
-            case DISPOSABLE_ITEM -> "dispose_item_turret";
+            case GRENADE, PLASMA -> "grenade_turret";
+            case DISPOSABLE_ITEM -> "disposable_item_turret";
             case POTATO_CANNON -> "potato_cannon_turret";
             case INCENDIARY -> "incendiary_turret";
             case ROCKET -> "rocket_turret";
@@ -63,15 +90,10 @@ public enum TurretKind {
             case TELEPORTER -> "teleporter_turret";
             case LASER -> "laser_turret";
             case RAIL_GUN -> "rail_gun_turret";
-            case PLASMA -> "plasma_turret";
             case ARC -> "arc_turret";
             case MELEE -> "melee_turret";
             case CROSSBOW -> "crossbow_turret";
         };
-    }
-
-    public boolean usesGrenadeModel() {
-        return this == GRENADE || this == ROCKET || this == PLASMA;
     }
 
     public double getRange() {

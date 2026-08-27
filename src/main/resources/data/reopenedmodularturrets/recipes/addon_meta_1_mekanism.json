@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/steel"
-    },
-    "B": {
-      "tag": "c:circuits/elite"
-    },
-    "C": {
-      "tag": "c:alloyElite"
-    }
+    "A": "#c:ingots/steel",
+    "B": "#c:circuits/elite",
+    "C": "#c:alloyElite"
   },
   "result": {
     "count": 1,

@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/iron"
-    },
-    "B": {
-      "id": "minecraft:ender_eye"
-    },
-    "C": {
-      "tag": "c:storage_blocks/redstone"
-    }
+    "A": "#c:ingots/iron",
+    "B": "minecraft:ender_eye",
+    "C": "#c:storage_blocks/redstone"
   },
   "result": {
     "count": 1,

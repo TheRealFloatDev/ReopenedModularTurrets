@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:reinforcedalloy"
-    },
-    "B": {
-      "id": "mekanism:energytablet"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "D": {
-      "tag": "c:ingots/refined_glowstone"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "mekanism:reinforcedalloy",
+    "B": "mekanism:energytablet",
+    "C": "reopenedmodularturrets:sensor_tier_4",
+    "D": "#c:ingots/refined_glowstone",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

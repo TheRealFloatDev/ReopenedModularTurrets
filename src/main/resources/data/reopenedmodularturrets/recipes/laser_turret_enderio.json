@@ -6,21 +6,11 @@
     "DCD"
   ],
   "key": {
-    "A": {
-      "id": "reopenedmodularturrets:barrel_tier_5"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_5"
-    },
-    "C": {
-      "tag": "c:gearEnergized"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "E": {
-      "tag": "c:itemVibrantCrystal"
-    }
+    "A": "reopenedmodularturrets:barrel_tier_5",
+    "B": "reopenedmodularturrets:chamber_tier_5",
+    "C": "#c:gearEnergized",
+    "D": "#reopenedmodularturrets:io_bus",
+    "E": "#c:itemVibrantCrystal"
   },
   "result": {
     "count": 1,

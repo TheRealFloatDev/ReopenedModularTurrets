@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:itemEnrichedAlloy"
-    },
-    "B": {
-      "tag": "c:itemCompressedCarbon"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemEnrichedAlloy",
+    "B": "#c:itemCompressedCarbon",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

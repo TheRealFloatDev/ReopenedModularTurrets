@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:obsidians"
-    },
-    "B": {
-      "id": "mekanism:energytablet"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_5"
-    },
-    "D": {
-      "tag": "c:ingots/refined_obsidian"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:obsidians",
+    "B": "mekanism:energytablet",
+    "C": "reopenedmodularturrets:sensor_tier_5",
+    "D": "#c:ingots/refined_obsidian",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

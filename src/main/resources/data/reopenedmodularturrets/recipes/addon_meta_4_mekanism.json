@@ -6,18 +6,10 @@
     "CAC"
   ],
   "key": {
-    "A": {
-      "tag": "c:itemCompressedRedstone"
-    },
-    "B": {
-      "tag": "c:circuits/advanced"
-    },
-    "C": {
-      "tag": "c:ingots/steel"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemCompressedRedstone",
+    "B": "#c:circuits/advanced",
+    "C": "#c:ingots/steel",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

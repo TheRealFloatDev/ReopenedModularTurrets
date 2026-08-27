@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichedalloy"
-    },
-    "B": {
-      "id": "mekanism:energytablet"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "D": {
-      "tag": "c:ingots/steel"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "mekanism:enrichedalloy",
+    "B": "mekanism:energytablet",
+    "C": "reopenedmodularturrets:sensor_tier_3",
+    "D": "#c:ingots/steel",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

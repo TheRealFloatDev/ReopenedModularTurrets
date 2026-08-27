@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotElectricalSteel"
-    },
-    "B": {
-      "tag": "c:itemPulsatingCrystal"
-    },
-    "C": {
-      "tag": "c:blockRedstoneAlloy"
-    }
+    "A": "#c:ingotElectricalSteel",
+    "B": "#c:itemPulsatingCrystal",
+    "C": "#c:blockRedstoneAlloy"
   },
   "result": {
     "count": 1,

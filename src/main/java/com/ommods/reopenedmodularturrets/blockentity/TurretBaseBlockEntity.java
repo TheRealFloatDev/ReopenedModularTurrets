@@ -181,7 +181,15 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public int getAmmoCount(AmmoType type) {
-        return ammoStorage.getCount(type);
+        int count = ammoStorage.getCount(type);
+        int perItem = type.getAmmoPerItem();
+        for (int slot = BaseSlotIndices.AMMO_START; slot < BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT; slot++) {
+            ItemStack stack = inventory[slot];
+            if (stack.getItem() instanceof AmmoItem ammoItem && ammoItem.getAmmoType() == type) {
+                count += stack.getCount() * perItem;
+            }
+        }
+        return count;
     }
 
     public boolean isAttackMobs() {
@@ -533,6 +541,20 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (addonState.recycleChance() > 0.0F && level != null && level.random.nextFloat() < addonState.recycleChance()) {
             return true;
         }
+        for (int slot = BaseSlotIndices.AMMO_START; slot < BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT; slot++) {
+            ItemStack stack = inventory[slot];
+            if (stack.getItem() instanceof AmmoItem ammoItem && ammoItem.getAmmoType() == type && !stack.isEmpty()) {
+                int perItem = type.getAmmoPerItem();
+                int neededItems = (amount + perItem - 1) / perItem;
+                int consumed = Math.min(neededItems, stack.getCount());
+                stack.shrink(consumed);
+                if (stack.isEmpty()) {
+                    inventory[slot] = ItemStack.EMPTY;
+                }
+                setChanged();
+                return true;
+            }
+        }
         if (ammoStorage.tryConsume(type, amount)) {
             setChanged();
             return true;
@@ -736,15 +758,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        if (isAmmoSlot(slot) && !stack.isEmpty()) {
-            ItemStack working = stack.copy();
-            if (ammoStorage.tryInsertStack(working)) {
-                inventory[slot] = working;
-                setChanged();
-                refreshItemDerivedState();
-                return;
-            }
-        }
         inventory[slot] = stack;
         setChanged();
         refreshItemDerivedState();

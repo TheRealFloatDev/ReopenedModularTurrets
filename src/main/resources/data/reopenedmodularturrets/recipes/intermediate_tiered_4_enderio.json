@@ -6,18 +6,10 @@
     "EDE"
   ],
   "key": {
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "tag": "c:obsidians"
-    },
-    "E": {
-      "tag": "c:itemPowderPhotovoltaic"
-    }
+    "B": "reopenedmodularturrets:sensor_tier_4",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "#c:obsidians",
+    "E": "#c:itemPowderPhotovoltaic"
   },
   "result": {
     "count": 1,

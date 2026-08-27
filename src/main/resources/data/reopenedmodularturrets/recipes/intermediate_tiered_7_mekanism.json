@@ -6,15 +6,9 @@
     "ACA"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichedalloy"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_2"
-    },
-    "C": {
-      "tag": "c:ingots/steel"
-    }
+    "A": "mekanism:enrichedalloy",
+    "B": "reopenedmodularturrets:chamber_tier_2",
+    "C": "#c:ingots/steel"
   },
   "result": {
     "count": 1,

@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotSoularium"
-    },
-    "B": {
-      "tag": "c:itemSoulMachineChassi"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_4"
-    },
-    "D": {
-      "id": "enderio:item_basic_capacitor"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotSoularium",
+    "B": "#c:itemSoulMachineChassi",
+    "C": "reopenedmodularturrets:sensor_tier_4",
+    "D": "enderio:item_basic_capacitor",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

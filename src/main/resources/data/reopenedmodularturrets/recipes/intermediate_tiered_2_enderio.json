@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotDarkSteel"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_2"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotDarkSteel",
+    "B": "reopenedmodularturrets:sensor_tier_2",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

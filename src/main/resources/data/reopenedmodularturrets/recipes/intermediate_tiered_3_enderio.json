@@ -6,18 +6,10 @@
     "EDE"
   ],
   "key": {
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "tag": "c:gemDiamond"
-    },
-    "E": {
-      "tag": "c:ingotSoularium"
-    }
+    "B": "reopenedmodularturrets:sensor_tier_3",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "#c:gemDiamond",
+    "E": "#c:ingotSoularium"
   },
   "result": {
     "count": 1,

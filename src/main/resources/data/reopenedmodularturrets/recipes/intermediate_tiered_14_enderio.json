@@ -6,15 +6,9 @@
     "AAA"
   ],
   "key": {
-    "A": {
-      "tag": "c:obsidians"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:barrel_tier_4"
-    },
-    "C": {
-      "tag": "c:itemChassiParts"
-    }
+    "A": "#c:obsidians",
+    "B": "reopenedmodularturrets:barrel_tier_4",
+    "C": "#c:itemChassiParts"
   },
   "result": {
     "count": 1,

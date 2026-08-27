@@ -6,15 +6,9 @@
     " A "
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotDarkSteel"
-    },
-    "B": {
-      "id": "minecraft:flint"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "#c:ingotDarkSteel",
+    "B": "minecraft:flint",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 16,

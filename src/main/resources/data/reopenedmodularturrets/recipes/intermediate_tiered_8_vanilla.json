@@ -6,18 +6,10 @@
     "DAD"
   ],
   "key": {
-    "A": {
-      "tag": "c:gemDiamond"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_3"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "tag": "c:gems/quartz"
-    }
+    "A": "#c:gemDiamond",
+    "B": "reopenedmodularturrets:chamber_tier_3",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "#c:gems/quartz"
   },
   "result": {
     "count": 1,

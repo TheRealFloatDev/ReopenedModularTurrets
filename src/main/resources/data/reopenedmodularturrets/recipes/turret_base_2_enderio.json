@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingotDarkSteel"
-    },
-    "B": {
-      "tag": "c:itemMachineChassi"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "D": {
-      "id": "enderio:item_basic_capacitor"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingotDarkSteel",
+    "B": "#c:itemMachineChassi",
+    "C": "reopenedmodularturrets:sensor_tier_3",
+    "D": "enderio:item_basic_capacitor",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

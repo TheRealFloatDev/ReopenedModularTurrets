@@ -6,18 +6,10 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/iron"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:turret_base_tier_1"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_2"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingots/iron",
+    "B": "reopenedmodularturrets:turret_base_tier_1",
+    "C": "reopenedmodularturrets:sensor_tier_2",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

@@ -1,8 +1,6 @@
 package com.ommods.reopenedmodularturrets.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.ommods.reopenedmodularturrets.ModConstants;
-import com.ommods.reopenedmodularturrets.core.targeting.TargetFilter;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.network.payload.AdjustRangePayload;
@@ -10,13 +8,9 @@ import com.ommods.reopenedmodularturrets.network.payload.DropBasePayload;
 import com.ommods.reopenedmodularturrets.network.payload.DropTurretsPayload;
 import com.ommods.reopenedmodularturrets.network.payload.ToggleActivePayload;
 import com.ommods.reopenedmodularturrets.network.payload.ToggleMultiTargetPayload;
-import com.ommods.reopenedmodularturrets.network.payload.ToggleTargetFilterPayload;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,19 +21,8 @@ import java.util.List;
 
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     private static final int TEX_SIZE = 256;
-    private static final int BUTTON_SIZE = 18;
-    private static final int ICON_SIZE = 12;
     private static final int SIDE_BUTTON_W = 80;
     private static final int SIDE_BUTTON_H = 20;
-
-    private static final ResourceLocation ICON_MOBS =
-            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/mobs.png");
-    private static final ResourceLocation ICON_PLAYERS =
-            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/players.png");
-    private static final ResourceLocation ICON_NEUTRAL =
-            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/neutral.png");
-    private static final ResourceLocation ICON_GEAR =
-            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/gear.png");
 
     private static final int ENERGY_X = 153;
     private static final int ENERGY_Y = 17;
@@ -47,16 +30,12 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     private static final int ENERGY_H = 51;
     private static final int[] ENERGY_FILL_U = {196, 215, 234};
 
-    private static final int FILTER_X = ENERGY_X - BUTTON_SIZE - 2;
-    private static final int FILTER_Y = ENERGY_Y;
-    private static final int FILTER_SPACING = 18;
-
     private static final int RANGE_PLUS_X = 120;
     private static final int RANGE_PLUS_Y = 15;
     private static final int RANGE_MINUS_Y = 50;
     private static final int SIDE_PANEL_X = 180;
 
-    private TrustedPlayersGearButton trustedGearButton;
+    private Button modeButton;
     private Button targetButton;
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
@@ -85,19 +64,6 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
         if (menu.getBase() == null) {
             return;
         }
-        int x = leftPos + FILTER_X;
-        int y = topPos + FILTER_Y;
-        addRenderableWidget(new TargetFilterIconButton(x, y, TargetFilter.MOBS, ICON_MOBS));
-        addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING, TargetFilter.PLAYERS, ICON_PLAYERS));
-        addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING * 2, TargetFilter.NEUTRAL, ICON_NEUTRAL));
-
-        trustedGearButton = new TrustedPlayersGearButton(
-                leftPos + FILTER_X - BUTTON_SIZE - 2,
-                topPos + FILTER_Y + FILTER_SPACING,
-                ICON_GEAR,
-                () -> minecraft.setScreen(new TrustedPlayersScreen(menu.getBase().getBlockPos(), this, menu))
-        );
-        addRenderableWidget(trustedGearButton);
 
         addRenderableWidget(Button.builder(Component.literal("+"), b -> adjustRange(1))
                 .bounds(leftPos + RANGE_PLUS_X, topPos + RANGE_PLUS_Y, 20, 20)
@@ -109,7 +75,7 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
                 .build());
 
         int sideX = leftPos + SIDE_PANEL_X;
-        addRenderableWidget(Button.builder(Component.translatable("text.reopenedmodularturrets.gui.mode"), b -> toggleActive())
+        modeButton = addRenderableWidget(Button.builder(modeLabel(), b -> toggleActive())
                 .bounds(sideX, topPos, SIDE_BUTTON_W, SIDE_BUTTON_H)
                 .tooltip(Tooltip.create(Component.translatable("text.reopenedmodularturrets.toggle_mode")))
                 .build());
@@ -127,8 +93,15 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
         addRenderableWidget(Button.builder(Component.translatable("text.reopenedmodularturrets.gui.drop_turrets"), b -> dropTurrets())
                 .bounds(sideX, topPos + 100, SIDE_BUTTON_W, SIDE_BUTTON_H)
                 .build());
+    }
 
-        updateTrustedGearVisibility();
+    private Component modeLabel() {
+        String stateKey = menu.isActive()
+                ? "text.reopenedmodularturrets.gui.on"
+                : "text.reopenedmodularturrets.gui.off";
+        return Component.translatable("text.reopenedmodularturrets.gui.mode")
+                .append(": ")
+                .append(Component.translatable(stateKey));
     }
 
     private Component targetLabel() {
@@ -179,18 +152,14 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     @Override
     protected void containerTick() {
         super.containerTick();
-        updateTrustedGearVisibility();
+        if (modeButton != null) {
+            modeButton.setMessage(modeLabel());
+        }
         if (targetButton != null) {
             targetButton.setMessage(targetLabel());
         }
         if (menu.getBase() != null) {
             menu.refreshFilterData();
-        }
-    }
-
-    private void updateTrustedGearVisibility() {
-        if (trustedGearButton != null) {
-            trustedGearButton.visible = menu.getData(3) == 1;
         }
     }
 
@@ -295,88 +264,5 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
                 && mouseX < leftPos + ENERGY_X + ENERGY_W
                 && mouseY >= topPos + ENERGY_Y
                 && mouseY < topPos + ENERGY_Y + ENERGY_H;
-    }
-
-    private boolean isFilterEnabled(TargetFilter filter) {
-        return switch (filter) {
-            case MOBS -> menu.getData(2) == 1;
-            case PLAYERS -> menu.getData(3) == 1;
-            case NEUTRAL -> menu.getData(4) == 1;
-        };
-    }
-
-    private static void blitIcon(GuiGraphics graphics, ResourceLocation icon, int x, int y) {
-        graphics.blit(icon, x + (BUTTON_SIZE - ICON_SIZE) / 2, y + (BUTTON_SIZE - ICON_SIZE) / 2, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
-    }
-
-    private final class TargetFilterIconButton extends AbstractButton {
-        private final TargetFilter filter;
-        private final ResourceLocation icon;
-
-        TargetFilterIconButton(int x, int y, TargetFilter filter, ResourceLocation icon) {
-            super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.empty());
-            this.filter = filter;
-            this.icon = icon;
-            this.setTooltip(Tooltip.create(Component.translatable(
-                    "gui.reopenedmodularturrets.filter." + filter.name().toLowerCase())));
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            boolean enabled = isFilterEnabled(filter);
-            boolean highlighted = enabled || isHoveredOrFocused();
-            graphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-            graphics.blitSprite(SPRITES.get(true, highlighted), getX(), getY(), getWidth(), getHeight());
-            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-            blitIcon(graphics, icon, getX(), getY());
-        }
-
-        @Override
-        public void onPress() {
-            menu.toggleFilterClient(filter);
-            updateTrustedGearVisibility();
-            if (menu.getBase() != null) {
-                ModNetworking.sendToServer(new ToggleTargetFilterPayload(menu.getBase().getBlockPos(), filter));
-            }
-        }
-
-        @Override
-        public void updateWidgetNarration(NarrationElementOutput output) {
-            defaultButtonNarrationText(output);
-        }
-    }
-
-    private final class TrustedPlayersGearButton extends AbstractButton {
-        private final ResourceLocation icon;
-        private final Runnable onOpen;
-
-        TrustedPlayersGearButton(int x, int y, ResourceLocation icon, Runnable onOpen) {
-            super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.empty());
-            this.icon = icon;
-            this.onOpen = onOpen;
-            this.setTooltip(Tooltip.create(Component.translatable("gui.reopenedmodularturrets.trusted_players")));
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            graphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-            graphics.blitSprite(SPRITES.get(this.active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight());
-            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-            blitIcon(graphics, icon, getX(), getY());
-        }
-
-        @Override
-        public void onPress() {
-            onOpen.run();
-        }
-
-        @Override
-        public void updateWidgetNarration(NarrationElementOutput output) {
-            defaultButtonNarrationText(output);
-        }
     }
 }

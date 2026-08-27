@@ -6,15 +6,9 @@
     "BCB"
   ],
   "key": {
-    "A": {
-      "id": "minecraft:blaze_powder"
-    },
-    "B": {
-      "id": "minecraft:clay_ball"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "minecraft:blaze_powder",
+    "B": "minecraft:clay_ball",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 32,

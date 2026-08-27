@@ -6,18 +6,10 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "tag": "c:obsidians"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:chamber_tier_4"
-    },
-    "C": {
-      "id": "enderio:item_basic_capacitor"
-    },
-    "D": {
-      "tag": "c:itemChassiParts"
-    }
+    "A": "#c:obsidians",
+    "B": "reopenedmodularturrets:chamber_tier_4",
+    "C": "enderio:item_basic_capacitor",
+    "D": "#c:itemChassiParts"
   },
   "result": {
     "count": 1,

@@ -6,15 +6,9 @@
     "ACA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/tin"
-    },
-    "B": {
-      "id": "minecraft:tnt"
-    },
-    "C": {
-      "tag": "c:dusts/redstone"
-    }
+    "A": "#c:ingots/tin",
+    "B": "minecraft:tnt",
+    "C": "#c:dusts/redstone"
   },
   "result": {
     "count": 32,

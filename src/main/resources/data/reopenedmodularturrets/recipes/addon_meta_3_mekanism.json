@@ -6,18 +6,10 @@
     "ABA"
   ],
   "key": {
-    "A": {
-      "tag": "c:alloyAdvanced"
-    },
-    "B": {
-      "tag": "c:circuits/basic"
-    },
-    "C": {
-      "tag": "c:itemCompressedCarbon"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:alloyAdvanced",
+    "B": "#c:circuits/basic",
+    "C": "#c:itemCompressedCarbon",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

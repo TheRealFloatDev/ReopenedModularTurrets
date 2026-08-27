@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:gems/quartz"
-    },
-    "B": {
-      "tag": "c:ingots/gold"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:gems/quartz",
+    "B": "#c:ingots/gold",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

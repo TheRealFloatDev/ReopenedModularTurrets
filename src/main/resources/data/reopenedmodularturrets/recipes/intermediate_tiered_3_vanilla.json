@@ -6,21 +6,11 @@
     "EDE"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "id": "reopenedmodularturrets:sensor_tier_3"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "D": {
-      "tag": "c:gemDiamond"
-    },
-    "E": {
-      "tag": "c:gems/quartz"
-    }
+    "A": "#c:ingots/gold",
+    "B": "reopenedmodularturrets:sensor_tier_3",
+    "C": "#reopenedmodularturrets:io_bus",
+    "D": "#c:gemDiamond",
+    "E": "#c:gems/quartz"
   },
   "result": {
     "count": 1,

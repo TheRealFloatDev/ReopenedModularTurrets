@@ -6,18 +6,10 @@
     "ABA"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "id": "minecraft:magma_cream"
-    },
-    "C": {
-      "id": "minecraft:ender_chest"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:ingots/gold",
+    "B": "minecraft:magma_cream",
+    "C": "minecraft:ender_chest",
+    "D": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

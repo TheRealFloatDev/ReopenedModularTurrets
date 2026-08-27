@@ -6,24 +6,12 @@
     "FDF"
   ],
   "key": {
-    "A": {
-      "tag": "c:ingots/gold"
-    },
-    "B": {
-      "tag": "c:dusts/redstone"
-    },
-    "C": {
-      "tag": "c:ingots/iron"
-    },
-    "D": {
-      "tag": "reopenedmodularturrets:io_bus"
-    },
-    "E": {
-      "id": "minecraft:paper"
-    },
-    "F": {
-      "id": "minecraft:dye"
-    }
+    "A": "#c:ingots/gold",
+    "B": "#c:dusts/redstone",
+    "C": "#c:ingots/iron",
+    "D": "#reopenedmodularturrets:io_bus",
+    "E": "minecraft:paper",
+    "F": "minecraft:dye"
   },
   "result": {
     "count": 1,

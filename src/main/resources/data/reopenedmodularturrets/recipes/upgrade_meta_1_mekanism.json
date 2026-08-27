@@ -6,15 +6,9 @@
     " C "
   ],
   "key": {
-    "A": {
-      "tag": "c:itemEnrichedAlloy"
-    },
-    "B": {
-      "tag": "c:circuits/elite"
-    },
-    "C": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "#c:itemEnrichedAlloy",
+    "B": "#c:circuits/elite",
+    "C": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,

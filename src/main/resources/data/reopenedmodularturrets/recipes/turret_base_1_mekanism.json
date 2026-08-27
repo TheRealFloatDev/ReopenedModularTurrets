@@ -6,21 +6,11 @@
     "ADA"
   ],
   "key": {
-    "A": {
-      "id": "mekanism:enrichediron"
-    },
-    "B": {
-      "id": "mekanism:energytablet"
-    },
-    "C": {
-      "id": "reopenedmodularturrets:sensor_tier_2"
-    },
-    "D": {
-      "tag": "c:ingots/tin"
-    },
-    "E": {
-      "tag": "reopenedmodularturrets:io_bus"
-    }
+    "A": "mekanism:enrichediron",
+    "B": "mekanism:energytablet",
+    "C": "reopenedmodularturrets:sensor_tier_2",
+    "D": "#c:ingots/tin",
+    "E": "#reopenedmodularturrets:io_bus"
   },
   "result": {
     "count": 1,
