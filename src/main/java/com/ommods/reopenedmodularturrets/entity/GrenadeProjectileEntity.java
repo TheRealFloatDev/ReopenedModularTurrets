@@ -14,6 +14,8 @@ import net.minecraft.world.phys.HitResult;
 public class GrenadeProjectileEntity extends ThrowableItemProjectile {
     private float damage = 6.0F;
     private boolean directHit = false;
+    private String projectileTexture = "ammo_grenade";
+    private boolean explosive = true;
 
     public GrenadeProjectileEntity(EntityType<? extends GrenadeProjectileEntity> type, Level level) {
         super(type, level);
@@ -31,6 +33,18 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
         this.directHit = directHit;
     }
 
+    public void setProjectileTexture(String projectileTexture) {
+        this.projectileTexture = projectileTexture;
+    }
+
+    public String getProjectileTexture() {
+        return projectileTexture;
+    }
+
+    public void setExplosive(boolean explosive) {
+        this.explosive = explosive;
+    }
+
     @Override
     protected Item getDefaultItem() {
         return Items.TNT;
@@ -39,8 +53,10 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (level() instanceof ServerLevel serverLevel) {
+        if (level() instanceof ServerLevel serverLevel && explosive) {
             serverLevel.explode(this, getX(), getY(), getZ(), damage, Level.ExplosionInteraction.MOB);
+            discard();
+        } else if (!explosive) {
             discard();
         }
     }
@@ -55,7 +71,9 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
                 discard();
                 return;
             }
-            serverLevel.explode(this, getX(), getY(), getZ(), damage, Level.ExplosionInteraction.MOB);
+            if (explosive) {
+                serverLevel.explode(this, getX(), getY(), getZ(), damage, Level.ExplosionInteraction.MOB);
+            }
             discard();
         }
     }

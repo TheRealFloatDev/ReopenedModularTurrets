@@ -15,7 +15,7 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class DirectedTurretBlockEntity extends BlockEntity {
     private float yaw = 0.0F;
-    private float pitch = 180.0F;
+    private float pitch = 0.0F;
 
     protected DirectedTurretBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -41,6 +41,9 @@ public abstract class DirectedTurretBlockEntity extends BlockEntity {
             yaw = newYaw;
             pitch = newPitch;
             setChanged();
+            if (level != null) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
         }
     }
 

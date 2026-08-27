@@ -1,1 +1,3 @@
-{"parent":"reopenedmodularturrets:block/lever_block"}
+{
+  "parent": "minecraft:builtin/entity"
+}

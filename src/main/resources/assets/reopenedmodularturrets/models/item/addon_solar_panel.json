@@ -1,6 +1,6 @@
 {
-  "parent": "omlib:item/default_item",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reopenedmodularturrets:items/addon_solar_panel"
+    "layer0": "reopenedmodularturrets:item/addon_solar_panel"
   }
 }

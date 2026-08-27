@@ -1,41 +1,161 @@
 {
-  "machine_gun": {
+  "amped": {
+    "category": "block",
     "sounds": [
       {
-        "name": "minecraft:entity.arrow.shoot",
-        "type": "event"
-      }
-    ]
-  },
-  "grenade": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.generic.explode",
-        "type": "event"
-      }
-    ]
-  },
-  "rocket": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.firework_rocket.launch",
-        "type": "event"
-      }
-    ]
-  },
-  "laser": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.guardian.attack",
-        "type": "event"
+        "name": "reopenedmodularturrets:amped"
       }
     ]
   },
   "bullet_hit": {
+    "category": "ambient",
     "sounds": [
       {
-        "name": "minecraft:entity.arrow.hit",
-        "type": "event"
+        "name": "reopenedmodularturrets:bullet_hit"
+      }
+    ]
+  },
+  "windup": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:windup"
+      }
+    ]
+  },
+  "grenade": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:grenade"
+      }
+    ]
+  },
+  "machine_gun": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:machine_gun"
+      }
+    ]
+  },
+  "laser": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:laser"
+      }
+    ]
+  },
+  "warning": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:warning"
+      }
+    ]
+  },
+  "laser_hit": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:laser_hit"
+      }
+    ]
+  },
+  "rocket": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:rocket"
+      }
+    ]
+  },
+  "disposable": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:disposable"
+      }
+    ]
+  },
+  "potato": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:potato"
+      }
+    ]
+  },
+  "incendiary": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:incendiary"
+      }
+    ]
+  },
+  "relativistic": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:relativistic"
+      }
+    ]
+  },
+  "teleport": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:teleport"
+      }
+    ]
+  },
+  "rail_gun": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:rail_gun"
+      }
+    ]
+  },
+  "rail_gun_hit": {
+    "category": "ambient",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:rail_gun_hit"
+      }
+    ]
+  },
+  "turret_deploy": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:turret_deploy"
+      }
+    ]
+  },
+  "turret_retract": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:turret_retract"
+      }
+    ]
+  },
+  "plasma_launch": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:plasma_launch"
+      }
+    ]
+  },
+  "arc": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "reopenedmodularturrets:arc"
       }
     ]
   }

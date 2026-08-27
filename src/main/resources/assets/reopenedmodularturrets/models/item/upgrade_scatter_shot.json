@@ -1,6 +1,6 @@
 {
-  "parent": "omlib:item/default_item",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reopenedmodularturrets:items/upgrade_scatter_shot"
+    "layer0": "reopenedmodularturrets:item/upgrade_scatter_shot"
   }
 }

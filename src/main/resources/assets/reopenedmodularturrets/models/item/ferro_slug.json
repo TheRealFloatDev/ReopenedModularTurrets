@@ -1,6 +1,6 @@
 {
-  "parent": "omlib:item/default_item",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reopenedmodularturrets:items/ammo_ferro_slug"
+    "layer0": "reopenedmodularturrets:item/ammo_ferro_slug"
   }
 }

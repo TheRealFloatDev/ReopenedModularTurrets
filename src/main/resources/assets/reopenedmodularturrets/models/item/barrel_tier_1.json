@@ -1,6 +1,6 @@
 {
-  "parent": "omlib:item/default_item",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reopenedmodularturrets:items/barrel_tier_one"
+    "layer0": "reopenedmodularturrets:item/barrel_tier_one"
   }
 }

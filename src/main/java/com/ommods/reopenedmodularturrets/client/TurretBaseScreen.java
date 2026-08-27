@@ -13,26 +13,49 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/turret_base.png");
+    private static final int TEX_SIZE = 256;
+    private static final int ENERGY_U = 178;
+    private static final int ENERGY_V = 18;
+    private static final int ENERGY_W = 16;
+    private static final int ENERGY_H = 34;
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
-        this.imageHeight = 184;
+        this.imageHeight = 166;
+        this.inventoryLabelY = this.imageHeight - 94;
+    }
+
+    private ResourceLocation texture() {
+        int tier = menu.getBase() != null ? menu.getBase().getTier() : 1;
+        String suffix = switch (tier) {
+            case 2 -> "two";
+            case 3 -> "three";
+            case 4 -> "four";
+            case 5 -> "five";
+            default -> "one";
+        };
+        return ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/turret_base_tier_" + suffix + ".png");
     }
 
     @Override
     protected void init() {
         super.init();
+        if (menu.getBase() == null) {
+            return;
+        }
         int x = leftPos + 116;
         int y = topPos + 18;
-        addRenderableWidget(Button.builder(Component.literal("Mobs"), button -> sendToggle(TargetFilter.MOBS))
-                .bounds(x, y, 50, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Players"), button -> sendToggle(TargetFilter.PLAYERS))
-                .bounds(x, y + 24, 50, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Neutral"), button -> sendToggle(TargetFilter.NEUTRAL))
-                .bounds(x, y + 48, 50, 20).build());
+        addRenderableWidget(toggleButton(x, y, TargetFilter.MOBS, menu.getData(2) == 1));
+        addRenderableWidget(toggleButton(x, y + 22, TargetFilter.PLAYERS, menu.getData(3) == 1));
+        addRenderableWidget(toggleButton(x, y + 44, TargetFilter.NEUTRAL, menu.getData(4) == 1));
+    }
+
+    private Button toggleButton(int x, int y, TargetFilter filter, boolean active) {
+        Component label = Component.translatable("gui.reopenedmodularturrets.filter." + filter.name().toLowerCase());
+        return Button.builder(label, button -> sendToggle(filter))
+                .bounds(x, y, 56, 20)
+                .build();
     }
 
     private void sendToggle(TargetFilter filter) {
@@ -43,47 +66,37 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
-        int energyWidth = menu.getMaxEnergy() > 0
-                ? menu.getEnergyStored() * 52 / menu.getMaxEnergy()
-                : 0;
-        graphics.fill(x + 8, y + 52, x + 8 + energyWidth, y + 60, 0xFF55AAFF);
+        int x = leftPos;
+        int y = topPos;
+        ResourceLocation texture = texture();
+        graphics.blit(texture, x, y, 0, 0, imageWidth, imageHeight, TEX_SIZE, TEX_SIZE);
+        renderEnergyBar(graphics, x, y, texture);
+    }
+
+    private void renderEnergyBar(GuiGraphics graphics, int x, int y, ResourceLocation texture) {
+        int max = menu.getMaxEnergy();
+        if (max <= 0) {
+            return;
+        }
+        int fill = menu.getEnergyStored() * ENERGY_H / max;
+        if (fill <= 0) {
+            return;
+        }
+        graphics.blit(texture,
+                x + 152, y + 18 + (ENERGY_H - fill),
+                ENERGY_U, ENERGY_V + (ENERGY_H - fill),
+                ENERGY_W, fill,
+                TEX_SIZE, TEX_SIZE);
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
-        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 18, 0x404040, false);
-        graphics.drawString(font, "FE: " + menu.getEnergyStored() + "/" + menu.getMaxEnergy(), 8, 6, 0x404040, false);
-        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.ammo"), 8, 16, 0x404040, false);
-        graphics.drawString(font,
-                "B:" + menu.getData(5) + " G:" + menu.getData(6) + " C:" + menu.getData(7),
-                8, 26, 0x606060, false);
-        graphics.drawString(font,
-                "S:" + menu.getData(8) + " R:" + menu.getData(9),
-                8, 36, 0x606060, false);
-        String addons = buildAddonStatus();
-        if (!addons.isEmpty()) {
-            graphics.drawString(font, addons, 62, 6, 0x006600, false);
-        }
-    }
-
-    private String buildAddonStatus() {
-        StringBuilder builder = new StringBuilder();
-        if (menu.getData(10) == 1) {
-            builder.append("Solar ");
-        }
-        if (menu.getData(11) == 1) {
-            builder.append("Reactor ");
-        }
-        if (menu.getData(12) == 1) {
-            builder.append("LootDel ");
-        }
-        if (menu.getData(13) == 1) {
-            builder.append("DmgAmp");
-        }
-        return builder.toString().trim();
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
+        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.energy",
+                menu.getEnergyStored(), menu.getMaxEnergy()), 8, 6, 0x303030, false);
+        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.ammo"), 8, 16, 0x303030, false);
+        graphics.drawString(font, "B:" + menu.getData(5) + " G:" + menu.getData(6) + " C:" + menu.getData(7), 8, 26, 0x505050, false);
+        graphics.drawString(font, "S:" + menu.getData(8) + " R:" + menu.getData(9), 8, 36, 0x505050, false);
     }
 }

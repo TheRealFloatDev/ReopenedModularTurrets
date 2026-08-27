@@ -73,12 +73,22 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     }
 
     private void addBaseSlots(TurretBaseBlockEntity blockEntity) {
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 44, 20, stack -> stack.getItem() instanceof AmmoItem));
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 26, 38, stack -> stack.getItem() instanceof UpgradeItem));
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 44, 38, stack -> stack.getItem() instanceof UpgradeItem));
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 56, AddonItems::isAddonItem));
-        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 56, AddonItems::isAddonItem));
+        boolean advanced = blockEntity.getTier() >= 2;
+        if (advanced) {
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 20, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 62, 20, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 80, 20, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 62, 38, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 80, 38, AddonItems::isAddonItem));
+        } else {
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 20, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 44, 20, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 8, 38, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 38, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 38, AddonItems::isAddonItem));
+        }
     }
 
     private void addExpanderSlots() {

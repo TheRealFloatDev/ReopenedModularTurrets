@@ -1,3 +1,6 @@
 {
-  "parent": "reopenedmodularturrets:block/addon_redstone_reactor"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "reopenedmodularturrets:item/addon_redstone_reactor"
+  }
 }

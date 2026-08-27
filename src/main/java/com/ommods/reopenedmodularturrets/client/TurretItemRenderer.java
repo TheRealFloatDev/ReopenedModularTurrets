@@ -49,7 +49,7 @@ public class TurretItemRenderer extends BlockEntityWithoutLevelRenderer {
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.forTurret(kind));
         VertexConsumer consumer = buffer.getBuffer(renderType);
         poseStack.pushPose();
-        TurretRenderHelper.prepareItemPose(poseStack);
+        TurretRenderHelper.prepareItemPose(poseStack, displayContext);
         TurretRenderHelper.prepareTurretPose(poseStack);
         if (kind.usesGrenadeModel()) {
             grenadeModel.setupAnim(modelState);

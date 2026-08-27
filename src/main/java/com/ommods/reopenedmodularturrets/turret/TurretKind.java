@@ -5,6 +5,8 @@ import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
+import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
+import com.ommods.reopenedmodularturrets.entity.LaserBeamEntity;
 import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -146,12 +148,13 @@ public enum TurretKind {
         Vec3 origin = Vec3.atCenterOf(turret.getBlockPos());
         switch (this) {
             case GUN, POTATO_CANNON, DISPOSABLE_ITEM, CROSSBOW -> applyHitscan(level, target, damage);
-            case LASER -> applyLaserHit(level, target, damage);
+            case LASER -> applyLaserHit(level, target, damage, origin);
             case RAIL_GUN -> applyArmorPiercingHit(level, target, damage);
             case MELEE, ARC -> target.hurt(level.damageSources().mobAttack(null), damage);
             case INCENDIARY -> {
                 target.hurt(level.damageSources().mobAttack(null), damage);
                 target.igniteForSeconds(4);
+                spawnProjectile(level, origin, target, damage, 0.9F, false, "ammo_blazing_clay", true);
             }
             case RELATIVISTIC -> {
                 target.hurt(level.damageSources().mobAttack(null), damage);
@@ -163,9 +166,9 @@ public enum TurretKind {
                     target.teleportTo(target.getX(), target.getY() + 8.0, target.getZ());
                 }
             }
-            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, false);
-            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, false);
-            case PLASMA -> spawnProjectile(level, origin, target, damage, 1.0F, true);
+            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, false, "ammo_grenade", true);
+            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, false, "ammo_rocket", true);
+            case PLASMA -> spawnProjectile(level, origin, target, damage, 1.0F, true, "plasma", false);
         }
     }
 
@@ -174,9 +177,11 @@ public enum TurretKind {
         level.playSound(null, target.blockPosition(), ModSounds.BULLET_HIT.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
     }
 
-    private static void applyLaserHit(ServerLevel level, LivingEntity target, float damage) {
+    private static void applyLaserHit(ServerLevel level, LivingEntity target, float damage, Vec3 origin) {
+        Vec3 targetPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
         target.hurt(level.damageSources().mobAttack(null), damage);
-        level.playSound(null, target.blockPosition(), ModSounds.BULLET_HIT.get(), SoundSource.BLOCKS, 0.4F, 1.2F);
+        level.addFreshEntity(new LaserBeamEntity(level, origin, targetPos));
+        level.playSound(null, target.blockPosition(), ModSounds.LASER_HIT.get(), SoundSource.BLOCKS, 0.6F, 1.0F);
     }
 
     private static void applyArmorPiercingHit(ServerLevel level, LivingEntity target, float damage) {
@@ -189,7 +194,9 @@ public enum TurretKind {
             LivingEntity target,
             float damage,
             float speed,
-            boolean directHit
+            boolean directHit,
+            String texture,
+            boolean explosive
     ) {
         Vec3 targetPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
         Vec3 direction = targetPos.subtract(origin).normalize();
@@ -198,6 +205,8 @@ public enum TurretKind {
         projectile.shoot(direction.x, direction.y, direction.z, speed, 1.0F);
         projectile.setDamage(damage);
         projectile.setDirectHit(directHit);
+        projectile.setProjectileTexture(texture);
+        projectile.setExplosive(explosive);
         level.addFreshEntity(projectile);
     }
 }
