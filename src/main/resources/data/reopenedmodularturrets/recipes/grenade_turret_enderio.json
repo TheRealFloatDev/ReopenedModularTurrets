@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "reopenedmodularturrets:barrel_tier_3"
+      "id": "reopenedmodularturrets:barrel_tier_3"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_3"
+      "id": "reopenedmodularturrets:chamber_tier_3"
     },
     "C": {
       "tag": "c:ingotDarkSteel"
@@ -20,8 +20,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:grenade_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:grenade_turret"
   },
   "neoforge:conditions": [
     {

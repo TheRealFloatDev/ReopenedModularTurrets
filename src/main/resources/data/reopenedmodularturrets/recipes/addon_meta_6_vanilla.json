@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "tag": "c:paneGlass"
+      "tag": "c:glass_panes"
     },
     "B": {
-      "tag": "c:blockLapis"
+      "tag": "c:storage_blocks/lapis"
     },
     "C": {
       "tag": "c:dusts/redstone"
@@ -23,7 +23,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_concealer",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_concealer"
   }
 }

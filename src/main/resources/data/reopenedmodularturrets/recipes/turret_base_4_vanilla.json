@@ -10,17 +10,17 @@
       "tag": "c:obsidians"
     },
     "B": {
-      "item": "reopenedmodularturrets:turret_base_tier_4"
+      "id": "reopenedmodularturrets:turret_base_tier_4"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_5"
+      "id": "reopenedmodularturrets:sensor_tier_5"
     },
     "D": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_5"
   }
 }

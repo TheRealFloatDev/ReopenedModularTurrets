@@ -10,7 +10,7 @@
       "tag": "c:ingots/gold"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_3"
+      "id": "reopenedmodularturrets:sensor_tier_3"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
@@ -23,7 +23,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_4"
   }
 }

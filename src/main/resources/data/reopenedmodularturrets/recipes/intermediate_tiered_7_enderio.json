@@ -10,15 +10,15 @@
       "tag": "c:ingotDarkSteel"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_2"
+      "id": "reopenedmodularturrets:chamber_tier_2"
     },
     "C": {
-      "item": "enderio:item_basic_capacitor"
+      "id": "enderio:item_basic_capacitor"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_3",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_3"
   },
   "neoforge:conditions": [
     {

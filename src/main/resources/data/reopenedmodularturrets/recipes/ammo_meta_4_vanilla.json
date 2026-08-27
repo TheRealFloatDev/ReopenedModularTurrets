@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:tnt"
+      "id": "minecraft:tnt"
     },
     "C": {
       "tag": "c:dusts/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:rocket",
-    "count": 32
+    "count": 32,
+    "id": "reopenedmodularturrets:rocket"
   }
 }

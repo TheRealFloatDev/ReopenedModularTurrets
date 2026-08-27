@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "R": {
-      "item": "minecraft:redstone_block"
+      "id": "minecraft:redstone_block"
     },
     "B": {
-      "item": "reopenedmodularturrets:turret_base_tier_1"
+      "id": "reopenedmodularturrets:turret_base_tier_1"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:expander_power_tier_1",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:expander_power_tier_1"
   }
 }

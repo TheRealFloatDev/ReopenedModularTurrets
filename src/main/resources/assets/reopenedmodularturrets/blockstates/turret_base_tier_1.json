@@ -1,1 +1,6 @@
-{"variants":{"":{"model":"reopenedmodularturrets:block/turret_base_tier_1"}}}
+{
+  "variants": {
+    "camouflaged=false": { "model": "reopenedmodularturrets:block/turret_base_tier_1" },
+    "camouflaged=true": { "model": "reopenedmodularturrets:block/turret_base_tier_1" }
+  }
+}

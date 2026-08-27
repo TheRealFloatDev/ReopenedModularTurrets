@@ -17,8 +17,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_redstone_reactor",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_redstone_reactor"
   },
   "neoforge:conditions": [
     {

@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "minecraft:ender_pearl"
+      "id": "minecraft:ender_pearl"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_3"
+      "id": "reopenedmodularturrets:sensor_tier_3"
     },
     "C": {
       "tag": "c:ingots/gold"
@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:relativistic_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:relativistic_turret"
   }
 }

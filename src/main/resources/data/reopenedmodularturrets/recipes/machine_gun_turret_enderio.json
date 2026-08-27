@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "reopenedmodularturrets:barrel_tier_2"
+      "id": "reopenedmodularturrets:barrel_tier_2"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_2"
+      "id": "reopenedmodularturrets:chamber_tier_2"
     },
     "C": {
       "tag": "c:ingotElectricalSteel"
@@ -20,8 +20,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:gun_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:gun_turret"
   },
   "neoforge:conditions": [
     {

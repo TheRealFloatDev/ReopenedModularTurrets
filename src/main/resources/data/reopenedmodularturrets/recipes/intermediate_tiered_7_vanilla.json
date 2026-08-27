@@ -10,14 +10,14 @@
       "tag": "c:ingots/gold"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_2"
+      "id": "reopenedmodularturrets:chamber_tier_2"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_3",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_3"
   }
 }

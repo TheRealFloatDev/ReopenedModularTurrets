@@ -8,14 +8,12 @@ import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
 import com.ommods.reopenedmodularturrets.client.model.LeverBlockModel;
 import com.ommods.reopenedmodularturrets.client.model.ModEntityTextures;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
-import com.ommods.reopenedmodularturrets.client.model.TurretRenderHelper;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 
 public class LeverBlockRenderer implements BlockEntityRenderer<LeverBlockEntity> {
     private final LeverBlockModel model;
@@ -34,20 +32,14 @@ public class LeverBlockRenderer implements BlockEntityRenderer<LeverBlockEntity>
             int packedOverlay
     ) {
         int rotation = blockEntity.getBlockState().getValue(LeverBlock.ROTATION);
-        Direction baseFacing = LeverBlock.baseFacingForRotation(rotation);
-        Direction outward = baseFacing.getOpposite();
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.texture("lever_block"));
         VertexConsumer consumer = buffer.getBuffer(renderType);
         int light = Math.max(packedLight, LightTexture.FULL_BRIGHT);
 
         poseStack.pushPose();
-        TurretRenderHelper.prepareBlockEntityPose(poseStack);
-        poseStack.translate(
-                baseFacing.getStepX() * 0.5F,
-                baseFacing.getStepY() * 0.5F,
-                baseFacing.getStepZ() * 0.5F
-        );
-        poseStack.mulPose(Axis.YP.rotationDegrees(-outward.toYRot()));
+        poseStack.translate(0.5F, 1.5F, 0.5F);
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotation * -90.0F));
+        poseStack.scale(1.0F, -1.0F, -1.0F);
         model.setupAnim(blockEntity.getCrankRotation(partialTick));
         model.renderToBuffer(poseStack, consumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();

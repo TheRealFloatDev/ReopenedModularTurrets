@@ -7,18 +7,18 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:enrichedalloy"
+      "id": "mekanism:enrichedalloy"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_2"
+      "id": "reopenedmodularturrets:chamber_tier_2"
     },
     "C": {
       "tag": "c:ingots/steel"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_3",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_3"
   },
   "neoforge:conditions": [
     {

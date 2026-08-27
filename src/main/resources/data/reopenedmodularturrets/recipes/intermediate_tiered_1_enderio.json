@@ -10,15 +10,15 @@
       "tag": "c:ingotElectricalSteel"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_1"
+      "id": "reopenedmodularturrets:sensor_tier_1"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_2",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_2"
   },
   "neoforge:conditions": [
     {

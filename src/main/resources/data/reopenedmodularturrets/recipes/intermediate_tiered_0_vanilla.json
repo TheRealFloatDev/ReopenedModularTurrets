@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_1",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_1"
   }
 }

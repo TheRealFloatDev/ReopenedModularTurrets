@@ -10,14 +10,14 @@
       "tag": "c:gems/quartz"
     },
     "B": {
-      "item": "minecraft:flint"
+      "id": "minecraft:flint"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_scatter_shot",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_scatter_shot"
   }
 }

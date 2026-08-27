@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:flint"
+      "id": "minecraft:flint"
     },
     "C": {
       "tag": "c:dusts/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:blazing_clay",
-    "count": 16
+    "count": 16,
+    "id": "reopenedmodularturrets:blazing_clay"
   }
 }

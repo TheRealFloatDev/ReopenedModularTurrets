@@ -10,17 +10,17 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "reopenedmodularturrets:turret_base_tier_1"
+      "id": "reopenedmodularturrets:turret_base_tier_1"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_2"
+      "id": "reopenedmodularturrets:sensor_tier_2"
     },
     "D": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_2",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_2"
   }
 }

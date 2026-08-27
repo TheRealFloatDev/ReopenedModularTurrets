@@ -23,7 +23,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TurretBaseMenu extends AbstractContainerMenu {
-    public static final int DATA_COUNT = 14;
+    public static final int DATA_COUNT = 22;
+
+    private static final int ENERGY_STORED = 0;
+    private static final int MAX_ENERGY = 1;
+    private static final int FILTER_MOBS = 2;
+    private static final int FILTER_PLAYERS = 3;
+    private static final int FILTER_NEUTRAL = 4;
+    private static final int AMMO_BULLET = 5;
+    private static final int AMMO_GRENADE = 6;
+    private static final int AMMO_BLAZING = 7;
+    private static final int AMMO_FERRO = 8;
+    private static final int AMMO_ROCKET = 9;
+    private static final int ADDON_SOLAR = 10;
+    private static final int ADDON_REACTOR = 11;
+    private static final int ADDON_LOOT = 12;
+    private static final int ADDON_DAMAGE = 13;
+    private static final int TARGET_RANGE = 14;
+    private static final int MAX_RANGE = 15;
+    private static final int MULTI_TARGET = 16;
+    private static final int ACTIVE = 17;
+    private static final int KILLS = 18;
+    private static final int PLAYER_KILLS = 19;
+    private static final int LIGHT_VALUE = 20;
+    private static final int LIGHT_OPACITY = 21;
 
     private final TurretBaseBlockEntity base;
     private final int[] syncedData = new int[DATA_COUNT];
@@ -78,24 +101,19 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
     private void addBaseSlots(TurretBaseBlockEntity blockEntity) {
         int tier = blockEntity.getTier();
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                int slot = BaseSlotIndices.AMMO_START + col + row * 3;
+                this.addSlot(new FilteredSlot(blockEntity, slot, 8 + col * 18, 17 + row * 18, TurretBaseMenu::isAmmoSlotItem));
+            }
+        }
         if (tier >= 2) {
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 17, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 17, stack -> stack.getItem() instanceof AmmoItem));
             this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 72, 18, AddonItems::isAddonItem));
             this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 92, 18, AddonItems::isAddonItem));
             this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 72, 52, stack -> stack.getItem() instanceof UpgradeItem));
             if (tier >= 5) {
                 this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem));
-            } else {
-                this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem));
             }
-        } else {
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 17, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 17, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 44, 17, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 8, 35, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 35, AddonItems::isAddonItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 35, AddonItems::isAddonItem));
         }
     }
 
@@ -137,20 +155,28 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         if (base == null) {
             return;
         }
-        syncedData[0] = base.getEnergyStorage().getEnergyStored();
-        syncedData[1] = base.getEffectiveMaxEnergy();
-        syncedData[2] = base.isAttackMobs() ? 1 : 0;
-        syncedData[3] = base.isAttackPlayers() ? 1 : 0;
-        syncedData[4] = base.isAttackNeutral() ? 1 : 0;
-        syncedData[5] = base.getAmmoCount(AmmoType.BULLET);
-        syncedData[6] = base.getAmmoCount(AmmoType.GRENADE);
-        syncedData[7] = base.getAmmoCount(AmmoType.BLAZING_CLAY);
-        syncedData[8] = base.getAmmoCount(AmmoType.FERRO_SLUG);
-        syncedData[9] = base.getAmmoCount(AmmoType.ROCKET);
-        syncedData[10] = base.getAddonState().solar() ? 1 : 0;
-        syncedData[11] = base.getAddonState().redstoneReactor() ? 1 : 0;
-        syncedData[12] = base.getAddonState().lootDeleter() ? 1 : 0;
-        syncedData[13] = base.getAddonState().damageAmp() ? 1 : 0;
+        syncedData[ENERGY_STORED] = base.getEnergyStorage().getEnergyStored();
+        syncedData[MAX_ENERGY] = base.getEffectiveMaxEnergy();
+        syncedData[FILTER_MOBS] = base.isAttackMobs() ? 1 : 0;
+        syncedData[FILTER_PLAYERS] = base.isAttackPlayers() ? 1 : 0;
+        syncedData[FILTER_NEUTRAL] = base.isAttackNeutral() ? 1 : 0;
+        syncedData[AMMO_BULLET] = base.getAmmoCount(AmmoType.BULLET);
+        syncedData[AMMO_GRENADE] = base.getAmmoCount(AmmoType.GRENADE);
+        syncedData[AMMO_BLAZING] = base.getAmmoCount(AmmoType.BLAZING_CLAY);
+        syncedData[AMMO_FERRO] = base.getAmmoCount(AmmoType.FERRO_SLUG);
+        syncedData[AMMO_ROCKET] = base.getAmmoCount(AmmoType.ROCKET);
+        syncedData[ADDON_SOLAR] = base.getAddonState().solar() ? 1 : 0;
+        syncedData[ADDON_REACTOR] = base.getAddonState().redstoneReactor() ? 1 : 0;
+        syncedData[ADDON_LOOT] = base.getAddonState().lootDeleter() ? 1 : 0;
+        syncedData[ADDON_DAMAGE] = base.getAddonState().damageAmp() ? 1 : 0;
+        syncedData[TARGET_RANGE] = base.getTargetRange();
+        syncedData[MAX_RANGE] = base.getMaxAllowedRange();
+        syncedData[MULTI_TARGET] = base.isMultiTargeting() ? 1 : 0;
+        syncedData[ACTIVE] = base.isActive() ? 1 : 0;
+        syncedData[KILLS] = base.getKills();
+        syncedData[PLAYER_KILLS] = base.getPlayerKills();
+        syncedData[LIGHT_VALUE] = base.getLightValue();
+        syncedData[LIGHT_OPACITY] = base.getLightOpacity();
     }
 
     private void addPlayerInventory(Inventory playerInventory, int left, int top) {
@@ -170,22 +196,38 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     }
 
     public int getEnergyStored() {
-        return syncedData[0];
+        return syncedData[ENERGY_STORED];
     }
 
     public int getMaxEnergy() {
-        return syncedData[1];
+        return syncedData[MAX_ENERGY];
     }
 
     public int getData(int index) {
         return syncedData[index];
     }
 
+    public int getTargetRange() {
+        return syncedData[TARGET_RANGE];
+    }
+
+    public int getMaxAllowedRange() {
+        return syncedData[MAX_RANGE];
+    }
+
+    public boolean isMultiTargeting() {
+        return syncedData[MULTI_TARGET] == 1;
+    }
+
+    public boolean isActive() {
+        return syncedData[ACTIVE] == 1;
+    }
+
     public void toggleFilterClient(TargetFilter filter) {
         int index = switch (filter) {
-            case MOBS -> 2;
-            case PLAYERS -> 3;
-            case NEUTRAL -> 4;
+            case MOBS -> FILTER_MOBS;
+            case PLAYERS -> FILTER_PLAYERS;
+            case NEUTRAL -> FILTER_NEUTRAL;
         };
         syncedData[index] = syncedData[index] == 1 ? 0 : 1;
     }
@@ -194,9 +236,9 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         if (base == null) {
             return;
         }
-        syncedData[2] = base.isAttackMobs() ? 1 : 0;
-        syncedData[3] = base.isAttackPlayers() ? 1 : 0;
-        syncedData[4] = base.isAttackNeutral() ? 1 : 0;
+        syncedData[FILTER_MOBS] = base.isAttackMobs() ? 1 : 0;
+        syncedData[FILTER_PLAYERS] = base.isAttackPlayers() ? 1 : 0;
+        syncedData[FILTER_NEUTRAL] = base.isAttackNeutral() ? 1 : 0;
     }
 
     private int baseSlotCount() {
@@ -253,5 +295,13 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return base != null && base.stillValid(player);
+    }
+
+    private static boolean isAmmoSlotItem(ItemStack stack) {
+        return stack.isEmpty()
+                || stack.getItem() instanceof AmmoItem
+                || stack.is(net.minecraft.world.item.Items.POTATO)
+                || stack.is(net.minecraft.world.item.Items.BAKED_POTATO)
+                || stack.is(net.minecraft.world.item.Items.POISONOUS_POTATO);
     }
 }

@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "reopenedmodularturrets:barrel_tier_4"
+      "id": "reopenedmodularturrets:barrel_tier_4"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_4"
+      "id": "reopenedmodularturrets:chamber_tier_4"
     },
     "C": {
       "tag": "c:gems/quartz"
@@ -23,7 +23,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:rocket_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:rocket_turret"
   }
 }

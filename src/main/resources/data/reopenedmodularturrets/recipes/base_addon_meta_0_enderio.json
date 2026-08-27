@@ -16,15 +16,15 @@
       "tag": "c:itemVibrantCrystal"
     },
     "D": {
-      "item": "enderio:item_basic_capacitor"
+      "id": "enderio:item_basic_capacitor"
     },
     "E": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:base_addon_loot_deleter",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:base_addon_loot_deleter"
   },
   "neoforge:conditions": [
     {

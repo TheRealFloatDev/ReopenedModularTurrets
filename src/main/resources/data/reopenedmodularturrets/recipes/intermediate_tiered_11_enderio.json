@@ -10,12 +10,12 @@
       "tag": "c:ingotElectricalSteel"
     },
     "B": {
-      "item": "reopenedmodularturrets:barrel_tier_1"
+      "id": "reopenedmodularturrets:barrel_tier_1"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:barrel_tier_2",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_2"
   },
   "neoforge:conditions": [
     {

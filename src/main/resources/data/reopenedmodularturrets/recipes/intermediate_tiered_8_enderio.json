@@ -10,18 +10,18 @@
       "tag": "c:gemDiamond"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_3"
+      "id": "reopenedmodularturrets:chamber_tier_3"
     },
     "C": {
-      "item": "enderio:item_basic_capacitor"
+      "id": "enderio:item_basic_capacitor"
     },
     "D": {
       "tag": "c:ingotSoularium"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_4"
   },
   "neoforge:conditions": [
     {

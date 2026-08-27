@@ -13,11 +13,11 @@
       "tag": "minecraft:planks"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_1"
+      "id": "reopenedmodularturrets:sensor_tier_1"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_1",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_1"
   }
 }

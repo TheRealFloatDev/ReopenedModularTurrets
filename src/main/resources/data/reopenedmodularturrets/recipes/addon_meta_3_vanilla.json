@@ -10,17 +10,17 @@
       "tag": "c:ingots/gold"
     },
     "B": {
-      "item": "minecraft:magma_cream"
+      "id": "minecraft:magma_cream"
     },
     "C": {
-      "item": "minecraft:ender_chest"
+      "id": "minecraft:ender_chest"
     },
     "D": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_potentia",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_potentia"
   }
 }

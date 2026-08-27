@@ -10,14 +10,14 @@
       "tag": "c:gemDiamond"
     },
     "B": {
-      "item": "reopenedmodularturrets:barrel_tier_3"
+      "id": "reopenedmodularturrets:barrel_tier_3"
     },
     "C": {
       "tag": "c:gems/quartz"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:barrel_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_4"
   }
 }

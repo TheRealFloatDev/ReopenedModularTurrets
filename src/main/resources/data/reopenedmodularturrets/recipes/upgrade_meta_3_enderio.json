@@ -17,8 +17,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_accuracy",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_accuracy"
   },
   "neoforge:conditions": [
     {

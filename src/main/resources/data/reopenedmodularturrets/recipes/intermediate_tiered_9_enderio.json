@@ -10,18 +10,18 @@
       "tag": "c:obsidians"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_4"
+      "id": "reopenedmodularturrets:chamber_tier_4"
     },
     "C": {
-      "item": "enderio:item_basic_capacitor"
+      "id": "enderio:item_basic_capacitor"
     },
     "D": {
       "tag": "c:itemChassiParts"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_5"
   },
   "neoforge:conditions": [
     {

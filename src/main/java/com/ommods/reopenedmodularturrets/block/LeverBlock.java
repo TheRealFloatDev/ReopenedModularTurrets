@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class LeverBlock extends BaseEntityBlock {
     public static final MapCodec<LeverBlock> CODEC = simpleCodec(LeverBlock::new);
-    public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
+    public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 3);
 
     public LeverBlock(Properties properties) {
         super(properties);
@@ -64,12 +64,37 @@ public class LeverBlock extends BaseEntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return leverShape(state.getValue(ROTATION));
+        return leverShape(baseFacingForRotation(state.getValue(ROTATION)));
     }
 
     @Override
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return leverShape(state.getValue(ROTATION));
+        return leverShape(baseFacingForRotation(state.getValue(ROTATION)));
+    }
+
+    static VoxelShape leverShape(Direction baseFacing) {
+        return SHAPES.getOrDefault(baseFacing, Shapes.block());
+    }
+
+    private static final java.util.Map<Direction, VoxelShape> SHAPES = createShapes();
+
+    private static java.util.Map<Direction, VoxelShape> createShapes() {
+        java.util.EnumMap<Direction, VoxelShape> shapes = new java.util.EnumMap<>(Direction.class);
+        VoxelShape box = Shapes.box(0.2D, 0.2D, 0.1D, 0.8D, 0.8D, 0.9D);
+        for (Direction baseFacing : Direction.Plane.HORIZONTAL) {
+            Direction renderFacing = baseFacing.getOpposite();
+            double offsetX = renderFacing.getStepX() * 0.1D;
+            double offsetZ = renderFacing.getStepZ() * 0.1D;
+            VoxelShape placed = switch (renderFacing) {
+                case NORTH -> Shapes.box(0.2D + offsetX, 0.2D, 0.0D + offsetZ, 0.8D + offsetX, 0.8D, 0.6D + offsetZ);
+                case SOUTH -> Shapes.box(0.2D + offsetX, 0.2D, 0.4D + offsetZ, 0.8D + offsetX, 0.8D, 1.0D + offsetZ);
+                case WEST -> Shapes.box(0.0D + offsetX, 0.2D, 0.2D + offsetZ, 0.6D + offsetX, 0.8D, 0.8D + offsetZ);
+                case EAST -> Shapes.box(0.4D + offsetX, 0.2D, 0.2D + offsetZ, 1.0D + offsetX, 0.8D, 0.8D + offsetZ);
+                default -> box;
+            };
+            shapes.put(baseFacing, placed);
+        }
+        return shapes;
     }
 
     @Nullable
@@ -81,16 +106,24 @@ public class LeverBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction baseFacing = AddonAttachmentHelper.findHorizontalTierOneBaseFacing(context.getLevel(), context.getClickedPos());
-        if (baseFacing == null) {
+        int rotation = rotationForAdjacentTierOneBase(context.getLevel(), context.getClickedPos());
+        if (rotation < 0) {
             return null;
         }
-        return defaultBlockState().setValue(ROTATION, rotationForBaseFacing(baseFacing));
+        return defaultBlockState().setValue(ROTATION, rotation);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        int rotation = rotationForAdjacentTierOneBase(level, pos);
+        if (rotation >= 0 && state.getValue(ROTATION) != rotation) {
+            level.setBlock(pos, state.setValue(ROTATION, rotation), Block.UPDATE_ALL);
+        }
     }
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return AddonAttachmentHelper.findHorizontalTierOneBaseFacing(level, pos) != null;
+        return rotationForAdjacentTierOneBase(level, pos) >= 0;
     }
 
     @Override
@@ -150,10 +183,7 @@ public class LeverBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
-        Direction baseFacing = AddonAttachmentHelper.findHorizontalTierOneBaseFacing(level, pos);
-        if (baseFacing == null) {
-            return InteractionResult.PASS;
-        }
+        Direction baseFacing = baseFacingForRotation(state.getValue(ROTATION));
         BlockEntity neighbor = level.getBlockEntity(pos.relative(baseFacing));
         if (neighbor instanceof TurretBaseBlockEntity base) {
             int generation = ModConfig.LEVER_GENERATION.get();
@@ -169,32 +199,31 @@ public class LeverBlock extends BaseEntityBlock {
     public static Direction baseFacingForRotation(int rotation) {
         return switch (rotation) {
             case 0 -> Direction.SOUTH;
-            case 4 -> Direction.WEST;
-            case 8 -> Direction.NORTH;
-            case 12 -> Direction.EAST;
+            case 1 -> Direction.WEST;
+            case 2 -> Direction.NORTH;
+            case 3 -> Direction.EAST;
             default -> Direction.SOUTH;
         };
     }
 
-    public static VoxelShape leverShape(int rotation) {
-        Direction baseFacing = baseFacingForRotation(rotation);
-        VoxelShape crank = switch (baseFacing) {
-            case SOUTH -> Shapes.box(0.125D, 0.125D, 0.0625D, 0.875D, 0.875D, 0.5625D);
-            case NORTH -> Shapes.box(0.125D, 0.125D, 0.4375D, 0.875D, 0.875D, 0.9375D);
-            case WEST -> Shapes.box(0.0625D, 0.125D, 0.125D, 0.5625D, 0.875D, 0.875D);
-            case EAST -> Shapes.box(0.4375D, 0.125D, 0.125D, 0.9375D, 0.875D, 0.875D);
-            default -> Shapes.box(0.125D, 0.125D, 0.0625D, 0.875D, 0.875D, 0.5625D);
-        };
-        return crank;
+    private static int rotationForAdjacentTierOneBase(LevelReader level, BlockPos pos) {
+        if (isTierOneBase(level, pos.north())) {
+            return 2;
+        }
+        if (isTierOneBase(level, pos.east())) {
+            return 3;
+        }
+        if (isTierOneBase(level, pos.south())) {
+            return 0;
+        }
+        if (isTierOneBase(level, pos.west())) {
+            return 1;
+        }
+        return -1;
     }
 
-    private static int rotationForBaseFacing(Direction baseFacing) {
-        return switch (baseFacing) {
-            case SOUTH -> 0;
-            case WEST -> 4;
-            case NORTH -> 8;
-            case EAST -> 12;
-            default -> 0;
-        };
+    private static boolean isTierOneBase(LevelReader level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        return blockEntity instanceof TurretBaseBlockEntity base && base.getTier() == 1;
     }
 }

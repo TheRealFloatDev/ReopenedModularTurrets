@@ -10,11 +10,11 @@
       "tag": "c:ingots/gold"
     },
     "B": {
-      "item": "reopenedmodularturrets:barrel_tier_2"
+      "id": "reopenedmodularturrets:barrel_tier_2"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:barrel_tier_3",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_3"
   }
 }

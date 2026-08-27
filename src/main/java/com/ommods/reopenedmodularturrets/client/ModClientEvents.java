@@ -37,6 +37,7 @@ public final class ModClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_HEAD.get(), TurretHeadBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_BASE.get(), TurretBaseBlockRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.LEVER_BLOCK.get(), LeverBlockRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.GRENADE_PROJECTILE.get(), GrenadeProjectileRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LASER_BEAM.get(), LaserBeamRenderer::new);
@@ -45,10 +46,7 @@ public final class ModClientEvents {
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(lazy(TurretItemRenderer::create), turretItems());
-        event.registerItem(lazy(SolarItemRenderer::create), ModItems.SOLAR_ADDON_ITEM.get());
         event.registerItem(lazy(LeverItemRenderer::create), ModItems.LEVER_BLOCK_ITEM.get());
-        event.registerItem(lazy(RedstoneReactorItemRenderer::create), ModItems.REDSTONE_REACTOR_ADDON_ITEM.get());
-        event.registerItem(lazy(LootDeleterItemRenderer::create), ModItems.BASE_ADDON_LOOT_DELETER_ITEM.get());
     }
 
     private static IClientItemExtensions lazy(java.util.function.Supplier<BlockEntityWithoutLevelRenderer> supplier) {

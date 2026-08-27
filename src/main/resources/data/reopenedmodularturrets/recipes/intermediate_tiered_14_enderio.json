@@ -10,15 +10,15 @@
       "tag": "c:obsidians"
     },
     "B": {
-      "item": "reopenedmodularturrets:barrel_tier_4"
+      "id": "reopenedmodularturrets:barrel_tier_4"
     },
     "C": {
       "tag": "c:itemChassiParts"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:barrel_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_5"
   },
   "neoforge:conditions": [
     {

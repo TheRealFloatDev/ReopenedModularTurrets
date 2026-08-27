@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "C": {
-      "item": "minecraft:chest"
+      "id": "minecraft:chest"
     },
     "B": {
-      "item": "reopenedmodularturrets:expander_inv_tier_3"
+      "id": "reopenedmodularturrets:expander_inv_tier_3"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:expander_inv_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:expander_inv_tier_4"
   }
 }

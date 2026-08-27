@@ -23,8 +23,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_concealer",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_concealer"
   },
   "neoforge:conditions": [
     {

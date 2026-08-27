@@ -7,17 +7,17 @@
   ],
   "key": {
     "A": {
-      "item": "minecraft:blaze_powder"
+      "id": "minecraft:blaze_powder"
     },
     "B": {
-      "item": "minecraft:clay_ball"
+      "id": "minecraft:clay_ball"
     },
     "C": {
       "tag": "c:dusts/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:bullet",
-    "count": 32
+    "count": 32,
+    "id": "reopenedmodularturrets:bullet"
   }
 }

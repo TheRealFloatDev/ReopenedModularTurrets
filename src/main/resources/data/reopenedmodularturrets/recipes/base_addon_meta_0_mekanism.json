@@ -23,8 +23,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:base_addon_loot_deleter",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:base_addon_loot_deleter"
   },
   "neoforge:conditions": [
     {

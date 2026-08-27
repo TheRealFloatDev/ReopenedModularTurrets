@@ -17,8 +17,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_range",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_range"
   },
   "neoforge:conditions": [
     {

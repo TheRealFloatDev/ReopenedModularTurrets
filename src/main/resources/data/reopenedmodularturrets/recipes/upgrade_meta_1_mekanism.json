@@ -17,8 +17,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_efficiency",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_efficiency"
   },
   "neoforge:conditions": [
     {

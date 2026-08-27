@@ -14,6 +14,9 @@ import com.ommods.reopenedmodularturrets.item.UpgradeItem;
 import com.ommods.reopenedmodularturrets.menu.BaseSlotIndices;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
+import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
+import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
+import com.ommods.reopenedmodularturrets.registry.ModBlocks;
 import com.ommods.reopenedmodularturrets.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +26,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -33,6 +37,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -57,6 +62,17 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private boolean attackMobs = true;
     private boolean attackPlayers = false;
     private boolean attackNeutral = false;
+    private boolean multiTargeting = false;
+    private boolean active = true;
+    private int targetRange = 16;
+    private int kills = 0;
+    private int playerKills = 0;
+    private int lightValue = 0;
+    private int lightOpacity = 0;
+    @Nullable
+    private BlockState camoState;
+    @Nullable
+    private LivingEntity sharedTarget;
 
     private AddonState addonState = AddonState.EMPTY;
     private UpgradeModifiers upgradeModifiers = UpgradeModifiers.NONE;
@@ -180,6 +196,120 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return attackNeutral;
     }
 
+    public boolean isMultiTargeting() {
+        return multiTargeting;
+    }
+
+    public void setMultiTargeting(boolean multiTargeting) {
+        this.multiTargeting = multiTargeting;
+        setChanged();
+        syncToClients();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void toggleActive() {
+        this.active = !active;
+        setChanged();
+        syncToClients();
+    }
+
+    public int getTargetRange() {
+        return targetRange;
+    }
+
+    public void adjustTargetRange(int delta) {
+        int max = getMaxAllowedRange();
+        targetRange = Math.max(1, Math.min(max, targetRange + delta));
+        setChanged();
+        syncToClients();
+    }
+
+    public int getMaxAllowedRange() {
+        int max = 1;
+        for (TurretHeadBlockEntity head : turretHeads) {
+            double upgraded = getUpgradeModifiers().applyRange(head.getKind().getRange());
+            max = Math.max(max, (int) Math.ceil(upgraded));
+        }
+        if (turretHeads.isEmpty()) {
+            max = 32;
+        }
+        return max;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getPlayerKills() {
+        return playerKills;
+    }
+
+    public int getLightValue() {
+        return lightValue;
+    }
+
+    public int getLightOpacity() {
+        return lightOpacity;
+    }
+
+    public void setLightValue(int value) {
+        lightValue = Math.max(0, Math.min(15, value));
+        setChanged();
+        syncToClients();
+    }
+
+    public void setLightOpacity(int value) {
+        lightOpacity = Math.max(0, Math.min(15, value));
+        setChanged();
+        syncToClients();
+    }
+
+    @Nullable
+    public BlockState getCamoState() {
+        return camoState;
+    }
+
+    public boolean hasCamo() {
+        return camoState != null;
+    }
+
+    public void setCamoState(@Nullable BlockState state) {
+        camoState = state;
+        syncCamoBlockState();
+        setChanged();
+        syncToClients();
+    }
+
+    private void syncCamoBlockState() {
+        if (level != null && !level.isClientSide()) {
+            BlockState current = getBlockState();
+            if (current.getBlock() instanceof TurretBaseBlock) {
+                level.setBlock(worldPosition, current.setValue(TurretBaseBlock.CAMOUFLAGED, camoState != null), Block.UPDATE_ALL);
+            }
+        }
+    }
+
+    public void clearCamo() {
+        setCamoState(null);
+    }
+
+    @Nullable
+    public LivingEntity getSharedTarget() {
+        return sharedTarget;
+    }
+
+    public void setSharedTarget(@Nullable LivingEntity sharedTarget) {
+        this.sharedTarget = sharedTarget;
+    }
+
+    public double getEffectiveRange(double turretRange) {
+        double upgraded = getUpgradeModifiers().applyRange(turretRange);
+        return Math.min(upgraded, targetRange);
+    }
+
     public void toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter filter) {
         switch (filter) {
             case MOBS -> attackMobs = !attackMobs;
@@ -196,6 +326,16 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         tag.putBoolean("AttackMobs", attackMobs);
         tag.putBoolean("AttackPlayers", attackPlayers);
         tag.putBoolean("AttackNeutral", attackNeutral);
+        tag.putBoolean("MultiTargeting", multiTargeting);
+        tag.putBoolean("Active", active);
+        tag.putInt("TargetRange", targetRange);
+        tag.putInt("Kills", kills);
+        tag.putInt("PlayerKills", playerKills);
+        tag.putInt("LightValue", lightValue);
+        tag.putInt("LightOpacity", lightOpacity);
+        if (camoState != null) {
+            tag.put("CamoState", net.minecraft.nbt.NbtUtils.writeBlockState(camoState));
+        }
         trustedPlayers.save(tag);
         return tag;
     }
@@ -323,10 +463,31 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (turretHeads.isEmpty()) {
             refreshNeighbors();
         }
+        if (!active) {
+            sharedTarget = null;
+            return;
+        }
         tickInventoryAddons(level);
+        if (!multiTargeting) {
+            sharedTarget = findSharedTarget(level);
+        } else {
+            sharedTarget = null;
+        }
         for (TurretHeadBlockEntity head : turretHeads) {
             head.tickCombat(level, this);
         }
+    }
+
+    @Nullable
+    private LivingEntity findSharedTarget(ServerLevel level) {
+        if (turretHeads.isEmpty()) {
+            return null;
+        }
+        TurretHeadBlockEntity first = turretHeads.getFirst();
+        double range = getEffectiveRange(first.getKind().getRange());
+        Vec3 origin = Vec3.atCenterOf(first.getBlockPos());
+        OptionalTarget target = findTarget(level, origin, range);
+        return target != null ? target.entity() : null;
     }
 
     private void tickInventoryAddons(ServerLevel level) {
@@ -471,6 +632,12 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
+        kills++;
+        if (target instanceof net.minecraft.world.entity.player.Player) {
+            playerKills++;
+        }
+        setChanged();
+        syncToClients();
         if (addonState.fakeDrops()) {
             ItemStack fake = new ItemStack(Items.ROTTEN_FLESH, 1 + serverLevel.random.nextInt(3));
             ItemEntity drop = new ItemEntity(serverLevel, target.getX(), target.getY(), target.getZ(), fake);
@@ -495,6 +662,19 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         attackMobs = tag.getBoolean("AttackMobs");
         attackPlayers = tag.getBoolean("AttackPlayers");
         attackNeutral = tag.getBoolean("AttackNeutral");
+        multiTargeting = tag.getBoolean("MultiTargeting");
+        active = !tag.contains("Active") || tag.getBoolean("Active");
+        targetRange = tag.contains("TargetRange") ? tag.getInt("TargetRange") : 16;
+        kills = tag.getInt("Kills");
+        playerKills = tag.getInt("PlayerKills");
+        lightValue = tag.getInt("LightValue");
+        lightOpacity = tag.getInt("LightOpacity");
+        if (tag.contains("CamoState")) {
+            camoState = net.minecraft.nbt.NbtUtils.readBlockState(registries.lookupOrThrow(net.minecraft.core.registries.Registries.BLOCK), tag.getCompound("CamoState"));
+        } else {
+            camoState = null;
+        }
+        syncCamoBlockState();
         if (tag.contains("Energy")) {
             energyStorage.deserializeNBT(registries, tag.get("Energy"));
         }
@@ -516,6 +696,16 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         tag.putBoolean("AttackMobs", attackMobs);
         tag.putBoolean("AttackPlayers", attackPlayers);
         tag.putBoolean("AttackNeutral", attackNeutral);
+        tag.putBoolean("MultiTargeting", multiTargeting);
+        tag.putBoolean("Active", active);
+        tag.putInt("TargetRange", targetRange);
+        tag.putInt("Kills", kills);
+        tag.putInt("PlayerKills", playerKills);
+        tag.putInt("LightValue", lightValue);
+        tag.putInt("LightOpacity", lightOpacity);
+        if (camoState != null) {
+            tag.put("CamoState", net.minecraft.nbt.NbtUtils.writeBlockState(camoState));
+        }
         tag.put("Energy", energyStorage.serializeNBT(registries));
         for (int i = 0; i < inventory.length; i++) {
             if (!inventory[i].isEmpty()) {
@@ -611,6 +801,48 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         inventory[slot] = ItemStack.EMPTY;
         refreshItemDerivedState();
         return stack;
+    }
+
+    public void dropTurrets(ServerPlayer player) {
+        if (!(level instanceof ServerLevel serverLevel) || !canAccess(player)) {
+            return;
+        }
+        refreshNeighbors();
+        for (TurretHeadBlockEntity head : new ArrayList<>(turretHeads)) {
+            BlockPos headPos = head.getBlockPos();
+            BlockState headState = serverLevel.getBlockState(headPos);
+            if (headState.getBlock() instanceof TurretHeadBlock turretBlock) {
+                Block.popResource(serverLevel, headPos, new ItemStack(turretBlock));
+                serverLevel.removeBlock(headPos, false);
+            }
+        }
+        refreshNeighbors();
+    }
+
+    public void dropBase(ServerPlayer player) {
+        if (!(level instanceof ServerLevel serverLevel) || !canAccess(player)) {
+            return;
+        }
+        dropTurrets(player);
+        BlockState state = getBlockState();
+        ItemStack baseStack = switch (tier) {
+            case 1 -> new ItemStack(ModBlocks.TURRET_BASE_TIER_1.get());
+            case 2 -> new ItemStack(ModBlocks.TURRET_BASE_TIER_2.get());
+            case 3 -> new ItemStack(ModBlocks.TURRET_BASE_TIER_3.get());
+            case 4 -> new ItemStack(ModBlocks.TURRET_BASE_TIER_4.get());
+            case 5 -> new ItemStack(ModBlocks.TURRET_BASE_TIER_5.get());
+            default -> new ItemStack(ModBlocks.TURRET_BASE_TIER_1.get());
+        };
+        Block.popResource(serverLevel, worldPosition, baseStack);
+        serverLevel.removeBlock(worldPosition, false);
+    }
+
+    @Nullable
+    public OptionalTarget findTargetForTurret(ServerLevel level, Vec3 origin, double turretRange, @Nullable LivingEntity preferred) {
+        if (!multiTargeting && preferred != null && preferred.isAlive()) {
+            return new OptionalTarget(preferred);
+        }
+        return findTarget(level, origin, getEffectiveRange(turretRange));
     }
 
     public record OptionalTarget(LivingEntity entity) {}

@@ -28,6 +28,14 @@ export JAVA_HOME=/path/to/java-21
 
 Mod id: `reopenedmodularturrets`
 
+### EMI / recipe reload
+
+After changing datapack recipes in development or in-game:
+
+- Run **`/reload`** in a world — EMI picks up recipe changes automatically.
+- Use **`F3 + T`** to reload resources (textures/models).
+- If EMI still shows stale recipes after a mod rebuild, restart the client.
+
 ## Current feature set (MVP)
 
 - 5 turret base tiers with energy storage and internal ammo magazines

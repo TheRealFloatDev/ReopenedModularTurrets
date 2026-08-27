@@ -7,18 +7,18 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:enrichediron"
+      "id": "mekanism:enrichediron"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_1"
+      "id": "reopenedmodularturrets:chamber_tier_1"
     },
     "C": {
       "tag": "c:ingots/tin"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_2",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_2"
   },
   "neoforge:conditions": [
     {

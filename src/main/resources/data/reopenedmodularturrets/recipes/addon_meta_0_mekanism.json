@@ -20,8 +20,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_solar",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_solar"
   },
   "neoforge:conditions": [
     {

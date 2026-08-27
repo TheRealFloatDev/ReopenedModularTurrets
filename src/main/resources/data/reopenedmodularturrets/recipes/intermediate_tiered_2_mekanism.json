@@ -7,21 +7,21 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:enrichedalloy"
+      "id": "mekanism:enrichedalloy"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_2"
+      "id": "reopenedmodularturrets:sensor_tier_2"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     },
     "D": {
-      "item": "mekanism:controlcircuit"
+      "id": "mekanism:controlcircuit"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_3",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_3"
   },
   "neoforge:conditions": [
     {

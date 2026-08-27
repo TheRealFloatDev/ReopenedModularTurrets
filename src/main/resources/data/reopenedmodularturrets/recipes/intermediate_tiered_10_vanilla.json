@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:barrel_tier_1",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_1"
   }
 }

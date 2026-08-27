@@ -10,17 +10,17 @@
       "tag": "c:gemDiamond"
     },
     "B": {
-      "item": "reopenedmodularturrets:turret_base_tier_3"
+      "id": "reopenedmodularturrets:turret_base_tier_3"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_4"
+      "id": "reopenedmodularturrets:sensor_tier_4"
     },
     "D": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_4"
   }
 }

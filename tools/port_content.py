@@ -168,7 +168,7 @@ def convert_ingredient(raw) -> dict | str:
         mapped = map_item(raw["item"], data)
         if isinstance(mapped, dict):
             return mapped
-        return {"item": mapped}
+        return {"id": mapped}
     return raw
 
 
@@ -191,7 +191,7 @@ def convert_recipe(path: Path) -> dict | None:
         "type": "minecraft:crafting_shaped",
         "pattern": data["pattern"],
         "key": {k: convert_ingredient(v) for k, v in data["key"].items()},
-        "result": {"item": result_item, "count": result_raw.get("count", 1)},
+        "result": {"id": result_item, "count": result_raw.get("count", 1)},
     }
 
     if variant == "enderio":

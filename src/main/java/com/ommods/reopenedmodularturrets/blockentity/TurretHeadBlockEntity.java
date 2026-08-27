@@ -61,13 +61,13 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
 
     public void tickCombat(ServerLevel level, TurretBaseBlockEntity baseEntity) {
         TurretKind kind = getKind();
-        if (!kind.isEnabled()) {
+        if (!kind.isEnabled() || !baseEntity.isActive()) {
             return;
         }
         if (baseEntity.getTier() < kind.getMinTier()) {
             return;
         }
-        double range = baseEntity.getUpgradeModifiers().applyRange(kind.getRange());
+        double range = baseEntity.getEffectiveRange(kind.getRange());
         if (kind.isDirected()) {
             updateAim(level, baseEntity, range);
         }
@@ -80,8 +80,13 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         }
         TurretKind kind = getKind();
         Vec3 origin = Vec3.atCenterOf(worldPosition);
-        double range = baseEntity.getUpgradeModifiers().applyRange(kind.getRange());
-        TurretBaseBlockEntity.OptionalTarget target = baseEntity.findTarget(level, origin, range);
+        double range = baseEntity.getEffectiveRange(kind.getRange());
+        TurretBaseBlockEntity.OptionalTarget target = baseEntity.findTargetForTurret(
+                level,
+                origin,
+                kind.getRange(),
+                baseEntity.getSharedTarget()
+        );
         if (target == null) {
             return;
         }
@@ -135,7 +140,12 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
             double range,
             LivingEntity primary
     ) {
-        TurretBaseBlockEntity.OptionalTarget secondary = baseEntity.findTarget(level, origin, range);
+        TurretBaseBlockEntity.OptionalTarget secondary = baseEntity.findTargetForTurret(
+                level,
+                origin,
+                getKind().getRange(),
+                primary
+        );
         if (secondary != null && secondary.entity() != primary) {
             return secondary.entity();
         }

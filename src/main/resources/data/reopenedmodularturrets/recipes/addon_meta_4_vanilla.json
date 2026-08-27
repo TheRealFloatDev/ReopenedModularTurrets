@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "tag": "c:blockRedstone"
+      "tag": "c:storage_blocks/redstone"
     },
     "B": {
-      "item": "minecraft:ender_eye"
+      "id": "minecraft:ender_eye"
     },
     "C": {
       "tag": "c:gems/quartz"
@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_serial_port",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_serial_port"
   }
 }

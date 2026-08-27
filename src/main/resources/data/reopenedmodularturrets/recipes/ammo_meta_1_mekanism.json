@@ -10,15 +10,15 @@
       "tag": "c:ingots/osmium"
     },
     "B": {
-      "item": "minecraft:gunpowder"
+      "id": "minecraft:gunpowder"
     },
     "C": {
       "tag": "c:ingots/iron"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:grenade",
-    "count": 64
+    "count": 64,
+    "id": "reopenedmodularturrets:grenade"
   },
   "neoforge:conditions": [
     {

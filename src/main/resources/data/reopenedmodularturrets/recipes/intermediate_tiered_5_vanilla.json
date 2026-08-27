@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:chamber_tier_1",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_1"
   }
 }

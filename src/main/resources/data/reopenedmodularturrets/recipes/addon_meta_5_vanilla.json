@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_recycler",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_recycler"
   }
 }

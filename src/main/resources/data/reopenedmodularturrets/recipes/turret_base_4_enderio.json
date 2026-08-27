@@ -13,18 +13,18 @@
       "tag": "c:itemEnhancedMachineChassi"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_5"
+      "id": "reopenedmodularturrets:sensor_tier_5"
     },
     "D": {
-      "item": "enderio:item_basic_capacitor"
+      "id": "enderio:item_basic_capacitor"
     },
     "E": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_5"
   },
   "neoforge:conditions": [
     {

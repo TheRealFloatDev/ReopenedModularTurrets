@@ -20,8 +20,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_serial_port",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_serial_port"
   },
   "neoforge:conditions": [
     {

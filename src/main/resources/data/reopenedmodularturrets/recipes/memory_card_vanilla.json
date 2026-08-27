@@ -7,17 +7,17 @@
   ],
   "key": {
     "P": {
-      "item": "minecraft:paper"
+      "id": "minecraft:paper"
     },
     "I": {
-      "item": "reopenedmodularturrets:io_bus"
+      "id": "reopenedmodularturrets:io_bus"
     },
     "G": {
       "tag": "c:ingots/gold"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:memory_card",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:memory_card"
   }
 }

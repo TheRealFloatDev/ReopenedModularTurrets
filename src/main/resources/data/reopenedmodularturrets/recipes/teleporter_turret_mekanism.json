@@ -10,10 +10,10 @@
       "tag": "c:gemDiamond"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_4"
+      "id": "reopenedmodularturrets:sensor_tier_4"
     },
     "C": {
-      "item": "minecraft:ender_eye"
+      "id": "minecraft:ender_eye"
     },
     "D": {
       "tag": "reopenedmodularturrets:io_bus"
@@ -23,8 +23,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:teleporter_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:teleporter_turret"
   },
   "neoforge:conditions": [
     {

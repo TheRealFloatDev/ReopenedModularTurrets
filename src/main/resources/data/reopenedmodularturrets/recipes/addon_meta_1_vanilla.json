@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:ender_eye"
+      "id": "minecraft:ender_eye"
     },
     "C": {
-      "tag": "c:blockRedstone"
+      "tag": "c:storage_blocks/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_redstone_reactor",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_redstone_reactor"
   }
 }

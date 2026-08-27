@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:gunpowder"
+      "id": "minecraft:gunpowder"
     },
     "C": {
       "tag": "c:dusts/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:grenade",
-    "count": 64
+    "count": 64,
+    "id": "reopenedmodularturrets:grenade"
   }
 }

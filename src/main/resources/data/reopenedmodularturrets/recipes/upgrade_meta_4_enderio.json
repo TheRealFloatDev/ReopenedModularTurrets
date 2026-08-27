@@ -17,8 +17,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_scatter_shot",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_scatter_shot"
   },
   "neoforge:conditions": [
     {

@@ -10,15 +10,15 @@
       "tag": "c:ingotElectricalSteel"
     },
     "B": {
-      "item": "minecraft:gunpowder"
+      "id": "minecraft:gunpowder"
     },
     "C": {
       "tag": "c:ingotConductiveIron"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:grenade",
-    "count": 64
+    "count": 64,
+    "id": "reopenedmodularturrets:grenade"
   },
   "neoforge:conditions": [
     {

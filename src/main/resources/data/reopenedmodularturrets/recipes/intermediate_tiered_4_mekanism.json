@@ -7,21 +7,21 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:atomicalloy"
+      "id": "mekanism:atomicalloy"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_4"
+      "id": "reopenedmodularturrets:sensor_tier_4"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     },
     "D": {
-      "item": "mekanism:controlcircuit"
+      "id": "mekanism:controlcircuit"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_5"
   },
   "neoforge:conditions": [
     {

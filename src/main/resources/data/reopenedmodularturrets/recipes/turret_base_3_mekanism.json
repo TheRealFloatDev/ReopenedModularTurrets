@@ -7,13 +7,13 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:reinforcedalloy"
+      "id": "mekanism:reinforcedalloy"
     },
     "B": {
-      "item": "mekanism:energytablet"
+      "id": "mekanism:energytablet"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_4"
+      "id": "reopenedmodularturrets:sensor_tier_4"
     },
     "D": {
       "tag": "c:ingots/refined_glowstone"
@@ -23,8 +23,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_4",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_4"
   },
   "neoforge:conditions": [
     {

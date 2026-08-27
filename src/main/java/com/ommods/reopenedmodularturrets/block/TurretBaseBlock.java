@@ -7,10 +7,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -19,10 +24,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class TurretBaseBlock extends BaseEntityBlock {
+    public static final BooleanProperty CAMOUFLAGED = BooleanProperty.create("camouflaged");
     private final int tier;
     private final MapCodec<? extends TurretBaseBlock> codec;
 
@@ -30,6 +38,12 @@ public class TurretBaseBlock extends BaseEntityBlock {
         super(properties);
         this.tier = tier;
         this.codec = codec;
+        registerDefaultState(stateDefinition.any().setValue(CAMOUFLAGED, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(CAMOUFLAGED);
     }
 
     public int getTier() {
@@ -43,7 +57,16 @@ public class TurretBaseBlock extends BaseEntityBlock {
 
     @Override
     protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return state.getValue(CAMOUFLAGED) ? RenderShape.INVISIBLE : RenderShape.MODEL;
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof TurretBaseBlockEntity base && base.hasCamo()) {
+            return base.getLightValue();
+        }
+        return super.getLightEmission(state, level, pos);
     }
 
     @Nullable
@@ -75,10 +98,39 @@ public class TurretBaseBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+    protected ItemInteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hitResult
+    ) {
+        if (!level.isClientSide() && !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof TurretBaseBlockEntity base && base.canAccess(player)) {
+                BlockState camoState = blockItem.getBlock().defaultBlockState();
+                if (!camoState.isAir()) {
+                    base.setCamoState(camoState);
+                    return ItemInteractionResult.SUCCESS;
+                }
+            }
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof TurretBaseBlockEntity base) {
+            if (player.isShiftKeyDown() && base.hasCamo()) {
+                if (!level.isClientSide() && base.canAccess(player)) {
+                    base.clearCamo();
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer && base.canAccess(player)) {
                 MenuProvider provider = getMenuProvider(state, level, pos);
                 if (provider != null) {
                     serverPlayer.openMenu(provider, pos);

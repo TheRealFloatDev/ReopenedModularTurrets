@@ -20,8 +20,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_potentia",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_potentia"
   },
   "neoforge:conditions": [
     {

@@ -19,14 +19,14 @@
       "tag": "reopenedmodularturrets:io_bus"
     },
     "E": {
-      "item": "minecraft:paper"
+      "id": "minecraft:paper"
     },
     "F": {
-      "item": "minecraft:dye"
+      "id": "minecraft:dye"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:usable_meta",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:usable_meta"
   }
 }

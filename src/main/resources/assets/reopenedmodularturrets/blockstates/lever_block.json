@@ -1,1 +1,8 @@
-{"variants":{"":{"model":"reopenedmodularturrets:block/lever_block"}}}
+{
+  "variants": {
+    "rotation=0": { "model": "reopenedmodularturrets:block/lever_block" },
+    "rotation=1": { "model": "reopenedmodularturrets:block/lever_block" },
+    "rotation=2": { "model": "reopenedmodularturrets:block/lever_block" },
+    "rotation=3": { "model": "reopenedmodularturrets:block/lever_block" }
+  }
+}

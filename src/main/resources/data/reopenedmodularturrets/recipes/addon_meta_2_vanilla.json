@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:redstone_block"
+      "id": "minecraft:redstone_block"
     },
     "C": {
-      "item": "reopenedmodularturrets:io_bus"
+      "id": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:addon_damage_amp",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_damage_amp"
   }
 }

@@ -10,14 +10,14 @@
       "tag": "c:gems/quartz"
     },
     "B": {
-      "item": "minecraft:ender_eye"
+      "id": "minecraft:ender_eye"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:upgrade_efficiency",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_efficiency"
   }
 }

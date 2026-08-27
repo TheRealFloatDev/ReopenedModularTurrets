@@ -7,13 +7,13 @@
   ],
   "key": {
     "A": {
-      "item": "mekanism:enrichediron"
+      "id": "mekanism:enrichediron"
     },
     "B": {
-      "item": "mekanism:energytablet"
+      "id": "mekanism:energytablet"
     },
     "C": {
-      "item": "reopenedmodularturrets:sensor_tier_2"
+      "id": "reopenedmodularturrets:sensor_tier_2"
     },
     "D": {
       "tag": "c:ingots/tin"
@@ -23,8 +23,8 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:turret_base_tier_2",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:turret_base_tier_2"
   },
   "neoforge:conditions": [
     {

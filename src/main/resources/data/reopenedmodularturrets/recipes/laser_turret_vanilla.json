@@ -7,10 +7,10 @@
   ],
   "key": {
     "A": {
-      "item": "reopenedmodularturrets:barrel_tier_5"
+      "id": "reopenedmodularturrets:barrel_tier_5"
     },
     "B": {
-      "item": "reopenedmodularturrets:chamber_tier_5"
+      "id": "reopenedmodularturrets:chamber_tier_5"
     },
     "C": {
       "tag": "c:obsidians"
@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:laser_turret",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:laser_turret"
   }
 }

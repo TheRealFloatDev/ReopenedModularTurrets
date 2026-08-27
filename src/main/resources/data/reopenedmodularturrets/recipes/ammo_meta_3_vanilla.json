@@ -10,14 +10,14 @@
       "tag": "c:ingots/iron"
     },
     "B": {
-      "item": "minecraft:gunpowder"
+      "id": "minecraft:gunpowder"
     },
     "C": {
       "tag": "c:dusts/redstone"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:ferro_slug",
-    "count": 32
+    "count": 32,
+    "id": "reopenedmodularturrets:ferro_slug"
   }
 }

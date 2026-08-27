@@ -10,20 +10,20 @@
       "tag": "c:ingots/gold"
     },
     "B": {
-      "item": "reopenedmodularturrets:sensor_tier_4"
+      "id": "reopenedmodularturrets:sensor_tier_4"
     },
     "C": {
       "tag": "reopenedmodularturrets:io_bus"
     },
     "D": {
-      "item": "minecraft:glowstone_dust"
+      "id": "minecraft:glowstone_dust"
     },
     "E": {
       "tag": "c:obsidians"
     }
   },
   "result": {
-    "item": "reopenedmodularturrets:sensor_tier_5",
-    "count": 1
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_5"
   }
 }
