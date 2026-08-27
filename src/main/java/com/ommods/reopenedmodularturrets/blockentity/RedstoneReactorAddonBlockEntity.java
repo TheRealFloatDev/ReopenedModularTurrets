@@ -1,9 +1,9 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
+import com.ommods.reopenedmodularturrets.block.AddonAttachmentHelper;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -20,9 +20,11 @@ public class RedstoneReactorAddonBlockEntity extends BlockEntity {
         this.base = base;
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, RedstoneReactorAddonBlockEntity addon) {
-        if (!level.isClientSide()) {
-            addon.tickGeneration((ServerLevel) level);
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide()) {
+            AddonAttachmentHelper.refreshAdjacentBases(level, worldPosition);
         }
     }
 

@@ -2,9 +2,9 @@ package com.ommods.reopenedmodularturrets.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.ommods.reopenedmodularturrets.client.model.LootDeleterAddonModel;
 import com.ommods.reopenedmodularturrets.client.model.ModEntityTextures;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
-import com.ommods.reopenedmodularturrets.client.model.RedstoneReactorAddonModel;
 import com.ommods.reopenedmodularturrets.client.model.TurretRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -16,12 +16,12 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class RedstoneReactorItemRenderer extends BlockEntityWithoutLevelRenderer {
-    private final RedstoneReactorAddonModel model;
+public class LootDeleterItemRenderer extends BlockEntityWithoutLevelRenderer {
+    private final LootDeleterAddonModel model;
 
-    public RedstoneReactorItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
+    public LootDeleterItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
         super(dispatcher, modelSet);
-        this.model = new RedstoneReactorAddonModel(modelSet.bakeLayer(ModModelLayers.REDSTONE_REACTOR_ADDON));
+        this.model = new LootDeleterAddonModel(modelSet.bakeLayer(ModModelLayers.LOOT_DELETER_ADDON));
     }
 
     @Override
@@ -33,16 +33,17 @@ public class RedstoneReactorItemRenderer extends BlockEntityWithoutLevelRenderer
             int packedLight,
             int packedOverlay
     ) {
-        RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.texture("addon_redstone_reactor"));
-        VertexConsumer consumer = buffer.getBuffer(renderType);
         poseStack.pushPose();
         TurretRenderHelper.prepareTurretItemPose(poseStack, displayContext);
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        RenderType sideType = RenderType.entityCutoutNoCull(ModEntityTextures.texture("base_addon_loot_deleter_side"));
+        model.renderBody(poseStack, buffer.getBuffer(sideType), packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        RenderType topType = RenderType.entityCutoutNoCull(ModEntityTextures.texture("base_addon_loot_deleter_top"));
+        model.renderTop(poseStack, buffer.getBuffer(topType), packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }
 
-    public static RedstoneReactorItemRenderer create() {
+    public static LootDeleterItemRenderer create() {
         Minecraft mc = Minecraft.getInstance();
-        return new RedstoneReactorItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
+        return new LootDeleterItemRenderer(mc.getBlockEntityRenderDispatcher(), mc.getEntityModels());
     }
 }

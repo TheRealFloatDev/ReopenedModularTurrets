@@ -3,10 +3,11 @@ package com.ommods.reopenedmodularturrets.client;
 import com.ommods.reopenedmodularturrets.client.model.GrenadeTurretModel;
 import com.ommods.reopenedmodularturrets.client.model.GunTurretModel;
 import com.ommods.reopenedmodularturrets.client.model.LeverBlockModel;
+import com.ommods.reopenedmodularturrets.client.model.LootDeleterAddonModel;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
 import com.ommods.reopenedmodularturrets.client.model.ProjectileModel;
+import com.ommods.reopenedmodularturrets.client.model.RedstoneReactorAddonModel;
 import com.ommods.reopenedmodularturrets.client.model.SolarAddonModel;
-import com.ommods.reopenedmodularturrets.client.model.TurretBaseModel;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import com.ommods.reopenedmodularturrets.registry.ModEntityTypes;
 import com.ommods.reopenedmodularturrets.registry.ModItems;
@@ -27,7 +28,8 @@ public final class ModClientEvents {
         event.registerLayerDefinition(ModModelLayers.GUN_TURRET, GunTurretModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.GRENADE_TURRET, GrenadeTurretModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.SOLAR_ADDON, SolarAddonModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.TURRET_BASE, TurretBaseModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.REDSTONE_REACTOR_ADDON, RedstoneReactorAddonModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.LOOT_DELETER_ADDON, LootDeleterAddonModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LEVER_BLOCK, LeverBlockModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.PROJECTILE, ProjectileModel::createBodyLayer);
     }
@@ -36,6 +38,9 @@ public final class ModClientEvents {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_HEAD.get(), TurretHeadBlockRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.SOLAR_ADDON.get(), SolarAddonBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.REDSTONE_REACTOR_ADDON.get(), RedstoneReactorAddonBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.LOOT_DELETER_ADDON.get(), LootDeleterAddonBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.LEVER_BLOCK.get(), LeverBlockRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.GRENADE_PROJECTILE.get(), GrenadeProjectileRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LASER_BEAM.get(), LaserBeamRenderer::new);
     }
@@ -44,14 +49,9 @@ public final class ModClientEvents {
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(lazy(TurretItemRenderer::create), turretItems());
         event.registerItem(lazy(SolarItemRenderer::create), ModItems.SOLAR_ADDON_ITEM.get());
-        event.registerItem(lazy(TurretBaseItemRenderer::create),
-                ModItems.TURRET_BASE_TIER_1_ITEM.get(),
-                ModItems.TURRET_BASE_TIER_2_ITEM.get(),
-                ModItems.TURRET_BASE_TIER_3_ITEM.get(),
-                ModItems.TURRET_BASE_TIER_4_ITEM.get(),
-                ModItems.TURRET_BASE_TIER_5_ITEM.get());
         event.registerItem(lazy(LeverItemRenderer::create), ModItems.LEVER_BLOCK_ITEM.get());
         event.registerItem(lazy(RedstoneReactorItemRenderer::create), ModItems.REDSTONE_REACTOR_ADDON_ITEM.get());
+        event.registerItem(lazy(LootDeleterItemRenderer::create), ModItems.BASE_ADDON_LOOT_DELETER_ITEM.get());
     }
 
     private static IClientItemExtensions lazy(java.util.function.Supplier<BlockEntityWithoutLevelRenderer> supplier) {

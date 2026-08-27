@@ -66,7 +66,7 @@ public final class ModBlocks {
 
     public static final DeferredBlock<SolarAddonBlock> SOLAR_ADDON = BLOCKS.registerBlock(
             "addon_solar",
-            props -> new SolarAddonBlock(applyTurretHeadProperties(props, MapColor.COLOR_YELLOW))
+            props -> new SolarAddonBlock(applyBaseProperties(props, MapColor.COLOR_YELLOW))
     );
 
     public static final DeferredBlock<RedstoneReactorAddonBlock> REDSTONE_REACTOR_ADDON = BLOCKS.registerBlock(

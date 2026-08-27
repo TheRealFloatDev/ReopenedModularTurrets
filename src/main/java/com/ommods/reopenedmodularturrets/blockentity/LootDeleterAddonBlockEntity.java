@@ -1,5 +1,6 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
+import com.ommods.reopenedmodularturrets.block.AddonAttachmentHelper;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,6 +17,14 @@ public class LootDeleterAddonBlockEntity extends BlockEntity {
 
     public void bindBase(TurretBaseBlockEntity base) {
         this.base = base;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide()) {
+            AddonAttachmentHelper.refreshAdjacentBases(level, worldPosition);
+        }
     }
 
     @Nullable

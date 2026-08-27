@@ -2,10 +2,11 @@ package com.ommods.reopenedmodularturrets.block;
 
 import com.mojang.serialization.MapCodec;
 import com.ommods.reopenedmodularturrets.blockentity.LootDeleterAddonBlockEntity;
-import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,12 +26,37 @@ public class LootDeleterAddonBlock extends BaseEntityBlock {
 
     @Override
     protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return RenderShape.INVISIBLE;
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LootDeleterAddonBlockEntity(pos, state);
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        AddonAttachmentHelper.onAddonPlaced(level, pos, state);
+    }
+
+    @Override
+    protected void neighborChanged(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Block block,
+            BlockPos fromPos,
+            boolean isMoving
+    ) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        AddonAttachmentHelper.refreshAdjacentBases(level, pos);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        AddonAttachmentHelper.refreshAdjacentBases(level, pos);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 }

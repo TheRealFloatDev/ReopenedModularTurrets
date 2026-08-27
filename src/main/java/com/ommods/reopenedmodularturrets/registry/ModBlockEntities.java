@@ -4,6 +4,7 @@ import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
+import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.LootDeleterAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.RedstoneReactorAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.SolarAddonBlockEntity;
@@ -54,6 +55,12 @@ public final class ModBlockEntities {
                     LootDeleterAddonBlockEntity::new,
                     ModBlocks.BASE_ADDON_LOOT_DELETER.get()
             ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "loot_deleter_addon")));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LeverBlockEntity>> LEVER_BLOCK =
+            BLOCK_ENTITIES.register("lever_block", () -> BlockEntityType.Builder.of(
+                    LeverBlockEntity::new,
+                    ModBlocks.LEVER_BLOCK.get()
+            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "lever_block")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExpanderInventoryBlockEntity>> EXPANDER_INVENTORY =
             BLOCK_ENTITIES.register("expander_inventory", () -> BlockEntityType.Builder.of(
