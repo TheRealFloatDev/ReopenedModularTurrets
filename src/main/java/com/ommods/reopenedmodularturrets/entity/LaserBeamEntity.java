@@ -11,6 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class LaserBeamEntity extends Entity {
+    public static final int BEAM_DURATION_TICKS = 1;
+
     private static final EntityDataAccessor<Float> END_X = SynchedEntityData.defineId(LaserBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> END_Y = SynchedEntityData.defineId(LaserBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> END_Z = SynchedEntityData.defineId(LaserBeamEntity.class, EntityDataSerializers.FLOAT);
@@ -38,6 +40,16 @@ public class LaserBeamEntity extends Entity {
         entityData.set(END_Z, (float) end.z);
     }
 
+    public float getBeamProgress(float partialTick) {
+        return Math.min(1.0F, (life + partialTick) / (float) BEAM_DURATION_TICKS);
+    }
+
+    public Vec3 getBeamTip(float partialTick) {
+        Vec3 start = position();
+        Vec3 end = getEnd();
+        return start.lerp(end, getBeamProgress(partialTick));
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(END_X, 0.0F);
@@ -48,7 +60,7 @@ public class LaserBeamEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (++life > 4) {
+        if (++life > BEAM_DURATION_TICKS) {
             discard();
         }
     }
@@ -58,6 +70,7 @@ public class LaserBeamEntity extends Entity {
         entityData.set(END_X, tag.getFloat("EndX"));
         entityData.set(END_Y, tag.getFloat("EndY"));
         entityData.set(END_Z, tag.getFloat("EndZ"));
+        life = tag.getInt("Life");
     }
 
     @Override
@@ -65,5 +78,6 @@ public class LaserBeamEntity extends Entity {
         tag.putFloat("EndX", entityData.get(END_X));
         tag.putFloat("EndY", entityData.get(END_Y));
         tag.putFloat("EndZ", entityData.get(END_Z));
+        tag.putInt("Life", life);
     }
 }

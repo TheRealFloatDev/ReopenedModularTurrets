@@ -19,7 +19,7 @@ public final class TurretRenderHelper {
      */
     private static void prepareGuiTurretItemPose(PoseStack poseStack) {
         // MC pre-applies translate(-0.5, -0.5, -0.5); offset tuned to center icons in 16x16 slots.
-        poseStack.translate(0.88F, 1.72F, 0.88F);
+        poseStack.translate(0.70F, 1.50F, 0.75F);
         poseStack.scale(0.7F, -0.7F, -0.7F);
         poseStack.translate(0.0F, 0.4F, 0.5F);
         poseStack.mulPose(new Quaternionf().rotateAxis((float) Math.toRadians(45.0F), 2.5F, -4.5F, -1.0F));

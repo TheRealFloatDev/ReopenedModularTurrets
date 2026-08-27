@@ -3,9 +3,9 @@ package com.ommods.reopenedmodularturrets.turret;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
+import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
-import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
 import com.ommods.reopenedmodularturrets.entity.LaserBeamEntity;
 import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
@@ -148,7 +148,7 @@ public enum TurretKind {
         Vec3 origin = Vec3.atCenterOf(turret.getBlockPos());
         switch (this) {
             case GUN, POTATO_CANNON, DISPOSABLE_ITEM, CROSSBOW -> applyHitscan(level, target, damage);
-            case LASER -> applyLaserHit(level, target, damage, origin);
+            case LASER -> applyLaserHit(level, target, damage, turret);
             case RAIL_GUN -> applyArmorPiercingHit(level, target, damage);
             case MELEE, ARC -> target.hurt(level.damageSources().mobAttack(null), damage);
             case INCENDIARY -> {
@@ -177,7 +177,8 @@ public enum TurretKind {
         level.playSound(null, target.blockPosition(), ModSounds.BULLET_HIT.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
     }
 
-    private static void applyLaserHit(ServerLevel level, LivingEntity target, float damage, Vec3 origin) {
+    private static void applyLaserHit(ServerLevel level, LivingEntity target, float damage, TurretHeadBlockEntity turret) {
+        Vec3 origin = TurretAimHelper.getLaserOrigin(turret.getBlockPos(), turret.getYaw(), turret.getPitch());
         Vec3 targetPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
         target.hurt(level.damageSources().mobAttack(null), damage);
         level.addFreshEntity(new LaserBeamEntity(level, origin, targetPos));

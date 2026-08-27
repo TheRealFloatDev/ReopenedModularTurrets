@@ -19,6 +19,27 @@ public final class TurretAimHelper {
     }
 
     private static final float TURRET_AIM_Y = 0.35F;
+    /** Barrel hinge in block-local space after BE pose (1.5 - 17/16). */
+    private static final float BARREL_PIVOT_Y = 0.4375F;
+    /** Barrel length in blocks (15/16) plus small muzzle offset. */
+    private static final float BARREL_EXTENSION = 0.97F;
+    /** Lifts origin slightly so the beam exits the muzzle instead of the hinge. */
+    private static final float BARREL_VERTICAL_OFFSET = 0.06F;
+
+    public static Vec3 getAimDirection(float yaw, float pitch) {
+        float yawRad = (float) Math.toRadians(yaw);
+        float pitchRad = (float) Math.toRadians(pitch);
+        double horizontal = Math.sin(pitchRad);
+        double dy = Math.cos(pitchRad);
+        double dx = horizontal * Math.cos(yawRad);
+        double dz = horizontal * Math.sin(yawRad);
+        return new Vec3(dx, dy, dz);
+    }
+
+    public static Vec3 getLaserOrigin(BlockPos turretPos, float yaw, float pitch) {
+        Vec3 pivot = Vec3.atBottomCenterOf(turretPos).add(0.0D, BARREL_PIVOT_Y + BARREL_VERTICAL_OFFSET, 0.0D);
+        return pivot.add(getAimDirection(yaw, pitch).scale(BARREL_EXTENSION));
+    }
 
     public static float getAimPitch(Entity target, BlockPos turretPos) {
         Vec3 targetCenter = target.position().add(0.0D, target.getBbHeight() * 0.5D, 0.0D);
