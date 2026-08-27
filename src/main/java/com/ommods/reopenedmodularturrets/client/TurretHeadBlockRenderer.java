@@ -11,6 +11,7 @@ import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
 import com.ommods.reopenedmodularturrets.client.model.TurretRenderHelper;
 import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -48,15 +49,16 @@ public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBl
         DirectedTurretModelState modelState = new DirectedTurretModelState(rotationX, rotationZ);
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.forTurret(kind));
         VertexConsumer consumer = buffer.getBuffer(renderType);
+        int light = Math.max(packedLight, LightTexture.FULL_BRIGHT);
 
         poseStack.pushPose();
-        TurretRenderHelper.prepareTurretPose(poseStack);
+        TurretRenderHelper.prepareBlockEntityPose(poseStack);
         if (kind.usesGrenadeModel()) {
             grenadeModel.setupAnim(modelState);
-            grenadeModel.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+            grenadeModel.renderToBuffer(poseStack, consumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         } else {
             gunModel.setupAnim(modelState);
-            gunModel.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+            gunModel.renderToBuffer(poseStack, consumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         }
         poseStack.popPose();
     }

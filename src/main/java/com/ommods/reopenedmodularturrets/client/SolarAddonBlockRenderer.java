@@ -32,8 +32,8 @@ public class SolarAddonBlockRenderer implements BlockEntityRenderer<SolarAddonBl
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.SOLAR_ADDON);
         VertexConsumer consumer = buffer.getBuffer(renderType);
         poseStack.pushPose();
-        TurretRenderHelper.prepareTurretPose(poseStack);
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+        TurretRenderHelper.prepareBlockEntityPose(poseStack);
+        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }
 }

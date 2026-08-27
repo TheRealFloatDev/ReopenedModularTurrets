@@ -8,6 +8,7 @@ import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
 import com.ommods.reopenedmodularturrets.core.addons.AddonState;
 import com.ommods.reopenedmodularturrets.core.ammo.AmmoStorage;
 import com.ommods.reopenedmodularturrets.core.ownership.OwnedData;
+import com.ommods.reopenedmodularturrets.core.ownership.TrustedPlayers;
 import com.ommods.reopenedmodularturrets.core.upgrades.UpgradeModifiers;
 import com.ommods.reopenedmodularturrets.item.AmmoItem;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
@@ -47,6 +48,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private final int tier;
     private final int baseEnergyCapacity;
     private final OwnedData ownedData = new OwnedData();
+    private final TrustedPlayers trustedPlayers = new TrustedPlayers();
     private final AmmoStorage ammoStorage;
     private final EnergyStorage energyStorage;
     private final ItemStack[] inventory = new ItemStack[BaseSlotIndices.BASE_SLOT_COUNT];
@@ -97,6 +99,26 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
 
     public OwnedData getOwnedData() {
         return ownedData;
+    }
+
+    public TrustedPlayers getTrustedPlayers() {
+        return trustedPlayers;
+    }
+
+    public boolean addTrustedPlayer(String name) {
+        if (trustedPlayers.add(name)) {
+            setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeTrustedPlayer(String name) {
+        if (trustedPlayers.remove(name)) {
+            setChanged();
+            return true;
+        }
+        return false;
     }
 
     public boolean canAccess(Player player) {
@@ -391,7 +413,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
                 attackMobs,
                 attackPlayers,
                 attackNeutral,
-                ownerUuid
+                ownerUuid,
+                trustedPlayers.getNames()
         ).map(OptionalTarget::new).orElse(null);
     }
 
@@ -422,6 +445,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         ownedData.load(tag);
+        trustedPlayers.load(tag);
         ammoStorage.load(tag);
         attackMobs = tag.getBoolean("AttackMobs");
         attackPlayers = tag.getBoolean("AttackPlayers");
@@ -442,6 +466,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         ownedData.save(tag);
+        trustedPlayers.save(tag);
         ammoStorage.save(tag);
         tag.putBoolean("AttackMobs", attackMobs);
         tag.putBoolean("AttackPlayers", attackPlayers);

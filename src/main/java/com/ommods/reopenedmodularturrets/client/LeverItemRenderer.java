@@ -34,10 +34,9 @@ public class LeverItemRenderer extends BlockEntityWithoutLevelRenderer {
             int packedOverlay
     ) {
         poseStack.pushPose();
-        TurretRenderHelper.prepareItemPose(poseStack, displayContext);
-        TurretRenderHelper.prepareTurretPose(poseStack);
+        TurretRenderHelper.prepareLeverItemPose(poseStack, displayContext);
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(ModEntityTextures.texture("lever_block")));
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }
 

@@ -55,7 +55,7 @@ public enum TurretKind {
         return switch (this) {
             case GUN -> "gun_turret";
             case GRENADE -> "grenade_turret";
-            case DISPOSABLE_ITEM -> "disposable_item_turret";
+            case DISPOSABLE_ITEM -> "dispose_item_turret";
             case POTATO_CANNON -> "potato_cannon_turret";
             case INCENDIARY -> "incendiary_turret";
             case ROCKET -> "rocket_turret";

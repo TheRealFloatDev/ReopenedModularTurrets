@@ -36,9 +36,8 @@ public class SolarItemRenderer extends BlockEntityWithoutLevelRenderer {
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.SOLAR_ADDON);
         VertexConsumer consumer = buffer.getBuffer(renderType);
         poseStack.pushPose();
-        TurretRenderHelper.prepareItemPose(poseStack, displayContext);
-        TurretRenderHelper.prepareTurretPose(poseStack);
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+        TurretRenderHelper.prepareTurretItemPose(poseStack, displayContext);
+        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }
 

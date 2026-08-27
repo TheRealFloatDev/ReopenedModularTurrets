@@ -1,7 +1,6 @@
 package com.ommods.reopenedmodularturrets.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.ommods.reopenedmodularturrets.client.model.ModEntityTextures;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
@@ -16,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 public class LaserBeamRenderer extends EntityRenderer<LaserBeamEntity> {
+    private static final int LASER_COLOR = 0xFF00FFFF;
     private final ProjectileModel model;
 
     public LaserBeamRenderer(EntityRendererProvider.Context context) {
@@ -39,15 +39,15 @@ public class LaserBeamRenderer extends EntityRenderer<LaserBeamEntity> {
         if (length < 0.01D) {
             return;
         }
-        float yaw = (float) Math.toDegrees(Math.atan2(delta.z, delta.x)) - 90.0F;
+        float yaw = (float) Math.toDegrees(Math.atan2(delta.z, delta.x));
         float pitch = (float) Math.toDegrees(Math.atan2(delta.y, Math.sqrt(delta.x * delta.x + delta.z * delta.z)));
 
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
         poseStack.scale(0.2F, 0.2F, (float) length * 2.0F);
-        var consumer = buffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+        var consumer = buffer.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity)));
+        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, LASER_COLOR);
         poseStack.popPose();
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
     }

@@ -6,7 +6,10 @@ import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.network.payload.ToggleTargetFilterPayload;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -14,16 +17,31 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     private static final int TEX_SIZE = 256;
-    private static final int ENERGY_U = 178;
-    private static final int ENERGY_V = 18;
-    private static final int ENERGY_W = 16;
-    private static final int ENERGY_H = 34;
+
+    private static final ResourceLocation ICON_MOBS =
+            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/mobs.png");
+    private static final ResourceLocation ICON_PLAYERS =
+            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/players.png");
+    private static final ResourceLocation ICON_NEUTRAL =
+            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/neutral.png");
+
+    private static final int FILTER_X = 98;
+    private static final int FILTER_Y = 18;
+    private static final int FILTER_SIZE = 16;
+    private static final int FILTER_SPACING = 18;
+
+    private static final int ENERGY_X = 153;
+    private static final int ENERGY_Y = 17;
+    private static final int ENERGY_W = 14;
+    private static final int ENERGY_H = 51;
+    private static final int[] ENERGY_FILL_U = {196, 215, 234};
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
         this.imageHeight = 166;
-        this.inventoryLabelY = this.imageHeight - 94;
+        this.titleLabelY = -1000;
+        this.inventoryLabelY = 73;
     }
 
     private ResourceLocation texture() {
@@ -44,24 +62,15 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
         if (menu.getBase() == null) {
             return;
         }
-        int x = leftPos + 116;
-        int y = topPos + 18;
-        addRenderableWidget(toggleButton(x, y, TargetFilter.MOBS, menu.getData(2) == 1));
-        addRenderableWidget(toggleButton(x, y + 22, TargetFilter.PLAYERS, menu.getData(3) == 1));
-        addRenderableWidget(toggleButton(x, y + 44, TargetFilter.NEUTRAL, menu.getData(4) == 1));
-    }
-
-    private Button toggleButton(int x, int y, TargetFilter filter, boolean active) {
-        Component label = Component.translatable("gui.reopenedmodularturrets.filter." + filter.name().toLowerCase());
-        return Button.builder(label, button -> sendToggle(filter))
-                .bounds(x, y, 56, 20)
-                .build();
-    }
-
-    private void sendToggle(TargetFilter filter) {
-        if (menu.getBase() != null) {
-            ModNetworking.sendToServer(new ToggleTargetFilterPayload(menu.getBase().getBlockPos(), filter));
-        }
+        int x = leftPos + FILTER_X;
+        int y = topPos + FILTER_Y;
+        addRenderableWidget(new TargetFilterIconButton(x, y, TargetFilter.MOBS, ICON_MOBS));
+        addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING, TargetFilter.PLAYERS, ICON_PLAYERS));
+        addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING * 2, TargetFilter.NEUTRAL, ICON_NEUTRAL));
+        addRenderableWidget(Button.builder(
+                Component.translatable("gui.reopenedmodularturrets.trusted_players"),
+                button -> minecraft.setScreen(new TrustedPlayersScreen(menu.getBase().getBlockPos(), this))
+        ).bounds(leftPos + 8, topPos + 56, 88, 16).build());
     }
 
     @Override
@@ -74,29 +83,100 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     }
 
     private void renderEnergyBar(GuiGraphics graphics, int x, int y, ResourceLocation texture) {
-        int max = menu.getMaxEnergy();
-        if (max <= 0) {
-            return;
-        }
+        graphics.blit(texture, x + ENERGY_X, y + ENERGY_Y, 178, 17, ENERGY_W, ENERGY_H, TEX_SIZE, TEX_SIZE);
+
+        int max = Math.max(1, menu.getMaxEnergy());
         int fill = menu.getEnergyStored() * ENERGY_H / max;
         if (fill <= 0) {
             return;
         }
+        int frame = minecraft != null && minecraft.level != null
+                ? (int) (minecraft.level.getGameTime() / 8L % ENERGY_FILL_U.length)
+                : 0;
         graphics.blit(texture,
-                x + 152, y + 18 + (ENERGY_H - fill),
-                ENERGY_U, ENERGY_V + (ENERGY_H - fill),
-                ENERGY_W, fill,
-                TEX_SIZE, TEX_SIZE);
+                x + ENERGY_X,
+                y + ENERGY_Y + ENERGY_H - fill,
+                ENERGY_FILL_U[frame],
+                68 - fill,
+                ENERGY_W,
+                fill,
+                TEX_SIZE,
+                TEX_SIZE);
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
+        int tier = menu.getBase() != null ? menu.getBase().getTier() : 1;
+        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.ammo"), 8, 6, 0x404040, false);
+        if (tier >= 2) {
+            graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.addons"), 71, 6, 0x404040, false);
+            graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.upgrades"), 71, 39, 0x404040, false);
+        }
         graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
-        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.energy",
-                menu.getEnergyStored(), menu.getMaxEnergy()), 8, 6, 0x303030, false);
-        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.ammo"), 8, 16, 0x303030, false);
-        graphics.drawString(font, "B:" + menu.getData(5) + " G:" + menu.getData(6) + " C:" + menu.getData(7), 8, 26, 0x505050, false);
-        graphics.drawString(font, "S:" + menu.getData(8) + " R:" + menu.getData(9), 8, 36, 0x505050, false);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderTooltip(graphics, mouseX, mouseY);
+        if (isHoveringEnergyBar(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable(
+                    "gui.reopenedmodularturrets.energy",
+                    menu.getEnergyStored(),
+                    menu.getMaxEnergy()
+            ), mouseX, mouseY);
+        }
+    }
+
+    private boolean isHoveringEnergyBar(int mouseX, int mouseY) {
+        return mouseX >= leftPos + ENERGY_X
+                && mouseX < leftPos + ENERGY_X + ENERGY_W
+                && mouseY >= topPos + ENERGY_Y
+                && mouseY < topPos + ENERGY_Y + ENERGY_H;
+    }
+
+    private final class TargetFilterIconButton extends AbstractWidget {
+        private final TargetFilter filter;
+        private final ResourceLocation icon;
+
+        TargetFilterIconButton(int x, int y, TargetFilter filter, ResourceLocation icon) {
+            super(x, y, FILTER_SIZE, FILTER_SIZE, Component.empty());
+            this.filter = filter;
+            this.icon = icon;
+            this.setTooltip(Tooltip.create(Component.translatable(
+                    "gui.reopenedmodularturrets.filter." + filter.name().toLowerCase())));
+        }
+
+        private boolean isFilterEnabled() {
+            return switch (filter) {
+                case MOBS -> menu.getData(2) == 1;
+                case PLAYERS -> menu.getData(3) == 1;
+                case NEUTRAL -> menu.getData(4) == 1;
+            };
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            if (!isFilterEnabled()) {
+                graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xAA000000);
+            }
+            if (isFilterEnabled()) {
+                graphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY() + height + 1, 0xAA00AA00);
+            } else if (isHovered()) {
+                graphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY() + height + 1, 0x66FFFFFF);
+            }
+            graphics.blit(icon, getX(), getY(), 0, 0, width, height, 16, 16);
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            if (menu.getBase() != null) {
+                ModNetworking.sendToServer(new ToggleTargetFilterPayload(menu.getBase().getBlockPos(), filter));
+            }
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput output) {
+            defaultButtonNarrationText(output);
+        }
     }
 }

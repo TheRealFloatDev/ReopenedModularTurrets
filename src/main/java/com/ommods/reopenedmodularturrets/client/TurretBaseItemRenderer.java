@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -44,10 +43,9 @@ public class TurretBaseItemRenderer extends BlockEntityWithoutLevelRenderer {
             return;
         }
         poseStack.pushPose();
-        TurretRenderHelper.prepareItemPose(poseStack, displayContext);
-        TurretRenderHelper.prepareTurretPose(poseStack);
+        TurretRenderHelper.prepareBaseItemPose(poseStack, displayContext);
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }
 

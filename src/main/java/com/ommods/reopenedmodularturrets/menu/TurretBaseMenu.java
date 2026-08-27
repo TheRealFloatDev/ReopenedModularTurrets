@@ -22,9 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TurretBaseMenu extends AbstractContainerMenu {
-    private static final int DATA_COUNT = 14;
+    public static final int DATA_COUNT = 14;
 
     private final TurretBaseBlockEntity base;
+    private final int[] syncedData = new int[DATA_COUNT];
     private final ContainerData data;
     private final List<ExpanderInventoryBlockEntity> expanders = new ArrayList<>();
     private final int expanderSlotCount;
@@ -40,8 +41,9 @@ public class TurretBaseMenu extends AbstractContainerMenu {
             blockEntity = baseEntity;
         }
         this.base = blockEntity;
-        this.data = createData(blockEntity);
+        this.data = createData();
         addDataSlots(data);
+        refreshData();
 
         int expanderSlots = 0;
         if (blockEntity != null) {
@@ -53,14 +55,15 @@ public class TurretBaseMenu extends AbstractContainerMenu {
             addExpanderSlots();
         }
         this.expanderSlotCount = expanderSlots;
-        addPlayerInventory(playerInventory, 8, 84 + (expanderSlots > 0 ? 18 : 0));
+        addPlayerInventory(playerInventory, 8, 84);
     }
 
     public TurretBaseMenu(int containerId, Inventory playerInventory, TurretBaseBlockEntity base) {
         super(ModMenus.TURRET_BASE.get(), containerId);
         this.base = base;
-        this.data = createData(base);
+        this.data = createData();
         addDataSlots(data);
+        refreshData();
         expanders.addAll(base.getInventoryExpanders());
         int expanderSlots = 0;
         for (ExpanderInventoryBlockEntity expander : expanders) {
@@ -69,38 +72,40 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         addBaseSlots(base);
         addExpanderSlots();
         this.expanderSlotCount = expanderSlots;
-        addPlayerInventory(playerInventory, 8, 84 + (expanderSlots > 0 ? 18 : 0));
+        addPlayerInventory(playerInventory, 8, 84);
     }
 
     private void addBaseSlots(TurretBaseBlockEntity blockEntity) {
-        boolean advanced = blockEntity.getTier() >= 2;
-        if (advanced) {
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 20, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 62, 20, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 80, 20, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 62, 38, AddonItems::isAddonItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 80, 38, AddonItems::isAddonItem));
+        int tier = blockEntity.getTier();
+        if (tier >= 2) {
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 17, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 17, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 72, 18, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 92, 18, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 72, 52, stack -> stack.getItem() instanceof UpgradeItem));
+            if (tier >= 5) {
+                this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem));
+            } else {
+                this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem));
+            }
         } else {
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 20, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 44, 20, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 8, 38, stack -> stack.getItem() instanceof UpgradeItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 38, AddonItems::isAddonItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 38, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 8, 17, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 26, 17, stack -> stack.getItem() instanceof AmmoItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 44, 17, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 8, 35, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 35, AddonItems::isAddonItem));
+            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 35, AddonItems::isAddonItem));
         }
     }
 
     private void addExpanderSlots() {
-        int slotIndex = BaseSlotIndices.BASE_SLOT_COUNT;
-        int row = 0;
         int col = 0;
+        int row = 0;
         for (ExpanderInventoryBlockEntity expander : expanders) {
             for (int i = 0; i < expander.getContainerSize(); i++) {
                 this.addSlot(new Slot(expander, i, 62 + col * 18, 74 + row * 18));
-                slotIndex++;
                 col++;
-                if (col >= 9) {
+                if (col >= 3) {
                     col = 0;
                     row++;
                 }
@@ -108,35 +113,16 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         }
     }
 
-    private static ContainerData createData(@Nullable TurretBaseBlockEntity blockEntity) {
+    private ContainerData createData() {
         return new ContainerData() {
             @Override
             public int get(int index) {
-                if (blockEntity == null) {
-                    return 0;
-                }
-                return switch (index) {
-                    case 0 -> blockEntity.getEnergyStorage().getEnergyStored();
-                    case 1 -> blockEntity.getEffectiveMaxEnergy();
-                    case 2 -> blockEntity.isAttackMobs() ? 1 : 0;
-                    case 3 -> blockEntity.isAttackPlayers() ? 1 : 0;
-                    case 4 -> blockEntity.isAttackNeutral() ? 1 : 0;
-                    case 5 -> blockEntity.getAmmoCount(AmmoType.BULLET);
-                    case 6 -> blockEntity.getAmmoCount(AmmoType.GRENADE);
-                    case 7 -> blockEntity.getAmmoCount(AmmoType.BLAZING_CLAY);
-                    case 8 -> blockEntity.getAmmoCount(AmmoType.FERRO_SLUG);
-                    case 9 -> blockEntity.getAmmoCount(AmmoType.ROCKET);
-                    case 10 -> blockEntity.getAddonState().solar() ? 1 : 0;
-                    case 11 -> blockEntity.getAddonState().redstoneReactor() ? 1 : 0;
-                    case 12 -> blockEntity.getAddonState().lootDeleter() ? 1 : 0;
-                    case 13 -> blockEntity.getAddonState().damageAmp() ? 1 : 0;
-                    default -> 0;
-                };
+                return syncedData[index];
             }
 
             @Override
             public void set(int index, int value) {
-                // Target toggles are handled via network packets.
+                syncedData[index] = value;
             }
 
             @Override
@@ -144,6 +130,26 @@ public class TurretBaseMenu extends AbstractContainerMenu {
                 return DATA_COUNT;
             }
         };
+    }
+
+    public void refreshData() {
+        if (base == null) {
+            return;
+        }
+        syncedData[0] = base.getEnergyStorage().getEnergyStored();
+        syncedData[1] = base.getEffectiveMaxEnergy();
+        syncedData[2] = base.isAttackMobs() ? 1 : 0;
+        syncedData[3] = base.isAttackPlayers() ? 1 : 0;
+        syncedData[4] = base.isAttackNeutral() ? 1 : 0;
+        syncedData[5] = base.getAmmoCount(AmmoType.BULLET);
+        syncedData[6] = base.getAmmoCount(AmmoType.GRENADE);
+        syncedData[7] = base.getAmmoCount(AmmoType.BLAZING_CLAY);
+        syncedData[8] = base.getAmmoCount(AmmoType.FERRO_SLUG);
+        syncedData[9] = base.getAmmoCount(AmmoType.ROCKET);
+        syncedData[10] = base.getAddonState().solar() ? 1 : 0;
+        syncedData[11] = base.getAddonState().redstoneReactor() ? 1 : 0;
+        syncedData[12] = base.getAddonState().lootDeleter() ? 1 : 0;
+        syncedData[13] = base.getAddonState().damageAmp() ? 1 : 0;
     }
 
     private void addPlayerInventory(Inventory playerInventory, int left, int top) {
@@ -163,19 +169,27 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     }
 
     public int getEnergyStored() {
-        return data.get(0);
+        return syncedData[0];
     }
 
     public int getMaxEnergy() {
-        return data.get(1);
+        return syncedData[1];
     }
 
     public int getData(int index) {
-        return data.get(index);
+        return syncedData[index];
     }
 
     private int baseSlotCount() {
         return BaseSlotIndices.BASE_SLOT_COUNT + expanderSlotCount;
+    }
+
+    @Override
+    public void broadcastChanges() {
+        if (base != null && base.getLevel() != null && !base.getLevel().isClientSide()) {
+            refreshData();
+        }
+        super.broadcastChanges();
     }
 
     @Override

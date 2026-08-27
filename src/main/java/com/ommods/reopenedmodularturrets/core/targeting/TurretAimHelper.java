@@ -29,7 +29,7 @@ public final class TurretAimHelper {
     }
 
     public static float getRotationXZFromYawPitch(float yaw, float pitch) {
-        return (float) Math.toRadians(normalizeYaw(yaw));
+        return (float) Math.toRadians(normalizeYaw(90.0F - yaw));
     }
 
     private static float normalizeYaw(float yaw) {

@@ -66,7 +66,7 @@ public final class ModBlocks {
 
     public static final DeferredBlock<SolarAddonBlock> SOLAR_ADDON = BLOCKS.registerBlock(
             "addon_solar",
-            props -> new SolarAddonBlock(applyBaseProperties(props, MapColor.COLOR_YELLOW))
+            props -> new SolarAddonBlock(applyTurretHeadProperties(props, MapColor.COLOR_YELLOW))
     );
 
     public static final DeferredBlock<RedstoneReactorAddonBlock> REDSTONE_REACTOR_ADDON = BLOCKS.registerBlock(
@@ -99,7 +99,7 @@ public final class ModBlocks {
     private static DeferredBlock<TurretHeadBlock> registerTurretHead(TurretKind kind, String name, MapColor color) {
         return BLOCKS.registerBlock(
                 name,
-                props -> new TurretHeadBlock(kind, applyBaseProperties(props, color))
+                props -> new TurretHeadBlock(kind, applyTurretHeadProperties(props, color))
         );
     }
 
@@ -123,6 +123,10 @@ public final class ModBlocks {
                 .strength(4.0F, 1200.0F)
                 .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops();
+    }
+
+    private static BlockBehaviour.Properties applyTurretHeadProperties(BlockBehaviour.Properties props, MapColor color) {
+        return applyBaseProperties(props, color).noOcclusion();
     }
 
     private ModBlocks() {}

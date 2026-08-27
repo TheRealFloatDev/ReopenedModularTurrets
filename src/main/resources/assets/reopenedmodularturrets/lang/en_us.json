@@ -344,7 +344,12 @@
   "item.reopenedmodularturrets.ferro_slug": "Ferro-Magnetic Slug",
   "item.reopenedmodularturrets.rocket": "Rocket",
   "gui.reopenedmodularturrets.energy": "Energy: %s / %s FE",
-  "gui.reopenedmodularturrets.filter.mobs": "Mobs",
-  "gui.reopenedmodularturrets.filter.players": "Players",
-  "gui.reopenedmodularturrets.filter.neutral": "Neutral"
+  "gui.reopenedmodularturrets.addons": "Addons",
+  "gui.reopenedmodularturrets.upgrades": "Upgr.",
+  "gui.reopenedmodularturrets.trusted_players": "Trusted Players",
+  "gui.reopenedmodularturrets.add_trusted_player": "Add trusted player",
+  "gui.reopenedmodularturrets.trusted_none": "No trusted players",
+  "gui.reopenedmodularturrets.filter.mobs": "Attack Mobs",
+  "gui.reopenedmodularturrets.filter.players": "Attack Players",
+  "gui.reopenedmodularturrets.filter.neutral": "Attack Neutral"
 }

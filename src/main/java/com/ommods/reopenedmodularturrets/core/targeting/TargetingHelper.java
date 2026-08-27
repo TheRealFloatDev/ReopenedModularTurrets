@@ -26,7 +26,8 @@ public final class TargetingHelper {
             boolean attackMobs,
             boolean attackPlayers,
             boolean attackNeutral,
-            UUID ownerUuid
+            UUID ownerUuid,
+            List<String> trustedPlayers
     ) {
         double vertical = range + downRange;
         AABB box = new AABB(
@@ -36,7 +37,7 @@ public final class TargetingHelper {
         List<LivingEntity> candidates = level.getEntitiesOfClass(
                 LivingEntity.class,
                 box,
-                entity -> isValidTarget(entity, attackMobs, attackPlayers, attackNeutral, ownerUuid)
+                entity -> isValidTarget(entity, attackMobs, attackPlayers, attackNeutral, ownerUuid, trustedPlayers)
         );
 
         return candidates.stream()
@@ -56,15 +57,19 @@ public final class TargetingHelper {
             boolean attackMobs,
             boolean attackPlayers,
             boolean attackNeutral,
-            UUID ownerUuid
+            UUID ownerUuid,
+            List<String> trustedPlayers
     ) {
         if (!entity.isAlive() || entity.isRemoved()) {
             return false;
         }
-        if (ownerUuid != null && entity instanceof Player player && player.getUUID().equals(ownerUuid)) {
-            return false;
-        }
         if (entity instanceof Player player) {
+            if (ownerUuid != null && player.getUUID().equals(ownerUuid)) {
+                return false;
+            }
+            if (isTrusted(trustedPlayers, player.getName().getString())) {
+                return false;
+            }
             return attackPlayers && !player.isCreative() && !player.isSpectator();
         }
         if (entity instanceof Animal) {
@@ -74,6 +79,15 @@ public final class TargetingHelper {
             return attackMobs;
         }
         return attackMobs;
+    }
+
+    private static boolean isTrusted(List<String> trustedPlayers, String playerName) {
+        for (String trusted : trustedPlayers) {
+            if (trusted.equalsIgnoreCase(playerName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean[] activeFilters() {

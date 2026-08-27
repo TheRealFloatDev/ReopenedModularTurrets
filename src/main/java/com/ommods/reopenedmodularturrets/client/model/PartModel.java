@@ -10,7 +10,7 @@ public abstract class PartModel extends Model {
     protected final ModelPart root;
 
     protected PartModel(ModelPart root) {
-        super(RenderType::entitySolid);
+        super(RenderType::entityCutoutNoCull);
         this.root = root;
     }
 
