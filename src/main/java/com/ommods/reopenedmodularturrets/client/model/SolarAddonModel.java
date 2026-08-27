@@ -8,9 +8,15 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
 public class SolarAddonModel extends PartModel {
+    private final ModelPart legFront;
+    private final ModelPart panel;
+    private final ModelPart legBack;
 
     public SolarAddonModel(ModelPart root) {
         super(root);
+        this.legFront = root.getChild("leg_front");
+        this.panel = root.getChild("panel");
+        this.legBack = root.getChild("leg_back");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -31,5 +37,14 @@ public class SolarAddonModel extends PartModel {
                 PartPose.offsetAndRotation(0.0F, 16.0F, 0.0F, -0.2565324F, 0.0F, 0.0F));
 
         return LayerDefinition.create(mesh, 64, 64);
+    }
+
+    public void setRotationForTarget(float rotationX, float rotationZ) {
+        legFront.xRot = rotationX;
+        legFront.yRot = rotationZ;
+        panel.xRot = rotationX;
+        panel.yRot = rotationZ;
+        legBack.xRot = rotationX;
+        legBack.yRot = rotationZ;
     }
 }

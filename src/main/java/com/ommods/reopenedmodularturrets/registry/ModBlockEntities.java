@@ -2,15 +2,16 @@ package com.ommods.reopenedmodularturrets.registry;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
+import com.ommods.reopenedmodularturrets.block.LeverBlock;
+import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
+import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
 import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.LootDeleterAddonBlockEntity;
-import com.ommods.reopenedmodularturrets.blockentity.RedstoneReactorAddonBlockEntity;
-import com.ommods.reopenedmodularturrets.blockentity.SolarAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
-import net.minecraft.Util;
+import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
@@ -30,37 +31,25 @@ public final class ModBlockEntities {
                     ModBlocks.TURRET_BASE_TIER_3.get(),
                     ModBlocks.TURRET_BASE_TIER_4.get(),
                     ModBlocks.TURRET_BASE_TIER_5.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "turret_base")));
+            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "turret_base")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretHeadBlockEntity>> TURRET_HEAD =
             BLOCK_ENTITIES.register("turret_head", () -> BlockEntityType.Builder.of(
                     TurretHeadBlockEntity::new,
                     turretHeadBlocks()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "turret_head")));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarAddonBlockEntity>> SOLAR_ADDON =
-            BLOCK_ENTITIES.register("solar_addon", () -> BlockEntityType.Builder.of(
-                    SolarAddonBlockEntity::new,
-                    ModBlocks.SOLAR_ADDON.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "solar_addon")));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RedstoneReactorAddonBlockEntity>> REDSTONE_REACTOR_ADDON =
-            BLOCK_ENTITIES.register("redstone_reactor_addon", () -> BlockEntityType.Builder.of(
-                    RedstoneReactorAddonBlockEntity::new,
-                    ModBlocks.REDSTONE_REACTOR_ADDON.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "redstone_reactor_addon")));
+            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "turret_head")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LootDeleterAddonBlockEntity>> LOOT_DELETER_ADDON =
             BLOCK_ENTITIES.register("loot_deleter_addon", () -> BlockEntityType.Builder.of(
                     LootDeleterAddonBlockEntity::new,
                     ModBlocks.BASE_ADDON_LOOT_DELETER.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "loot_deleter_addon")));
+            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "loot_deleter_addon")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LeverBlockEntity>> LEVER_BLOCK =
             BLOCK_ENTITIES.register("lever_block", () -> BlockEntityType.Builder.of(
                     LeverBlockEntity::new,
                     ModBlocks.LEVER_BLOCK.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "lever_block")));
+            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "lever_block")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExpanderInventoryBlockEntity>> EXPANDER_INVENTORY =
             BLOCK_ENTITIES.register("expander_inventory", () -> BlockEntityType.Builder.of(
@@ -74,7 +63,7 @@ public final class ModBlockEntities {
                     ModBlocks.EXPANDER_INV_TIER_3.get(),
                     ModBlocks.EXPANDER_INV_TIER_4.get(),
                     ModBlocks.EXPANDER_INV_TIER_5.get()
-            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "expander_inventory")));
+            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "expander_inventory")));
 
     private static Block[] turretHeadBlocks() {
         return new Block[] {

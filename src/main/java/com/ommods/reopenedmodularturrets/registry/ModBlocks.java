@@ -5,8 +5,6 @@ import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
 import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
 import com.ommods.reopenedmodularturrets.block.LeverBlock;
 import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
-import com.ommods.reopenedmodularturrets.block.RedstoneReactorAddonBlock;
-import com.ommods.reopenedmodularturrets.block.SolarAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
@@ -63,16 +61,6 @@ public final class ModBlocks {
             registerTurretHead(TurretKind.MELEE, "melee_turret", MapColor.STONE);
     public static final DeferredBlock<TurretHeadBlock> CROSSBOW_TURRET =
             registerTurretHead(TurretKind.CROSSBOW, "crossbow_turret", MapColor.WOOD);
-
-    public static final DeferredBlock<SolarAddonBlock> SOLAR_ADDON = BLOCKS.registerBlock(
-            "addon_solar",
-            props -> new SolarAddonBlock(applyBaseProperties(props, MapColor.COLOR_YELLOW))
-    );
-
-    public static final DeferredBlock<RedstoneReactorAddonBlock> REDSTONE_REACTOR_ADDON = BLOCKS.registerBlock(
-            "addon_redstone_reactor",
-            props -> new RedstoneReactorAddonBlock(applyBaseProperties(props, MapColor.COLOR_RED))
-    );
 
     public static final DeferredBlock<LeverBlock> LEVER_BLOCK = BLOCKS.registerBlock(
             "lever_block",

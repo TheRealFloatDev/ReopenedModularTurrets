@@ -61,14 +61,6 @@
       "required": false
     },
     {
-      "id": "reopenedmodularturrets:addon_solar",
-      "required": false
-    },
-    {
-      "id": "reopenedmodularturrets:addon_redstone_reactor",
-      "required": false
-    },
-    {
       "id": "reopenedmodularturrets:base_addon_loot_deleter",
       "required": false
     },

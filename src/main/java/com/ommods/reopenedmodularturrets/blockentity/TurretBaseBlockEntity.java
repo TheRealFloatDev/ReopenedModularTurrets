@@ -1,8 +1,6 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
 import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
-import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
-import com.ommods.reopenedmodularturrets.block.RedstoneReactorAddonBlock;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
 import com.ommods.reopenedmodularturrets.core.addons.AddonState;
@@ -65,8 +63,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private int powerExpanderBonus = 0;
 
     private final List<TurretHeadBlockEntity> turretHeads = new ArrayList<>();
-    private final List<SolarAddonBlockEntity> solarAddons = new ArrayList<>();
-    private final List<RedstoneReactorAddonBlockEntity> redstoneReactors = new ArrayList<>();
     private final List<LootDeleterAddonBlockEntity> lootDeleters = new ArrayList<>();
     private final List<ExpanderInventoryBlockEntity> inventoryExpanders = new ArrayList<>();
 
@@ -234,8 +230,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             return;
         }
         turretHeads.clear();
-        solarAddons.clear();
-        redstoneReactors.clear();
         lootDeleters.clear();
         inventoryExpanders.clear();
         powerExpanderBonus = 0;
@@ -248,12 +242,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             if (neighbor instanceof TurretHeadBlockEntity head) {
                 turretHeads.add(head);
                 head.bindBase(this);
-            } else if (neighbor instanceof SolarAddonBlockEntity solar) {
-                solarAddons.add(solar);
-                solar.bindBase(this);
-            } else if (neighbor instanceof RedstoneReactorAddonBlockEntity reactor) {
-                redstoneReactors.add(reactor);
-                reactor.bindBase(this);
             } else if (neighbor instanceof LootDeleterAddonBlockEntity lootDeleter) {
                 lootDeleters.add(lootDeleter);
                 lootDeleter.bindBase(this);
@@ -286,8 +274,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         boolean fakeDrops = hasAddonItem(ModItems.ADDON_FAKE_DROPS.get());
         boolean serialPort = hasAddonItem(ModItems.ADDON_SERIAL_PORT.get());
         return new AddonState(
-                !solarAddons.isEmpty(),
-                !redstoneReactors.isEmpty(),
+                tier >= 2 && hasAddonItem(ModItems.SOLAR_ADDON_ITEM.get()),
+                hasAddonItem(ModItems.REDSTONE_REACTOR_ADDON_ITEM.get()),
                 !lootDeleters.isEmpty(),
                 damageAmp,
                 potentia,
@@ -340,14 +328,29 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (turretHeads.isEmpty()) {
             refreshNeighbors();
         }
-        for (SolarAddonBlockEntity solar : solarAddons) {
-            solar.tickGeneration(level);
-        }
-        for (RedstoneReactorAddonBlockEntity reactor : redstoneReactors) {
-            reactor.tickGeneration(level);
-        }
+        tickInventoryAddons(level);
         for (TurretHeadBlockEntity head : turretHeads) {
             head.tickCombat(level, this);
+        }
+    }
+
+    private void tickInventoryAddons(ServerLevel level) {
+        if (addonState.solar() && level.canSeeSky(worldPosition.above())) {
+            int generation = ModConfig.SOLAR_GENERATION.get();
+            int current = energyStorage.getEnergyStored();
+            int capacity = getEffectiveMaxEnergy();
+            energyStorage.receiveEnergy(Math.min(capacity - current, generation), false);
+            setChanged();
+        }
+        if (addonState.redstoneReactor()) {
+            int signal = level.getBestNeighborSignal(worldPosition);
+            if (signal > 0) {
+                int generation = signal * 4;
+                int current = energyStorage.getEnergyStored();
+                int capacity = getEffectiveMaxEnergy();
+                energyStorage.receiveEnergy(Math.min(capacity - current, generation), false);
+                setChanged();
+            }
         }
     }
 

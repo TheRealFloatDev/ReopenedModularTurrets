@@ -17,6 +17,8 @@ public final class AddonItems {
                 || item == ModItems.ADDON_RECYCLER.get()
                 || item == ModItems.ADDON_CONCEALER.get()
                 || item == ModItems.ADDON_FAKE_DROPS.get()
-                || item == ModItems.ADDON_SERIAL_PORT.get();
+                || item == ModItems.ADDON_SERIAL_PORT.get()
+                || item == ModItems.SOLAR_ADDON_ITEM.get()
+                || item == ModItems.REDSTONE_REACTOR_ADDON_ITEM.get();
     }
 }
