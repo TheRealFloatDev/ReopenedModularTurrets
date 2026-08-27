@@ -1,8 +1,12 @@
 package com.ommods.reopenedmodularturrets.menu;
 
+import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
+import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
 import com.ommods.reopenedmodularturrets.item.AmmoItem;
+import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.item.UpgradeItem;
+import com.ommods.reopenedmodularturrets.menu.slot.FilteredSlot;
 import com.ommods.reopenedmodularturrets.registry.ModMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,10 +18,16 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TurretBaseMenu extends AbstractContainerMenu {
-    private static final int BASE_SLOT_COUNT = 6;
+    private static final int DATA_COUNT = 14;
+
     private final TurretBaseBlockEntity base;
     private final ContainerData data;
+    private final List<ExpanderInventoryBlockEntity> expanders = new ArrayList<>();
+    private final int expanderSlotCount;
 
     public TurretBaseMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(containerId, playerInventory, extraData.readBlockPos());
@@ -33,16 +43,17 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         this.data = createData(blockEntity);
         addDataSlots(data);
 
+        int expanderSlots = 0;
         if (blockEntity != null) {
-            for (int row = 0; row < 2; row++) {
-                for (int col = 0; col < 3; col++) {
-                    int index = row * 3 + col;
-                    this.addSlot(new Slot(blockEntity, index, 44 + col * 18, 20 + row * 18));
-                }
+            expanders.addAll(blockEntity.getInventoryExpanders());
+            for (ExpanderInventoryBlockEntity expander : expanders) {
+                expanderSlots += expander.getContainerSize();
             }
+            addBaseSlots(blockEntity);
+            addExpanderSlots();
         }
-
-        addPlayerInventory(playerInventory, 8, 84);
+        this.expanderSlotCount = expanderSlots;
+        addPlayerInventory(playerInventory, 8, 84 + (expanderSlots > 0 ? 18 : 0));
     }
 
     public TurretBaseMenu(int containerId, Inventory playerInventory, TurretBaseBlockEntity base) {
@@ -50,13 +61,41 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         this.base = base;
         this.data = createData(base);
         addDataSlots(data);
-        for (int row = 0; row < 2; row++) {
-            for (int col = 0; col < 3; col++) {
-                int index = row * 3 + col;
-                this.addSlot(new Slot(base, index, 44 + col * 18, 20 + row * 18));
+        expanders.addAll(base.getInventoryExpanders());
+        int expanderSlots = 0;
+        for (ExpanderInventoryBlockEntity expander : expanders) {
+            expanderSlots += expander.getContainerSize();
+        }
+        addBaseSlots(base);
+        addExpanderSlots();
+        this.expanderSlotCount = expanderSlots;
+        addPlayerInventory(playerInventory, 8, 84 + (expanderSlots > 0 ? 18 : 0));
+    }
+
+    private void addBaseSlots(TurretBaseBlockEntity blockEntity) {
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START, 26, 20, stack -> stack.getItem() instanceof AmmoItem));
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.AMMO_START + 1, 44, 20, stack -> stack.getItem() instanceof AmmoItem));
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 26, 38, stack -> stack.getItem() instanceof UpgradeItem));
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 44, 38, stack -> stack.getItem() instanceof UpgradeItem));
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 26, 56, AddonItems::isAddonItem));
+        this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 44, 56, AddonItems::isAddonItem));
+    }
+
+    private void addExpanderSlots() {
+        int slotIndex = BaseSlotIndices.BASE_SLOT_COUNT;
+        int row = 0;
+        int col = 0;
+        for (ExpanderInventoryBlockEntity expander : expanders) {
+            for (int i = 0; i < expander.getContainerSize(); i++) {
+                this.addSlot(new Slot(expander, i, 62 + col * 18, 74 + row * 18));
+                slotIndex++;
+                col++;
+                if (col >= 9) {
+                    col = 0;
+                    row++;
+                }
             }
         }
-        addPlayerInventory(playerInventory, 8, 84);
     }
 
     private static ContainerData createData(@Nullable TurretBaseBlockEntity blockEntity) {
@@ -68,10 +107,19 @@ public class TurretBaseMenu extends AbstractContainerMenu {
                 }
                 return switch (index) {
                     case 0 -> blockEntity.getEnergyStorage().getEnergyStored();
-                    case 1 -> blockEntity.getEnergyStorage().getMaxEnergyStored();
+                    case 1 -> blockEntity.getEffectiveMaxEnergy();
                     case 2 -> blockEntity.isAttackMobs() ? 1 : 0;
                     case 3 -> blockEntity.isAttackPlayers() ? 1 : 0;
                     case 4 -> blockEntity.isAttackNeutral() ? 1 : 0;
+                    case 5 -> blockEntity.getAmmoCount(AmmoType.BULLET);
+                    case 6 -> blockEntity.getAmmoCount(AmmoType.GRENADE);
+                    case 7 -> blockEntity.getAmmoCount(AmmoType.BLAZING_CLAY);
+                    case 8 -> blockEntity.getAmmoCount(AmmoType.FERRO_SLUG);
+                    case 9 -> blockEntity.getAmmoCount(AmmoType.ROCKET);
+                    case 10 -> blockEntity.getAddonState().solar() ? 1 : 0;
+                    case 11 -> blockEntity.getAddonState().redstoneReactor() ? 1 : 0;
+                    case 12 -> blockEntity.getAddonState().lootDeleter() ? 1 : 0;
+                    case 13 -> blockEntity.getAddonState().damageAmp() ? 1 : 0;
                     default -> 0;
                 };
             }
@@ -83,7 +131,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
             @Override
             public int getCount() {
-                return 5;
+                return DATA_COUNT;
             }
         };
     }
@@ -112,6 +160,14 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         return data.get(1);
     }
 
+    public int getData(int index) {
+        return data.get(index);
+    }
+
+    private int baseSlotCount() {
+        return BaseSlotIndices.BASE_SLOT_COUNT + expanderSlotCount;
+    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack result = ItemStack.EMPTY;
@@ -121,15 +177,26 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         }
         ItemStack stack = slot.getItem();
         result = stack.copy();
-        if (index < BASE_SLOT_COUNT) {
-            if (!this.moveItemStackTo(stack, BASE_SLOT_COUNT, this.slots.size(), true)) {
+        int baseSlots = baseSlotCount();
+        if (index < baseSlots) {
+            if (!this.moveItemStackTo(stack, baseSlots, this.slots.size(), true)) {
                 return ItemStack.EMPTY;
             }
-        } else if (stack.getItem() instanceof AmmoItem || stack.getItem() instanceof UpgradeItem) {
-            if (!this.moveItemStackTo(stack, 0, BASE_SLOT_COUNT, false)) {
+        } else if (stack.getItem() instanceof AmmoItem) {
+            if (!this.moveItemStackTo(stack, BaseSlotIndices.AMMO_START, BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT, false)
+                    && !this.moveItemStackTo(stack, BaseSlotIndices.BASE_SLOT_COUNT, baseSlots, false)) {
                 return ItemStack.EMPTY;
             }
-        } else if (!this.moveItemStackTo(stack, 0, BASE_SLOT_COUNT, false)) {
+        } else if (stack.getItem() instanceof UpgradeItem) {
+            if (!this.moveItemStackTo(stack, BaseSlotIndices.UPGRADE_START, BaseSlotIndices.UPGRADE_START + BaseSlotIndices.UPGRADE_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (AddonItems.isAddonItem(stack)) {
+            if (!this.moveItemStackTo(stack, BaseSlotIndices.ADDON_START, BaseSlotIndices.ADDON_START + BaseSlotIndices.ADDON_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (!this.moveItemStackTo(stack, BaseSlotIndices.BASE_SLOT_COUNT, baseSlots, false)
+                && !this.moveItemStackTo(stack, 0, BaseSlotIndices.BASE_SLOT_COUNT, false)) {
             return ItemStack.EMPTY;
         }
         if (stack.isEmpty()) {

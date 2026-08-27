@@ -1,10 +1,14 @@
 package com.ommods.reopenedmodularturrets.block;
 
 import com.mojang.serialization.MapCodec;
+import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -57,5 +61,44 @@ public class TurretHeadBlock extends BaseEntityBlock {
             return null;
         }
         return TurretBaseBlock.createTickerHelper(type, ModBlockEntities.TURRET_HEAD.get(), TurretHeadBlockEntity::serverTick);
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (level.isClientSide()) {
+            return;
+        }
+        refreshAdjacentBase(level, pos);
+        if (!validateTier(level, pos)) {
+            Block.popResource(level, pos, new ItemStack(this));
+            level.removeBlock(pos, false);
+        }
+    }
+
+    private static boolean validateTier(Level level, BlockPos pos) {
+        for (Direction direction : Direction.values()) {
+            BlockEntity neighbor = level.getBlockEntity(pos.relative(direction));
+            if (neighbor instanceof TurretBaseBlockEntity base
+                    && level.getBlockEntity(pos) instanceof TurretHeadBlockEntity head) {
+                return base.getTier() >= head.getKind().getMinTier();
+            }
+        }
+        return true;
+    }
+
+    private static void refreshAdjacentBase(Level level, BlockPos pos) {
+        for (Direction direction : Direction.values()) {
+            BlockEntity neighbor = level.getBlockEntity(pos.relative(direction));
+            if (neighbor instanceof TurretBaseBlockEntity base) {
+                base.refreshNeighbors();
+            }
+        }
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        refreshAdjacentBase(level, pos);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 }

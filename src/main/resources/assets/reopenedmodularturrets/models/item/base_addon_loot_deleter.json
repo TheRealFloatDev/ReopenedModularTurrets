@@ -1,1 +1,3 @@
-{"parent":"reopenedmodularturrets:block/base_addon_loot_deleter"}
+{
+  "parent": "reopenedmodularturrets:block/base_addon_loot_deleter"
+}

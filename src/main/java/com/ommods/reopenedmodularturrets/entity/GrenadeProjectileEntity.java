@@ -13,6 +13,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class GrenadeProjectileEntity extends ThrowableItemProjectile {
     private float damage = 6.0F;
+    private boolean directHit = false;
 
     public GrenadeProjectileEntity(EntityType<? extends GrenadeProjectileEntity> type, Level level) {
         super(type, level);
@@ -24,6 +25,10 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
 
     public void setDamage(float damage) {
         this.damage = damage;
+    }
+
+    public void setDirectHit(boolean directHit) {
+        this.directHit = directHit;
     }
 
     @Override
@@ -46,6 +51,11 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
             if (result.getEntity() instanceof LivingEntity living) {
                 living.hurt(serverLevel.damageSources().mobProjectile(this, null), damage);
             }
+            if (directHit) {
+                discard();
+                return;
+            }
+            serverLevel.explode(this, getX(), getY(), getZ(), damage, Level.ExplosionInteraction.MOB);
             discard();
         }
     }

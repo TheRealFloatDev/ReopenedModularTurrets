@@ -1,6 +1,3 @@
 {
-  "parent": "omlib:item/default_item",
-  "textures": {
-    "layer0": "reopenedmodularturrets:items/addon_redstone_reactor"
-  }
+  "parent": "reopenedmodularturrets:block/addon_redstone_reactor"
 }

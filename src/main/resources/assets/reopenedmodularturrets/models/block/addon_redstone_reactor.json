@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "reopenedmodularturrets:block/addon_redstone_reactor"
+  }
+}

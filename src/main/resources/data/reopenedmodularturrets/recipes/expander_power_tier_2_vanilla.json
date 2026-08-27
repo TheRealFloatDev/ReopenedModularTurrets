@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IRI",
+    "RBR",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:expander_power_tier_1"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:expander_power_tier_2",
+    "count": 1
+  }
+}

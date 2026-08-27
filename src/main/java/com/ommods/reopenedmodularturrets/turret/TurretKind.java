@@ -5,8 +5,9 @@ import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
+import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +35,10 @@ public enum TurretKind {
     TurretKind(int minTier, boolean directed) {
         this.minTier = minTier;
         this.directed = directed;
+    }
+
+    public boolean isEnabled() {
+        return this != ARC && this != MELEE && this != CROSSBOW && this != PLASMA;
     }
 
     public int getMinTier() {
@@ -121,28 +126,35 @@ public enum TurretKind {
 
     public AmmoType getAmmoType() {
         return switch (this) {
-            case GUN, LASER, RELATIVISTIC -> AmmoType.BULLET;
+            case GUN, RELATIVISTIC -> AmmoType.BULLET;
             case GRENADE -> AmmoType.GRENADE;
             case INCENDIARY -> AmmoType.BLAZING_CLAY;
             case ROCKET -> AmmoType.ROCKET;
             case RAIL_GUN -> AmmoType.FERRO_SLUG;
-            case PLASMA, ARC, CROSSBOW -> AmmoType.BULLET;
+            case LASER, PLASMA, ARC, CROSSBOW -> null;
             case DISPOSABLE_ITEM, POTATO_CANNON, TELEPORTER, MELEE -> null;
         };
     }
 
-    public void fire(TurretHeadBlockEntity turret, ServerLevel level, TurretBaseBlockEntity base, LivingEntity target) {
+    public void fire(
+            TurretHeadBlockEntity turret,
+            ServerLevel level,
+            TurretBaseBlockEntity base,
+            LivingEntity target,
+            float damage
+    ) {
         Vec3 origin = Vec3.atCenterOf(turret.getBlockPos());
-        DamageSource source = level.damageSources().mobAttack(null);
         switch (this) {
-            case GUN, POTATO_CANNON, DISPOSABLE_ITEM, LASER, RAIL_GUN, MELEE, CROSSBOW, ARC ->
-                    target.hurt(source, getDamage());
+            case GUN, POTATO_CANNON, DISPOSABLE_ITEM, CROSSBOW -> applyHitscan(level, target, damage);
+            case LASER -> applyLaserHit(level, target, damage);
+            case RAIL_GUN -> applyArmorPiercingHit(level, target, damage);
+            case MELEE, ARC -> target.hurt(level.damageSources().mobAttack(null), damage);
             case INCENDIARY -> {
-                target.hurt(source, getDamage());
+                target.hurt(level.damageSources().mobAttack(null), damage);
                 target.igniteForSeconds(4);
             }
             case RELATIVISTIC -> {
-                target.hurt(source, getDamage());
+                target.hurt(level.damageSources().mobAttack(null), damage);
                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1));
                 target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 0));
             }
@@ -151,17 +163,41 @@ public enum TurretKind {
                     target.teleportTo(target.getX(), target.getY() + 8.0, target.getZ());
                 }
             }
-            case GRENADE, ROCKET, PLASMA -> spawnProjectile(level, origin, target, getDamage(), this == ROCKET ? 1.0F : 0.8F);
+            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, false);
+            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, false);
+            case PLASMA -> spawnProjectile(level, origin, target, damage, 1.0F, true);
         }
     }
 
-    private static void spawnProjectile(ServerLevel level, Vec3 origin, LivingEntity target, float damage, float speed) {
+    private static void applyHitscan(ServerLevel level, LivingEntity target, float damage) {
+        target.hurt(level.damageSources().mobAttack(null), damage);
+        level.playSound(null, target.blockPosition(), ModSounds.BULLET_HIT.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+    }
+
+    private static void applyLaserHit(ServerLevel level, LivingEntity target, float damage) {
+        target.hurt(level.damageSources().mobAttack(null), damage);
+        level.playSound(null, target.blockPosition(), ModSounds.BULLET_HIT.get(), SoundSource.BLOCKS, 0.4F, 1.2F);
+    }
+
+    private static void applyArmorPiercingHit(ServerLevel level, LivingEntity target, float damage) {
+        target.hurt(level.damageSources().magic(), damage);
+    }
+
+    private static void spawnProjectile(
+            ServerLevel level,
+            Vec3 origin,
+            LivingEntity target,
+            float damage,
+            float speed,
+            boolean directHit
+    ) {
         Vec3 targetPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
         Vec3 direction = targetPos.subtract(origin).normalize();
         GrenadeProjectileEntity projectile = new GrenadeProjectileEntity(level);
         projectile.setPos(origin.x, origin.y, origin.z);
         projectile.shoot(direction.x, direction.y, direction.z, speed, 1.0F);
         projectile.setDamage(damage);
+        projectile.setDirectHit(directHit);
         level.addFreshEntity(projectile);
     }
 }

@@ -9,6 +9,7 @@ import com.ommods.reopenedmodularturrets.registry.ModCreativeTabs;
 import com.ommods.reopenedmodularturrets.registry.ModEntityTypes;
 import com.ommods.reopenedmodularturrets.registry.ModItems;
 import com.ommods.reopenedmodularturrets.registry.ModMenus;
+import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -34,6 +35,7 @@ public class ReopenedModularTurrets {
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
+        ModSounds.SOUND_EVENTS.register(modEventBus);
 
         NeoForge.EVENT_BUS.register(ModEvents.class);
 

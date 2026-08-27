@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "reopenedmodularturrets:block/turret_base_tier_3"
+  }
+}

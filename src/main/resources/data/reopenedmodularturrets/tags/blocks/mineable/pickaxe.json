@@ -1,0 +1,120 @@
+{
+  "values": [
+    {
+      "id": "reopenedmodularturrets:turret_base_tier_1",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:turret_base_tier_2",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:turret_base_tier_3",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:turret_base_tier_4",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:turret_base_tier_5",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:gun_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:grenade_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:disposable_item_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:potato_cannon_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:incendiary_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:rocket_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:relativistic_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:teleporter_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:laser_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:rail_gun_turret",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:addon_solar",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:addon_redstone_reactor",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:base_addon_loot_deleter",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:lever_block",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_power_tier_1",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_power_tier_2",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_power_tier_3",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_power_tier_4",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_power_tier_5",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_inv_tier_1",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_inv_tier_2",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_inv_tier_3",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_inv_tier_4",
+      "required": false
+    },
+    {
+      "id": "reopenedmodularturrets:expander_inv_tier_5",
+      "required": false
+    }
+  ]
+}

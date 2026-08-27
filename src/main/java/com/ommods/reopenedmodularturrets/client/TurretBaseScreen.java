@@ -14,12 +14,12 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
+            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/turret_base.png");
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageHeight = 184;
     }
 
     @Override
@@ -46,12 +46,44 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        int energyWidth = menu.getMaxEnergy() > 0
+                ? menu.getEnergyStored() * 52 / menu.getMaxEnergy()
+                : 0;
+        graphics.fill(x + 8, y + 52, x + 8 + energyWidth, y + 60, 0xFF55AAFF);
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
-        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 18, 0x404040, false);
         graphics.drawString(font, "FE: " + menu.getEnergyStored() + "/" + menu.getMaxEnergy(), 8, 6, 0x404040, false);
+        graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.ammo"), 8, 16, 0x404040, false);
+        graphics.drawString(font,
+                "B:" + menu.getData(5) + " G:" + menu.getData(6) + " C:" + menu.getData(7),
+                8, 26, 0x606060, false);
+        graphics.drawString(font,
+                "S:" + menu.getData(8) + " R:" + menu.getData(9),
+                8, 36, 0x606060, false);
+        String addons = buildAddonStatus();
+        if (!addons.isEmpty()) {
+            graphics.drawString(font, addons, 62, 6, 0x006600, false);
+        }
+    }
+
+    private String buildAddonStatus() {
+        StringBuilder builder = new StringBuilder();
+        if (menu.getData(10) == 1) {
+            builder.append("Solar ");
+        }
+        if (menu.getData(11) == 1) {
+            builder.append("Reactor ");
+        }
+        if (menu.getData(12) == 1) {
+            builder.append("LootDel ");
+        }
+        if (menu.getData(13) == 1) {
+            builder.append("DmgAmp");
+        }
+        return builder.toString().trim();
     }
 }

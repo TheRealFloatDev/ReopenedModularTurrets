@@ -1,8 +1,11 @@
 package com.ommods.reopenedmodularturrets.registry;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
-import com.ommods.reopenedmodularturrets.block.BaseAddonBlock;
+import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
+import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
 import com.ommods.reopenedmodularturrets.block.LeverBlock;
+import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
+import com.ommods.reopenedmodularturrets.block.RedstoneReactorAddonBlock;
 import com.ommods.reopenedmodularturrets.block.SolarAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
@@ -66,20 +69,51 @@ public final class ModBlocks {
             props -> new SolarAddonBlock(applyBaseProperties(props, MapColor.COLOR_YELLOW))
     );
 
+    public static final DeferredBlock<RedstoneReactorAddonBlock> REDSTONE_REACTOR_ADDON = BLOCKS.registerBlock(
+            "addon_redstone_reactor",
+            props -> new RedstoneReactorAddonBlock(applyBaseProperties(props, MapColor.COLOR_RED))
+    );
+
     public static final DeferredBlock<LeverBlock> LEVER_BLOCK = BLOCKS.registerBlock(
             "lever_block",
             props -> new LeverBlock(applyBaseProperties(props, MapColor.STONE))
     );
 
-    public static final DeferredBlock<BaseAddonBlock> BASE_ADDON_LOOT_DELETER = BLOCKS.registerBlock(
+    public static final DeferredBlock<LootDeleterAddonBlock> BASE_ADDON_LOOT_DELETER = BLOCKS.registerBlock(
             "base_addon_loot_deleter",
-            props -> new BaseAddonBlock(applyBaseProperties(props, MapColor.COLOR_BLACK))
+            props -> new LootDeleterAddonBlock(applyBaseProperties(props, MapColor.COLOR_BLACK))
     );
+
+    public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_1 = registerPowerExpander(1);
+    public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_2 = registerPowerExpander(2);
+    public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_3 = registerPowerExpander(3);
+    public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_4 = registerPowerExpander(4);
+    public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_5 = registerPowerExpander(5);
+
+    public static final DeferredBlock<ExpanderInventoryBlock> EXPANDER_INV_TIER_1 = registerInventoryExpander(1);
+    public static final DeferredBlock<ExpanderInventoryBlock> EXPANDER_INV_TIER_2 = registerInventoryExpander(2);
+    public static final DeferredBlock<ExpanderInventoryBlock> EXPANDER_INV_TIER_3 = registerInventoryExpander(3);
+    public static final DeferredBlock<ExpanderInventoryBlock> EXPANDER_INV_TIER_4 = registerInventoryExpander(4);
+    public static final DeferredBlock<ExpanderInventoryBlock> EXPANDER_INV_TIER_5 = registerInventoryExpander(5);
 
     private static DeferredBlock<TurretHeadBlock> registerTurretHead(TurretKind kind, String name, MapColor color) {
         return BLOCKS.registerBlock(
                 name,
                 props -> new TurretHeadBlock(kind, applyBaseProperties(props, color))
+        );
+    }
+
+    private static DeferredBlock<ExpanderPowerBlock> registerPowerExpander(int tier) {
+        return BLOCKS.registerBlock(
+                "expander_power_tier_" + tier,
+                props -> new ExpanderPowerBlock(applyBaseProperties(props, MapColor.METAL))
+        );
+    }
+
+    private static DeferredBlock<ExpanderInventoryBlock> registerInventoryExpander(int tier) {
+        return BLOCKS.registerBlock(
+                "expander_inv_tier_" + tier,
+                props -> new ExpanderInventoryBlock(applyBaseProperties(props, MapColor.QUARTZ))
         );
     }
 

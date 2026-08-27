@@ -35,6 +35,9 @@ public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBl
             int packedLight,
             int packedOverlay
     ) {
+        if (blockEntity.getBase() != null && blockEntity.getBase().getAddonState().concealer()) {
+            return;
+        }
         TurretKind kind = blockEntity.getKind();
         float rotationX = 0.0F;
         float rotationZ = 0.0F;

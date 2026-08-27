@@ -5,6 +5,7 @@ import com.ommods.reopenedmodularturrets.item.AmmoItem;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.item.BulletItem;
 import com.ommods.reopenedmodularturrets.item.GrenadeItem;
+import com.ommods.reopenedmodularturrets.item.MemoryCardItem;
 import com.ommods.reopenedmodularturrets.item.UpgradeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -35,8 +36,20 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> MELEE_TURRET_ITEM = ITEMS.registerSimpleBlockItem("melee_turret", ModBlocks.MELEE_TURRET);
     public static final DeferredItem<BlockItem> CROSSBOW_TURRET_ITEM = ITEMS.registerSimpleBlockItem("crossbow_turret", ModBlocks.CROSSBOW_TURRET);
     public static final DeferredItem<BlockItem> SOLAR_ADDON_ITEM = ITEMS.registerSimpleBlockItem("addon_solar", ModBlocks.SOLAR_ADDON);
+    public static final DeferredItem<BlockItem> REDSTONE_REACTOR_ADDON_ITEM = ITEMS.registerSimpleBlockItem("addon_redstone_reactor", ModBlocks.REDSTONE_REACTOR_ADDON);
     public static final DeferredItem<BlockItem> LEVER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("lever_block", ModBlocks.LEVER_BLOCK);
     public static final DeferredItem<BlockItem> BASE_ADDON_LOOT_DELETER_ITEM = ITEMS.registerSimpleBlockItem("base_addon_loot_deleter", ModBlocks.BASE_ADDON_LOOT_DELETER);
+
+    public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_1_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_1", ModBlocks.EXPANDER_POWER_TIER_1);
+    public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_2_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_2", ModBlocks.EXPANDER_POWER_TIER_2);
+    public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_3_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_3", ModBlocks.EXPANDER_POWER_TIER_3);
+    public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_4_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_4", ModBlocks.EXPANDER_POWER_TIER_4);
+    public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_5_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_5", ModBlocks.EXPANDER_POWER_TIER_5);
+    public static final DeferredItem<BlockItem> EXPANDER_INV_TIER_1_ITEM = ITEMS.registerSimpleBlockItem("expander_inv_tier_1", ModBlocks.EXPANDER_INV_TIER_1);
+    public static final DeferredItem<BlockItem> EXPANDER_INV_TIER_2_ITEM = ITEMS.registerSimpleBlockItem("expander_inv_tier_2", ModBlocks.EXPANDER_INV_TIER_2);
+    public static final DeferredItem<BlockItem> EXPANDER_INV_TIER_3_ITEM = ITEMS.registerSimpleBlockItem("expander_inv_tier_3", ModBlocks.EXPANDER_INV_TIER_3);
+    public static final DeferredItem<BlockItem> EXPANDER_INV_TIER_4_ITEM = ITEMS.registerSimpleBlockItem("expander_inv_tier_4", ModBlocks.EXPANDER_INV_TIER_4);
+    public static final DeferredItem<BlockItem> EXPANDER_INV_TIER_5_ITEM = ITEMS.registerSimpleBlockItem("expander_inv_tier_5", ModBlocks.EXPANDER_INV_TIER_5);
 
     public static final DeferredItem<BulletItem> BULLET = ITEMS.registerItem("bullet", BulletItem::new);
     public static final DeferredItem<GrenadeItem> GRENADE = ITEMS.registerItem("grenade", GrenadeItem::new);
@@ -61,9 +74,8 @@ public final class ModItems {
     public static final DeferredItem<Item> BARREL_TIER_5 = registerComponent("barrel_tier_5");
     public static final DeferredItem<Item> IO_BUS = registerComponent("io_bus");
     public static final DeferredItem<Item> ENERGETIC_BARREL = registerComponent("energetic_barrel");
-    public static final DeferredItem<Item> MEMORY_CARD = registerComponent("memory_card");
+    public static final DeferredItem<MemoryCardItem> MEMORY_CARD = ITEMS.registerItem("memory_card", MemoryCardItem::new);
 
-    public static final DeferredItem<Item> ADDON_REDSTONE_REACTOR = registerComponent("addon_redstone_reactor");
     public static final DeferredItem<Item> ADDON_DAMAGE_AMP = registerComponent("addon_damage_amp");
     public static final DeferredItem<Item> ADDON_POTENTIA = registerComponent("addon_potentia");
     public static final DeferredItem<Item> ADDON_SERIAL_PORT = registerComponent("addon_serial_port");

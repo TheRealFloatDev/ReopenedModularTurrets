@@ -1,7 +1,11 @@
 package com.ommods.reopenedmodularturrets.registry;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
+import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
+import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
+import com.ommods.reopenedmodularturrets.blockentity.LootDeleterAddonBlockEntity;
+import com.ommods.reopenedmodularturrets.blockentity.RedstoneReactorAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.SolarAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
@@ -38,6 +42,32 @@ public final class ModBlockEntities {
                     SolarAddonBlockEntity::new,
                     ModBlocks.SOLAR_ADDON.get()
             ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "solar_addon")));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RedstoneReactorAddonBlockEntity>> REDSTONE_REACTOR_ADDON =
+            BLOCK_ENTITIES.register("redstone_reactor_addon", () -> BlockEntityType.Builder.of(
+                    RedstoneReactorAddonBlockEntity::new,
+                    ModBlocks.REDSTONE_REACTOR_ADDON.get()
+            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "redstone_reactor_addon")));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LootDeleterAddonBlockEntity>> LOOT_DELETER_ADDON =
+            BLOCK_ENTITIES.register("loot_deleter_addon", () -> BlockEntityType.Builder.of(
+                    LootDeleterAddonBlockEntity::new,
+                    ModBlocks.BASE_ADDON_LOOT_DELETER.get()
+            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "loot_deleter_addon")));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExpanderInventoryBlockEntity>> EXPANDER_INVENTORY =
+            BLOCK_ENTITIES.register("expander_inventory", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new ExpanderInventoryBlockEntity(
+                            pos,
+                            state,
+                            ((ExpanderInventoryBlock) state.getBlock()).getTier()
+                    ),
+                    ModBlocks.EXPANDER_INV_TIER_1.get(),
+                    ModBlocks.EXPANDER_INV_TIER_2.get(),
+                    ModBlocks.EXPANDER_INV_TIER_3.get(),
+                    ModBlocks.EXPANDER_INV_TIER_4.get(),
+                    ModBlocks.EXPANDER_INV_TIER_5.get()
+            ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, "expander_inventory")));
 
     private static Block[] turretHeadBlocks() {
         return new Block[] {
