@@ -37,8 +37,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private boolean attackPlayers = false;
     private boolean attackNeutral = false;
 
-    private final List<GunTurretBlockEntity> gunTurrets = new ArrayList<>();
-    private final List<GrenadeTurretBlockEntity> grenadeTurrets = new ArrayList<>();
+    private final List<TurretHeadBlockEntity> turretHeads = new ArrayList<>();
     private final List<SolarAddonBlockEntity> solarAddons = new ArrayList<>();
 
     public TurretBaseBlockEntity(BlockPos pos, BlockState state, int tier) {
@@ -103,17 +102,13 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (level == null) {
             return;
         }
-        gunTurrets.clear();
-        grenadeTurrets.clear();
+        turretHeads.clear();
         solarAddons.clear();
         for (Direction direction : Direction.values()) {
             BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(direction));
-            if (neighbor instanceof GunTurretBlockEntity gun) {
-                gunTurrets.add(gun);
-                gun.bindBase(this);
-            } else if (neighbor instanceof GrenadeTurretBlockEntity grenade) {
-                grenadeTurrets.add(grenade);
-                grenade.bindBase(this);
+            if (neighbor instanceof TurretHeadBlockEntity head) {
+                turretHeads.add(head);
+                head.bindBase(this);
             } else if (neighbor instanceof SolarAddonBlockEntity solar) {
                 solarAddons.add(solar);
                 solar.bindBase(this);
@@ -129,17 +124,14 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     private void tickTurrets(ServerLevel level) {
-        if (gunTurrets.isEmpty() && grenadeTurrets.isEmpty()) {
+        if (turretHeads.isEmpty()) {
             refreshNeighbors();
         }
         for (SolarAddonBlockEntity solar : solarAddons) {
             solar.tickGeneration(level);
         }
-        for (GunTurretBlockEntity gun : gunTurrets) {
-            gun.tryFire(level, this);
-        }
-        for (GrenadeTurretBlockEntity grenade : grenadeTurrets) {
-            grenade.tryFire(level, this);
+        for (TurretHeadBlockEntity head : turretHeads) {
+            head.tickCombat(level, this);
         }
     }
 
@@ -223,6 +215,14 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
+        if (!stack.isEmpty()) {
+            ItemStack working = stack.copy();
+            if (ammoStorage.tryInsertStack(working)) {
+                inventory[slot] = working;
+                setChanged();
+                return;
+            }
+        }
         inventory[slot] = stack;
         setChanged();
     }

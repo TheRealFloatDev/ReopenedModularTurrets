@@ -5,6 +5,8 @@ import com.ommods.reopenedmodularturrets.block.GrenadeTurretBlock;
 import com.ommods.reopenedmodularturrets.block.GunTurretBlock;
 import com.ommods.reopenedmodularturrets.block.SolarAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
+import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
+import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -30,23 +32,43 @@ public final class ModBlocks {
             BLOCKS.registerBlock("turret_base_tier_5", TurretBaseBlock.Tier5::new,
                     props -> applyBaseProperties(props, MapColor.DIAMOND));
 
-    public static final DeferredBlock<GunTurretBlock> GUN_TURRET = BLOCKS.registerBlock(
-            "gun_turret",
-            GunTurretBlock::new,
-            props -> applyBaseProperties(props, MapColor.COLOR_RED)
-    );
-
-    public static final DeferredBlock<GrenadeTurretBlock> GRENADE_TURRET = BLOCKS.registerBlock(
-            "grenade_turret",
-            GrenadeTurretBlock::new,
-            props -> applyBaseProperties(props, MapColor.TERRACOTTA_ORANGE)
-    );
+    public static final DeferredBlock<TurretHeadBlock> DISPOSABLE_ITEM_TURRET =
+            registerTurretHead(TurretKind.DISPOSABLE_ITEM, "disposable_item_turret", MapColor.COLOR_PURPLE);
+    public static final DeferredBlock<TurretHeadBlock> POTATO_CANNON_TURRET =
+            registerTurretHead(TurretKind.POTATO_CANNON, "potato_cannon_turret", MapColor.PLANT);
+    public static final DeferredBlock<TurretHeadBlock> GUN_TURRET =
+            registerTurretHead(TurretKind.GUN, "gun_turret", MapColor.COLOR_RED);
+    public static final DeferredBlock<TurretHeadBlock> GRENADE_TURRET =
+            registerTurretHead(TurretKind.GRENADE, "grenade_turret", MapColor.TERRACOTTA_ORANGE);
+    public static final DeferredBlock<TurretHeadBlock> INCENDIARY_TURRET =
+            registerTurretHead(TurretKind.INCENDIARY, "incendiary_turret", MapColor.FIRE);
+    public static final DeferredBlock<TurretHeadBlock> ROCKET_TURRET =
+            registerTurretHead(TurretKind.ROCKET, "rocket_turret", MapColor.COLOR_RED);
+    public static final DeferredBlock<TurretHeadBlock> RELATIVISTIC_TURRET =
+            registerTurretHead(TurretKind.RELATIVISTIC, "relativistic_turret", MapColor.COLOR_CYAN);
+    public static final DeferredBlock<TurretHeadBlock> TELEPORTER_TURRET =
+            registerTurretHead(TurretKind.TELEPORTER, "teleporter_turret", MapColor.COLOR_MAGENTA);
+    public static final DeferredBlock<TurretHeadBlock> LASER_TURRET =
+            registerTurretHead(TurretKind.LASER, "laser_turret", MapColor.COLOR_RED);
+    public static final DeferredBlock<TurretHeadBlock> RAIL_GUN_TURRET =
+            registerTurretHead(TurretKind.RAIL_GUN, "rail_gun_turret", MapColor.COLOR_LIGHT_BLUE);
+    public static final DeferredBlock<TurretHeadBlock> PLASMA_TURRET =
+            registerTurretHead(TurretKind.PLASMA, "plasma_turret", MapColor.COLOR_PINK);
 
     public static final DeferredBlock<SolarAddonBlock> SOLAR_ADDON = BLOCKS.registerBlock(
             "addon_solar",
             SolarAddonBlock::new,
             props -> applyBaseProperties(props, MapColor.COLOR_YELLOW)
     );
+
+    private static DeferredBlock<TurretHeadBlock> registerTurretHead(TurretKind kind, String name, MapColor color) {
+        DeferredBlock<TurretHeadBlock> block = BLOCKS.registerBlock(
+                name,
+                props -> new TurretHeadBlock(kind, applyBaseProperties(props, color))
+        );
+        TurretHeadBlock.bindKind(block.get(), kind);
+        return block;
+    }
 
     private static BlockBehaviour.Properties applyBaseProperties(BlockBehaviour.Properties props, MapColor color) {
         return props

@@ -9,12 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class GrenadeTurretBlockEntity extends BlockEntity {
+public class GrenadeTurretBlockEntity extends DirectedTurretBlockEntity {
     private int cooldown = 0;
     @Nullable
     private TurretBaseBlockEntity base;
@@ -31,6 +30,11 @@ public class GrenadeTurretBlockEntity extends BlockEntity {
         if (turret.cooldown > 0) {
             turret.cooldown--;
         }
+    }
+
+    public void tickCombat(ServerLevel level, TurretBaseBlockEntity baseEntity) {
+        updateAim(level, baseEntity, ModConfig.GRENADE_RANGE.get());
+        tryFire(level, baseEntity);
     }
 
     public void tryFire(ServerLevel level, TurretBaseBlockEntity baseEntity) {

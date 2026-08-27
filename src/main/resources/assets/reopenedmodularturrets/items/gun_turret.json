@@ -1,6 +1,9 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "reopenedmodularturrets:item/gun_turret"
+    "type": "minecraft:special",
+    "base": "reopenedmodularturrets:block/gun_turret",
+    "model": {
+      "type": "reopenedmodularturrets:gun_turret"
+    }
   }
 }

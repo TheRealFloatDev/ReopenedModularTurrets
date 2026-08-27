@@ -8,12 +8,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class GunTurretBlockEntity extends BlockEntity {
+public class GunTurretBlockEntity extends DirectedTurretBlockEntity {
     private int cooldown = 0;
     @Nullable
     private TurretBaseBlockEntity base;
@@ -30,6 +29,11 @@ public class GunTurretBlockEntity extends BlockEntity {
         if (turret.cooldown > 0) {
             turret.cooldown--;
         }
+    }
+
+    public void tickCombat(ServerLevel level, TurretBaseBlockEntity baseEntity) {
+        updateAim(level, baseEntity, ModConfig.GUN_RANGE.get());
+        tryFire(level, baseEntity);
     }
 
     public void tryFire(ServerLevel level, TurretBaseBlockEntity baseEntity) {

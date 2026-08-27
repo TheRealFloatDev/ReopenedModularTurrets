@@ -2,11 +2,12 @@ package com.ommods.reopenedmodularturrets.registry;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
-import com.ommods.reopenedmodularturrets.blockentity.GrenadeTurretBlockEntity;
-import com.ommods.reopenedmodularturrets.blockentity.GunTurretBlockEntity;
+import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
 import com.ommods.reopenedmodularturrets.blockentity.SolarAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
+import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -25,14 +26,30 @@ public final class ModBlockEntities {
                     ModBlocks.TURRET_BASE_TIER_5.get()
             ));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GunTurretBlockEntity>> GUN_TURRET =
-            BLOCK_ENTITIES.register("gun_turret", () -> new BlockEntityType<>(GunTurretBlockEntity::new, ModBlocks.GUN_TURRET.get()));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrenadeTurretBlockEntity>> GRENADE_TURRET =
-            BLOCK_ENTITIES.register("grenade_turret", () -> new BlockEntityType<>(GrenadeTurretBlockEntity::new, ModBlocks.GRENADE_TURRET.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretHeadBlockEntity>> TURRET_HEAD =
+            BLOCK_ENTITIES.register("turret_head", () -> new BlockEntityType<>(
+                    TurretHeadBlockEntity::new,
+                    turretHeadBlocks()
+            ));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarAddonBlockEntity>> SOLAR_ADDON =
             BLOCK_ENTITIES.register("solar_addon", () -> new BlockEntityType<>(SolarAddonBlockEntity::new, ModBlocks.SOLAR_ADDON.get()));
+
+    private static Block[] turretHeadBlocks() {
+        return new Block[] {
+            ModBlocks.DISPOSABLE_ITEM_TURRET.get(),
+            ModBlocks.POTATO_CANNON_TURRET.get(),
+            ModBlocks.GUN_TURRET.get(),
+            ModBlocks.GRENADE_TURRET.get(),
+            ModBlocks.INCENDIARY_TURRET.get(),
+            ModBlocks.ROCKET_TURRET.get(),
+            ModBlocks.RELATIVISTIC_TURRET.get(),
+            ModBlocks.TELEPORTER_TURRET.get(),
+            ModBlocks.LASER_TURRET.get(),
+            ModBlocks.RAIL_GUN_TURRET.get(),
+            ModBlocks.PLASMA_TURRET.get()
+        };
+    }
 
     private ModBlockEntities() {}
 }
