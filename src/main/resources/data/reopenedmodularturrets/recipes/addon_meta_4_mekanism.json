@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "ABD",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:itemCompressedRedstone"
+    },
+    "B": {
+      "tag": "c:circuits/advanced"
+    },
+    "C": {
+      "tag": "c:ingots/steel"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:addon_serial_port",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

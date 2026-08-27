@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,10 +95,10 @@ public class TurretBaseBlock extends BaseEntityBlock {
             Level level,
             BlockPos pos,
             Block block,
-            @Nullable Orientation orientation,
-            boolean movedByPiston
+            BlockPos fromPos,
+            boolean isMoving
     ) {
-        super.neighborChanged(state, level, pos, block, orientation, movedByPiston);
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TurretBaseBlockEntity base) {
             base.refreshNeighbors();

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    " B ",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:atomicalloy"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:barrel_tier_4"
+    },
+    "C": {
+      "tag": "c:ingots/refined_obsidian"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:barrel_tier_5",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

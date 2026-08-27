@@ -3,8 +3,6 @@ package com.ommods.reopenedmodularturrets.registry;
 import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.entity.GrenadeProjectileEntity;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -18,12 +16,7 @@ public final class ModEntityTypes {
             ENTITY_TYPES.register("grenade_projectile", () -> EntityType.Builder.<GrenadeProjectileEntity>of(
                     GrenadeProjectileEntity::new,
                     MobCategory.MISC
-            ).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build(
-                    ResourceKey.create(
-                            Registries.ENTITY_TYPE,
-                            Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "grenade_projectile")
-                    )
-            ));
+            ).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10).build("grenade_projectile"));
 
     private ModEntityTypes() {}
 }

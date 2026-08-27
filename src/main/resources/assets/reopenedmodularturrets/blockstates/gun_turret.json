@@ -1,1 +1,7 @@
-{"variants":{"":{"model":"reopenedmodularturrets:block/gun_turret"}}}
+{
+  "variants": {
+    "": {
+      "model": "reopenedmodularturrets:block/gun_turret"
+    }
+  }
+}

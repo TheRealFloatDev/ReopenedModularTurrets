@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "CBC",
+    "DED"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:paneGlass"
+    },
+    "B": {
+      "tag": "c:blockLapis"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    },
+    "D": {
+      "tag": "c:ingots/iron"
+    },
+    "E": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:addon_concealer",
+    "count": 1
+  }
+}

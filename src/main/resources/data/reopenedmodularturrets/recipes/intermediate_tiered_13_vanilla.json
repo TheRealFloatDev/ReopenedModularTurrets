@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    " B ",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gemDiamond"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:barrel_tier_3"
+    },
+    "C": {
+      "tag": "c:gems/quartz"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:barrel_tier_4",
+    "count": 1
+  }
+}

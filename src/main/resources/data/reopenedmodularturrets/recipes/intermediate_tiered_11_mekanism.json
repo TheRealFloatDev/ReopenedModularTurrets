@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    " B ",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:enrichediron"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:barrel_tier_1"
+    },
+    "C": {
+      "tag": "c:ingots/tin"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:barrel_tier_2",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

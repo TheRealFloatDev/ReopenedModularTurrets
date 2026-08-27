@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "DCD",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:obsidians"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:turret_base_tier_4"
+    },
+    "C": {
+      "item": "reopenedmodularturrets:sensor_tier_5"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:turret_base_tier_5",
+    "count": 1
+  }
+}

@@ -1,18 +1,14 @@
 package com.ommods.reopenedmodularturrets.core.ownership;
 
-import com.mojang.serialization.Codec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.Permission;
-import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public final class OwnedData {
-    private static final Codec<UUID> UUID_CODEC = Codec.STRING.xmap(UUID::fromString, UUID::toString);
-
     private UUID ownerUuid;
     private String ownerName;
 
@@ -33,24 +29,27 @@ public final class OwnedData {
         if (ownerUuid == null) {
             return true;
         }
-        if (player instanceof ServerPlayer serverPlayer
-                && serverPlayer.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.byId(2)))) {
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.hasPermissions(2)) {
             return true;
         }
         return player.getUUID().equals(ownerUuid);
     }
 
-    public void saveAdditional(net.minecraft.world.level.storage.ValueOutput output) {
+    public void save(CompoundTag tag) {
         if (ownerUuid != null) {
-            output.store("OwnerUUID", UUID_CODEC, ownerUuid);
+            tag.putUUID("OwnerUUID", ownerUuid);
         }
         if (ownerName != null) {
-            output.putString("OwnerName", ownerName);
+            tag.putString("OwnerName", ownerName);
         }
     }
 
-    public void loadAdditional(net.minecraft.world.level.storage.ValueInput input) {
-        ownerUuid = input.read("OwnerUUID", UUID_CODEC).orElse(null);
-        ownerName = input.getStringOr("OwnerName", null);
+    public void load(CompoundTag tag) {
+        if (tag.hasUUID("OwnerUUID")) {
+            ownerUuid = tag.getUUID("OwnerUUID");
+        } else {
+            ownerUuid = null;
+        }
+        ownerName = tag.contains("OwnerName") ? tag.getString("OwnerName") : null;
     }
 }

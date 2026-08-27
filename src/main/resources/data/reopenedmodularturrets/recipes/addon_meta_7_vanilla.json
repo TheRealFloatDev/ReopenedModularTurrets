@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "ABD",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:blockLapis"
+    },
+    "B": {
+      "item": "minecraft:ender_eye"
+    },
+    "C": {
+      "tag": "c:gems/quartz"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:addon_fake_drops",
+    "count": 1
+  }
+}

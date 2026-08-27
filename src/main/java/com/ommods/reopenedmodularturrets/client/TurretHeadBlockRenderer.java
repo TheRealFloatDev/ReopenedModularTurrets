@@ -1,6 +1,7 @@
 package com.ommods.reopenedmodularturrets.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.client.model.DirectedTurretModelState;
 import com.ommods.reopenedmodularturrets.client.model.GrenadeTurretModel;
@@ -10,90 +11,49 @@ import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
 import com.ommods.reopenedmodularturrets.client.model.TurretRenderHelper;
 import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.sprite.SpriteGetter;
-import net.minecraft.util.Unit;
-import net.minecraft.world.phys.Vec3;
 
-public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBlockEntity, DirectedTurretRenderState> {
-    private final SpriteGetter sprites;
+public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBlockEntity> {
     private final GunTurretModel gunModel;
     private final GrenadeTurretModel grenadeModel;
 
     public TurretHeadBlockRenderer(BlockEntityRendererProvider.Context context) {
-        this.sprites = context.sprites();
         this.gunModel = new GunTurretModel(context.bakeLayer(ModModelLayers.GUN_TURRET));
         this.grenadeModel = new GrenadeTurretModel(context.bakeLayer(ModModelLayers.GRENADE_TURRET));
     }
 
     @Override
-    public DirectedTurretRenderState createRenderState() {
-        return new DirectedTurretRenderState();
-    }
-
-    @Override
-    public void extractRenderState(
+    public void render(
             TurretHeadBlockEntity blockEntity,
-            DirectedTurretRenderState state,
-            float partialTicks,
-            Vec3 cameraPosition,
-            ModelFeatureRenderer.CrumblingOverlay breakProgress
-    ) {
-        BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-        if (blockEntity.getKind().isDirected()) {
-            state.rotationX = TurretAimHelper.getRotationXYFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
-            state.rotationZ = TurretAimHelper.getRotationXZFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
-        } else {
-            state.rotationX = 0.0F;
-            state.rotationZ = 0.0F;
-        }
-        state.turretKind = blockEntity.getKind();
-    }
-
-    @Override
-    public void submit(
-            DirectedTurretRenderState state,
+            float partialTick,
             PoseStack poseStack,
-            SubmitNodeCollector submitNodeCollector,
-            CameraRenderState camera
+            MultiBufferSource buffer,
+            int packedLight,
+            int packedOverlay
     ) {
-        TurretKind kind = state.turretKind != null ? state.turretKind : TurretKind.GUN;
-        DirectedTurretModelState modelState = new DirectedTurretModelState(state.rotationX, state.rotationZ);
+        TurretKind kind = blockEntity.getKind();
+        float rotationX = 0.0F;
+        float rotationZ = 0.0F;
+        if (kind.isDirected()) {
+            rotationX = TurretAimHelper.getRotationXYFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
+            rotationZ = TurretAimHelper.getRotationXZFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
+        }
+        DirectedTurretModelState modelState = new DirectedTurretModelState(rotationX, rotationZ);
+        RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.forTurret(kind));
+        VertexConsumer consumer = buffer.getBuffer(renderType);
+
         poseStack.pushPose();
         TurretRenderHelper.prepareTurretPose(poseStack);
         if (kind.usesGrenadeModel()) {
             grenadeModel.setupAnim(modelState);
-            submitNodeCollector.submitModel(
-                    grenadeModel,
-                    modelState,
-                    poseStack,
-                    state.lightCoords,
-                    OverlayTexture.NO_OVERLAY,
-                    -1,
-                    ModEntityTextures.forTurret(kind),
-                    sprites,
-                    0,
-                    state.breakProgress
-            );
+            grenadeModel.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
         } else {
             gunModel.setupAnim(modelState);
-            submitNodeCollector.submitModel(
-                    gunModel,
-                    modelState,
-                    poseStack,
-                    state.lightCoords,
-                    OverlayTexture.NO_OVERLAY,
-                    -1,
-                    ModEntityTextures.forTurret(kind),
-                    sprites,
-                    0,
-                    state.breakProgress
-            );
+            gunModel.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
         }
         poseStack.popPose();
     }

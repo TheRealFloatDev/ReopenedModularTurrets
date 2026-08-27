@@ -1,12 +1,13 @@
 package com.ommods.reopenedmodularturrets.core.ammo;
 
 import com.ommods.reopenedmodularturrets.item.AmmoType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public final class AmmoStorage {
     private final int maxCapacity;
-    private final AmmoType[] slotTypes = new AmmoType[2];
-    private final int[] slotCounts = new int[2];
+    private final AmmoType[] slotTypes = new AmmoType[5];
+    private final int[] slotCounts = new int[5];
 
     public AmmoStorage(int maxCapacity) {
         this.maxCapacity = maxCapacity;
@@ -72,21 +73,21 @@ public final class AmmoStorage {
         return -1;
     }
 
-    public void saveAdditional(net.minecraft.world.level.storage.ValueOutput output) {
+    public void save(CompoundTag tag) {
         for (int i = 0; i < slotTypes.length; i++) {
             if (slotTypes[i] != null) {
-                output.putString("AmmoType" + i, slotTypes[i].name());
-                output.putInt("AmmoCount" + i, slotCounts[i]);
+                tag.putString("AmmoType" + i, slotTypes[i].name());
+                tag.putInt("AmmoCount" + i, slotCounts[i]);
             }
         }
     }
 
-    public void loadAdditional(net.minecraft.world.level.storage.ValueInput input) {
+    public void load(CompoundTag tag) {
         for (int i = 0; i < slotTypes.length; i++) {
-            String typeName = input.getStringOr("AmmoType" + i, null);
-            if (typeName != null) {
+            String typeName = tag.contains("AmmoType" + i) ? tag.getString("AmmoType" + i) : null;
+            if (typeName != null && !typeName.isEmpty()) {
                 slotTypes[i] = AmmoType.valueOf(typeName);
-                slotCounts[i] = input.getIntOr("AmmoCount" + i, 0);
+                slotCounts[i] = tag.getInt("AmmoCount" + i);
             } else {
                 slotTypes[i] = null;
                 slotCounts[i] = 0;

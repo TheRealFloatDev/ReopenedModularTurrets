@@ -11,8 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class DirectedTurretBlockEntity extends BlockEntity {
@@ -47,26 +45,26 @@ public abstract class DirectedTurretBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        yaw = input.getFloatOr("Yaw", 0.0F);
-        pitch = input.getFloatOr("Pitch", 180.0F);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        yaw = tag.getFloat("Yaw");
+        pitch = tag.getFloat("Pitch");
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putFloat("Yaw", yaw);
-        output.putFloat("Pitch", pitch);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putFloat("Yaw", yaw);
+        tag.putFloat("Pitch", pitch);
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveCustomOnly(registries);
+        return saveWithoutMetadata(registries);
     }
 
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::saveCustomOnly);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

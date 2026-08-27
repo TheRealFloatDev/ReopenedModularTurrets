@@ -1,7 +1,6 @@
 package com.ommods.reopenedmodularturrets;
 
 import com.mojang.logging.LogUtils;
-import com.ommods.reopenedmodularturrets.client.ModClientEvents;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
@@ -28,8 +27,6 @@ public class ReopenedModularTurrets {
         modEventBus.addListener(ModNetworking::register);
         modEventBus.addListener(ModCapabilityEvents::registerCapabilities);
         modEventBus.addListener(ReopenedModularTurretsClient::registerScreens);
-        modEventBus.addListener(ModClientEvents::registerLayerDefinitions);
-        modEventBus.addListener(ModClientEvents::registerRenderers);
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
@@ -44,6 +41,6 @@ public class ReopenedModularTurrets {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        LOGGER.info("Reopened Modular Turrets loaded for NeoForge 26.2");
+        LOGGER.info("Reopened Modular Turrets loaded for NeoForge 1.21.1");
     }
 }

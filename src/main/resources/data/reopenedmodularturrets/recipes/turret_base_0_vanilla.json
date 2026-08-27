@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:cobblestone"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "item": "reopenedmodularturrets:sensor_tier_1"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:turret_base_tier_1",
+    "count": 1
+  }
+}

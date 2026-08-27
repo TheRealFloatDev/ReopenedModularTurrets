@@ -5,7 +5,10 @@ import net.minecraft.world.item.ItemStack;
 
 public enum AmmoType {
     BULLET(8),
-    GRENADE(1);
+    GRENADE(1),
+    BLAZING_CLAY(4),
+    FERRO_SLUG(2),
+    ROCKET(1);
 
     private final int ammoPerItem;
 

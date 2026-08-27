@@ -7,11 +7,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public record ToggleTargetFilterPayload(BlockPos pos, TargetFilter filter) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ToggleTargetFilterPayload> TYPE =
-            new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(ModConstants.MOD_ID, "toggle_target"));
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "toggle_target"));
 
     public static final StreamCodec<FriendlyByteBuf, ToggleTargetFilterPayload> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC,

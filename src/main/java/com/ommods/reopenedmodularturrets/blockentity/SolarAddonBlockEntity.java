@@ -32,9 +32,9 @@ public class SolarAddonBlockEntity extends BlockEntity {
             return;
         }
         int generation = ModConfig.SOLAR_GENERATION.get();
-        int current = base.getEnergyHandler().getAmountAsInt();
-        int capacity = (int) base.getEnergyHandler().getCapacityAsLong();
-        base.getEnergyHandler().set(Math.min(capacity, current + generation));
+        int current = base.getEnergyStorage().getEnergyStored();
+        int capacity = base.getEnergyStorage().getMaxEnergyStored();
+        base.getEnergyStorage().receiveEnergy(Math.min(capacity - current, generation), false);
         base.setChanged();
     }
 }

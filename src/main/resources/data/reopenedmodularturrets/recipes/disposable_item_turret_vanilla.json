@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "CBC",
+    "CDC"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_1"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_1"
+    },
+    "C": {
+      "tag": "c:cobblestone"
+    },
+    "D": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:disposable_item_turret",
+    "count": 1
+  }
+}

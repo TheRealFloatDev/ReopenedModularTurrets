@@ -4,7 +4,7 @@ import com.ommods.reopenedmodularturrets.registry.ModEntityTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -44,7 +44,7 @@ public class GrenadeProjectileEntity extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult result) {
         if (level() instanceof ServerLevel serverLevel) {
             if (result.getEntity() instanceof LivingEntity living) {
-                living.hurtServer(serverLevel, serverLevel.damageSources().mobProjectile(this, null), damage);
+                living.hurt(serverLevel.damageSources().mobProjectile(this, null), damage);
             }
             discard();
         }

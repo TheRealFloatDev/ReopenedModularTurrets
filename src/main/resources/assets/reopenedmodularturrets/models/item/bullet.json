@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "omlib:item/default_item",
   "textures": {
-    "layer0": "reopenedmodularturrets:item/bullet"
+    "layer0": "reopenedmodularturrets:items/ammo_bullet"
   }
 }

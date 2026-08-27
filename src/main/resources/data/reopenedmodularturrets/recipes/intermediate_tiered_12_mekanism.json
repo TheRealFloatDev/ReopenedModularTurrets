@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    " B ",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:enrichedalloy"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:barrel_tier_2"
+    },
+    "C": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:barrel_tier_3",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

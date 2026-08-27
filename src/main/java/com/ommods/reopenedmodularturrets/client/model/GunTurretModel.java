@@ -1,15 +1,13 @@
 package com.ommods.reopenedmodularturrets.client.model;
 
-import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-public class GunTurretModel extends Model<DirectedTurretModelState> {
+public class GunTurretModel extends PartModel {
     private final ModelPart boxUnder;
     private final ModelPart boxLeft;
     private final ModelPart boxRight;
@@ -18,7 +16,7 @@ public class GunTurretModel extends Model<DirectedTurretModelState> {
     private final ModelPart barrel;
 
     public GunTurretModel(ModelPart root) {
-        super(root, RenderTypes::entitySolid);
+        super(root);
         this.boxUnder = root.getChild("box_under");
         this.boxLeft = root.getChild("box_left");
         this.boxRight = root.getChild("box_right");
@@ -67,9 +65,7 @@ public class GunTurretModel extends Model<DirectedTurretModelState> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    @Override
     public void setupAnim(DirectedTurretModelState state) {
-        super.setupAnim(state);
         float rotationX = state.rotationX();
         float rotationZ = state.rotationZ();
         boxUnder.yRot = rotationZ;

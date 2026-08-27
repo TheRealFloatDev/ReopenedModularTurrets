@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ADA",
+    "CBC",
+    "EDE"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/gold"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:sensor_tier_3"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "D": {
+      "tag": "c:gemDiamond"
+    },
+    "E": {
+      "tag": "c:gems/quartz"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:sensor_tier_4",
+    "count": 1
+  }
+}

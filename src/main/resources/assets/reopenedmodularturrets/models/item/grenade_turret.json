@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "reopenedmodularturrets:item/grenade_turret"
-  }
+  "parent": "reopenedmodularturrets:block/grenade_turret"
 }

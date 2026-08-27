@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingotElectricalSteel"
+    },
+    "B": {
+      "tag": "c:itemPulsatingCrystal"
+    },
+    "C": {
+      "tag": "c:blockRedstoneAlloy"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:addon_redstone_reactor",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

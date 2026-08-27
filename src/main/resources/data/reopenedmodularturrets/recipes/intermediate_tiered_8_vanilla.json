@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DAD",
+    " BC",
+    "DAD"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gemDiamond"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_3"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "D": {
+      "tag": "c:gems/quartz"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:chamber_tier_4",
+    "count": 1
+  }
+}

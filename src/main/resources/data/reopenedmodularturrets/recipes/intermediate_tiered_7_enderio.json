@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    " BC",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingotDarkSteel"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_2"
+    },
+    "C": {
+      "item": "enderio:item_basic_capacitor"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:chamber_tier_3",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

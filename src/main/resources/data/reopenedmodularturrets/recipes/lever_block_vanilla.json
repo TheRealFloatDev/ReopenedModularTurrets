@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A  ",
+    "A  "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:cobblestone"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:lever_block",
+    "count": 1
+  }
+}

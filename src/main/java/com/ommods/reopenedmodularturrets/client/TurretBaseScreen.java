@@ -1,22 +1,25 @@
 package com.ommods.reopenedmodularturrets.client;
 
+import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.core.targeting.TargetFilter;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.network.payload.ToggleTargetFilterPayload;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
-    private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final ResourceLocation TEXTURE =
+            ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, 176, 166);
+        super(menu, playerInventory, title);
+        this.imageWidth = 176;
+        this.imageHeight = 166;
     }
 
     @Override
@@ -39,14 +42,16 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos, topPos, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractLabels(graphics, mouseX, mouseY);
-        graphics.text(font, "FE: " + menu.getEnergyStored() + "/" + menu.getMaxEnergy(), leftPos + 8, topPos + 6, 0x404040, false);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
+        graphics.drawString(font, "FE: " + menu.getEnergyStored() + "/" + menu.getMaxEnergy(), 8, 6, 0x404040, false);
     }
 }

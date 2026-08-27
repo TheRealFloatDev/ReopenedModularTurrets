@@ -1,3 +1,6 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+
 license="${mod_license}"
 
 [[mods]]
@@ -6,7 +9,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="ReopenedModularTurrets Team"
 description='''
-Revival of OpenModularTurrets for NeoForge 26.2. Modular automated defense turrets with energy, ammo, and targeting.
+Revival of OpenModularTurrets for NeoForge 1.21.1. Modular automated defense turrets with energy, ammo, and targeting.
 Source code MIT; art assets CC-BY-NC where applicable.
 '''
 

@@ -4,8 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
-import java.util.IdentityHashMap;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -19,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class TurretHeadBlock extends BaseEntityBlock {
     public static final MapCodec<TurretHeadBlock> CODEC = simpleCodec(TurretHeadBlock::new);
-    private static final Map<Block, TurretKind> KIND_BY_BLOCK = new IdentityHashMap<>();
 
     private final TurretKind kind;
 
@@ -33,13 +30,8 @@ public class TurretHeadBlock extends BaseEntityBlock {
         this.kind = kind;
     }
 
-    public static void bindKind(Block block, TurretKind kind) {
-        KIND_BY_BLOCK.put(block, kind);
-    }
-
     public TurretKind getKind() {
-        TurretKind mapped = KIND_BY_BLOCK.get(this);
-        return mapped != null ? mapped : kind;
+        return kind;
     }
 
     @Override

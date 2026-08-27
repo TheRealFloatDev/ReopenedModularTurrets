@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "CAC",
+    "DBD"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_5"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_5"
+    },
+    "C": {
+      "tag": "c:obsidians"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:rail_gun_turret",
+    "count": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EAE",
+    "CBC",
+    "DCD"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_5"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_5"
+    },
+    "C": {
+      "tag": "c:gearEnergized"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "E": {
+      "tag": "c:itemVibrantCrystal"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:laser_turret",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

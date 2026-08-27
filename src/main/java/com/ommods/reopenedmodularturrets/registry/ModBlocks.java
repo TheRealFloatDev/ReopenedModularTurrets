@@ -1,8 +1,8 @@
 package com.ommods.reopenedmodularturrets.registry;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
-import com.ommods.reopenedmodularturrets.block.GrenadeTurretBlock;
-import com.ommods.reopenedmodularturrets.block.GunTurretBlock;
+import com.ommods.reopenedmodularturrets.block.BaseAddonBlock;
+import com.ommods.reopenedmodularturrets.block.LeverBlock;
 import com.ommods.reopenedmodularturrets.block.SolarAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
@@ -17,20 +17,20 @@ public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ModConstants.MOD_ID);
 
     public static final DeferredBlock<TurretBaseBlock.Tier1> TURRET_BASE_TIER_1 =
-            BLOCKS.registerBlock("turret_base_tier_1", TurretBaseBlock.Tier1::new,
-                    props -> applyBaseProperties(props, MapColor.METAL));
+            BLOCKS.registerBlock("turret_base_tier_1",
+                    props -> new TurretBaseBlock.Tier1(applyBaseProperties(props, MapColor.METAL)));
     public static final DeferredBlock<TurretBaseBlock.Tier2> TURRET_BASE_TIER_2 =
-            BLOCKS.registerBlock("turret_base_tier_2", TurretBaseBlock.Tier2::new,
-                    props -> applyBaseProperties(props, MapColor.COLOR_GRAY));
+            BLOCKS.registerBlock("turret_base_tier_2",
+                    props -> new TurretBaseBlock.Tier2(applyBaseProperties(props, MapColor.COLOR_GRAY)));
     public static final DeferredBlock<TurretBaseBlock.Tier3> TURRET_BASE_TIER_3 =
-            BLOCKS.registerBlock("turret_base_tier_3", TurretBaseBlock.Tier3::new,
-                    props -> applyBaseProperties(props, MapColor.COLOR_LIGHT_GRAY));
+            BLOCKS.registerBlock("turret_base_tier_3",
+                    props -> new TurretBaseBlock.Tier3(applyBaseProperties(props, MapColor.COLOR_LIGHT_GRAY)));
     public static final DeferredBlock<TurretBaseBlock.Tier4> TURRET_BASE_TIER_4 =
-            BLOCKS.registerBlock("turret_base_tier_4", TurretBaseBlock.Tier4::new,
-                    props -> applyBaseProperties(props, MapColor.GOLD));
+            BLOCKS.registerBlock("turret_base_tier_4",
+                    props -> new TurretBaseBlock.Tier4(applyBaseProperties(props, MapColor.GOLD)));
     public static final DeferredBlock<TurretBaseBlock.Tier5> TURRET_BASE_TIER_5 =
-            BLOCKS.registerBlock("turret_base_tier_5", TurretBaseBlock.Tier5::new,
-                    props -> applyBaseProperties(props, MapColor.DIAMOND));
+            BLOCKS.registerBlock("turret_base_tier_5",
+                    props -> new TurretBaseBlock.Tier5(applyBaseProperties(props, MapColor.DIAMOND)));
 
     public static final DeferredBlock<TurretHeadBlock> DISPOSABLE_ITEM_TURRET =
             registerTurretHead(TurretKind.DISPOSABLE_ITEM, "disposable_item_turret", MapColor.COLOR_PURPLE);
@@ -54,20 +54,33 @@ public final class ModBlocks {
             registerTurretHead(TurretKind.RAIL_GUN, "rail_gun_turret", MapColor.COLOR_LIGHT_BLUE);
     public static final DeferredBlock<TurretHeadBlock> PLASMA_TURRET =
             registerTurretHead(TurretKind.PLASMA, "plasma_turret", MapColor.COLOR_PINK);
+    public static final DeferredBlock<TurretHeadBlock> ARC_TURRET =
+            registerTurretHead(TurretKind.ARC, "arc_turret", MapColor.COLOR_YELLOW);
+    public static final DeferredBlock<TurretHeadBlock> MELEE_TURRET =
+            registerTurretHead(TurretKind.MELEE, "melee_turret", MapColor.STONE);
+    public static final DeferredBlock<TurretHeadBlock> CROSSBOW_TURRET =
+            registerTurretHead(TurretKind.CROSSBOW, "crossbow_turret", MapColor.WOOD);
 
     public static final DeferredBlock<SolarAddonBlock> SOLAR_ADDON = BLOCKS.registerBlock(
             "addon_solar",
-            SolarAddonBlock::new,
-            props -> applyBaseProperties(props, MapColor.COLOR_YELLOW)
+            props -> new SolarAddonBlock(applyBaseProperties(props, MapColor.COLOR_YELLOW))
+    );
+
+    public static final DeferredBlock<LeverBlock> LEVER_BLOCK = BLOCKS.registerBlock(
+            "lever_block",
+            props -> new LeverBlock(applyBaseProperties(props, MapColor.STONE))
+    );
+
+    public static final DeferredBlock<BaseAddonBlock> BASE_ADDON_LOOT_DELETER = BLOCKS.registerBlock(
+            "base_addon_loot_deleter",
+            props -> new BaseAddonBlock(applyBaseProperties(props, MapColor.COLOR_BLACK))
     );
 
     private static DeferredBlock<TurretHeadBlock> registerTurretHead(TurretKind kind, String name, MapColor color) {
-        DeferredBlock<TurretHeadBlock> block = BLOCKS.registerBlock(
+        return BLOCKS.registerBlock(
                 name,
                 props -> new TurretHeadBlock(kind, applyBaseProperties(props, color))
         );
-        TurretHeadBlock.bindKind(block.get(), kind);
-        return block;
     }
 
     private static BlockBehaviour.Properties applyBaseProperties(BlockBehaviour.Properties props, MapColor color) {

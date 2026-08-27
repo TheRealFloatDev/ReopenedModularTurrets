@@ -1,13 +1,15 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
+import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.core.ammo.AmmoStorage;
 import com.ommods.reopenedmodularturrets.core.ownership.OwnedData;
-import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,10 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private final int tier;
     private final OwnedData ownedData = new OwnedData();
     private final AmmoStorage ammoStorage;
-    private final SimpleEnergyHandler energyHandler;
+    private final EnergyStorage energyStorage;
     private final ItemStack[] inventory = new ItemStack[6];
     private boolean attackMobs = true;
     private boolean attackPlayers = false;
@@ -45,10 +45,14 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         this.tier = tier;
         int capacity = 20000 * tier * tier;
         int transfer = 200 * tier * tier;
-        this.energyHandler = new SimpleEnergyHandler(capacity, transfer, 0) {
+        this.energyStorage = new EnergyStorage(capacity, transfer, 0) {
             @Override
-            protected void onEnergyChanged(int previousAmount) {
-                TurretBaseBlockEntity.this.setChanged();
+            public int receiveEnergy(int maxReceive, boolean simulate) {
+                int received = super.receiveEnergy(maxReceive, simulate);
+                if (!simulate && received > 0) {
+                    TurretBaseBlockEntity.this.setChanged();
+                }
+                return received;
             }
         };
         this.ammoStorage = new AmmoStorage((int) Math.round(Math.pow(2, tier + 2)) * 128);
@@ -69,8 +73,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return ownedData.canAccess(player);
     }
 
-    public SimpleEnergyHandler getEnergyHandler() {
-        return energyHandler;
+    public EnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
 
     public AmmoStorage getAmmoStorage() {
@@ -136,11 +140,11 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean consumeEnergy(int amount) {
-        int current = energyHandler.getAmountAsInt();
-        if (current < amount) {
+        if (energyStorage.getEnergyStored() < amount) {
             return false;
         }
-        energyHandler.set(current - amount);
+        energyStorage.extractEnergy(amount, false);
+        setChanged();
         return true;
     }
 
@@ -152,7 +156,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return false;
     }
 
-  @Nullable
+    @Nullable
     public OptionalTarget findTarget(Level level, Vec3 origin, double range) {
         return com.ommods.reopenedmodularturrets.core.targeting.TargetingHelper.findTarget(
                 level, origin, range, attackMobs, attackPlayers, attackNeutral
@@ -164,31 +168,37 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        ownedData.loadAdditional(input);
-        ammoStorage.loadAdditional(input);
-        attackMobs = input.getBooleanOr("AttackMobs", ModConfig.ATTACK_MOBS.get());
-        attackPlayers = input.getBooleanOr("AttackPlayers", ModConfig.ATTACK_PLAYERS.get());
-        attackNeutral = input.getBooleanOr("AttackNeutral", ModConfig.ATTACK_NEUTRAL.get());
-        energyHandler.deserialize(input.childOrEmpty("Energy"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        ownedData.load(tag);
+        ammoStorage.load(tag);
+        attackMobs = tag.getBoolean("AttackMobs");
+        attackPlayers = tag.getBoolean("AttackPlayers");
+        attackNeutral = tag.getBoolean("AttackNeutral");
+        if (tag.contains("Energy")) {
+            energyStorage.deserializeNBT(registries, tag.get("Energy"));
+        }
         for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = input.read("Item" + i, ItemStack.CODEC).orElse(ItemStack.EMPTY);
+            if (tag.contains("Item" + i)) {
+                inventory[i] = ItemStack.parseOptional(registries, tag.getCompound("Item" + i));
+            } else {
+                inventory[i] = ItemStack.EMPTY;
+            }
         }
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        ownedData.saveAdditional(output);
-        ammoStorage.saveAdditional(output);
-        output.putBoolean("AttackMobs", attackMobs);
-        output.putBoolean("AttackPlayers", attackPlayers);
-        output.putBoolean("AttackNeutral", attackNeutral);
-        energyHandler.serialize(output.child("Energy"));
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        ownedData.save(tag);
+        ammoStorage.save(tag);
+        tag.putBoolean("AttackMobs", attackMobs);
+        tag.putBoolean("AttackPlayers", attackPlayers);
+        tag.putBoolean("AttackNeutral", attackNeutral);
+        tag.put("Energy", energyStorage.serializeNBT(registries));
         for (int i = 0; i < inventory.length; i++) {
             if (!inventory[i].isEmpty()) {
-                output.store("Item" + i, ItemStack.CODEC, inventory[i]);
+                tag.put("Item" + i, inventory[i].saveOptional(registries));
             }
         }
     }

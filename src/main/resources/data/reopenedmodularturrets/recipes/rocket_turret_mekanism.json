@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "CBC",
+    "EDE"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_4"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_4"
+    },
+    "C": {
+      "tag": "c:ingots/refined_glowstone"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "E": {
+      "tag": "c:gemDiamond"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:rocket_turret",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

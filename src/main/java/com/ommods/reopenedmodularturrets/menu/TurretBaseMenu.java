@@ -1,6 +1,8 @@
 package com.ommods.reopenedmodularturrets.menu;
 
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
+import com.ommods.reopenedmodularturrets.item.AmmoItem;
+import com.ommods.reopenedmodularturrets.item.UpgradeItem;
 import com.ommods.reopenedmodularturrets.registry.ModMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class TurretBaseMenu extends AbstractContainerMenu {
+    private static final int BASE_SLOT_COUNT = 6;
     private final TurretBaseBlockEntity base;
     private final ContainerData data;
 
@@ -63,18 +66,14 @@ public class TurretBaseMenu extends AbstractContainerMenu {
                 if (blockEntity == null) {
                     return 0;
                 }
-                switch (index) {
-                    case 0:
-                        return blockEntity.getEnergyHandler().getAmountAsInt();
-                    case 1:
-                        return (int) blockEntity.getEnergyHandler().getCapacityAsLong();
-                    case 2:
-                        return blockEntity.isAttackMobs() ? 1 : 0;
-                    case 3:
-                        return blockEntity.isAttackPlayers() ? 1 : 0;
-                    default:
-                        return 0;
-                }
+                return switch (index) {
+                    case 0 -> blockEntity.getEnergyStorage().getEnergyStored();
+                    case 1 -> blockEntity.getEnergyStorage().getMaxEnergyStored();
+                    case 2 -> blockEntity.isAttackMobs() ? 1 : 0;
+                    case 3 -> blockEntity.isAttackPlayers() ? 1 : 0;
+                    case 4 -> blockEntity.isAttackNeutral() ? 1 : 0;
+                    default -> 0;
+                };
             }
 
             @Override
@@ -84,7 +83,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
             @Override
             public int getCount() {
-                return 4;
+                return 5;
             }
         };
     }
@@ -115,7 +114,30 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
-        return ItemStack.EMPTY;
+        ItemStack result = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (!slot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack stack = slot.getItem();
+        result = stack.copy();
+        if (index < BASE_SLOT_COUNT) {
+            if (!this.moveItemStackTo(stack, BASE_SLOT_COUNT, this.slots.size(), true)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (stack.getItem() instanceof AmmoItem || stack.getItem() instanceof UpgradeItem) {
+            if (!this.moveItemStackTo(stack, 0, BASE_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (!this.moveItemStackTo(stack, 0, BASE_SLOT_COUNT, false)) {
+            return ItemStack.EMPTY;
+        }
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+        return result;
     }
 
     @Override

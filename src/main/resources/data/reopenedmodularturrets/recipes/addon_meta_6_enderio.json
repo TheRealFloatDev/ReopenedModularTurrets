@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "CBC",
+    "DED"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:paneGlassColorless"
+    },
+    "B": {
+      "tag": "c:itemPowderPhotovoltaic"
+    },
+    "C": {
+      "tag": "c:nuggetEnergeticAlloy"
+    },
+    "D": {
+      "tag": "c:ingotElectricalSteel"
+    },
+    "E": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "item": "reopenedmodularturrets:addon_concealer",
+    "count": 1
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}
