@@ -30,4 +30,10 @@ public class LeverBlockModel extends PartModel {
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         return LayerDefinition.create(mesh, 32, 32);
     }
+
+    public void setupAnim(float crankRotation) {
+        float angle = crankRotation / 55.0F;
+        crank.zRot = angle;
+        handle.zRot = angle;
+    }
 }

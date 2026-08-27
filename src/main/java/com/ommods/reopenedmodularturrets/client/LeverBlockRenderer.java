@@ -37,6 +37,7 @@ public class LeverBlockRenderer implements BlockEntityRenderer<LeverBlockEntity>
         poseStack.pushPose();
         TurretRenderHelper.prepareBlockEntityPose(poseStack);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation * -22.5F));
+        model.setupAnim(blockEntity.getCrankRotation(partialTick));
         model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         poseStack.popPose();
     }

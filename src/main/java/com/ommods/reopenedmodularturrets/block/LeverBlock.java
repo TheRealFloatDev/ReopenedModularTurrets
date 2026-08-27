@@ -4,10 +4,14 @@ import com.mojang.serialization.MapCodec;
 import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
+import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -15,6 +19,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -83,8 +89,43 @@ public class LeverBlock extends BaseEntityBlock {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return TurretBaseBlock.createTickerHelper(type, ModBlockEntities.LEVER_BLOCK.get(), LeverBlockEntity::tick);
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hitResult
+    ) {
+        InteractionResult crankResult = crank(state, level, pos, player, hitResult);
+        if (crankResult != InteractionResult.PASS) {
+            return ItemInteractionResult.SUCCESS;
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return crank(state, level, pos, player, hitResult);
+    }
+
+    private InteractionResult crank(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (!(blockEntity instanceof LeverBlockEntity lever)) {
+            return InteractionResult.PASS;
+        }
+        if (lever.isTurning()) {
+            return InteractionResult.SUCCESS;
+        }
+        lever.startCrank();
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
