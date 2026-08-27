@@ -6,6 +6,7 @@ import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
 import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,6 +38,19 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
     @Nullable
     public TurretBaseBlockEntity getBase() {
         return base;
+    }
+
+    @Nullable
+    public Direction getBaseDirection() {
+        if (level == null) {
+            return null;
+        }
+        for (Direction direction : Direction.values()) {
+            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof TurretBaseBlockEntity) {
+                return direction;
+            }
+        }
+        return null;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, TurretHeadBlockEntity turret) {
@@ -72,12 +86,16 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
             return;
         }
 
+        int energyCost = baseEntity.getUpgradeModifiers().applyEnergyCost(kind.getEnergyPerShot());
+        if (energyCost > 0 && baseEntity.getEnergyStorage().getEnergyStored() < energyCost) {
+            return;
+        }
+
         if (!consumeAmmoForKind(kind, baseEntity)) {
             return;
         }
 
-        int energyCost = baseEntity.getUpgradeModifiers().applyEnergyCost(kind.getEnergyPerShot());
-        if (!baseEntity.consumeEnergy(energyCost)) {
+        if (energyCost > 0 && !baseEntity.consumeEnergy(energyCost)) {
             return;
         }
 

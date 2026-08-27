@@ -1,13 +1,14 @@
 package com.ommods.reopenedmodularturrets.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.core.targeting.TargetFilter;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.network.payload.ToggleTargetFilterPayload;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -15,8 +16,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.List;
+
 public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     private static final int TEX_SIZE = 256;
+    private static final int BUTTON_SIZE = 18;
+    private static final int ICON_SIZE = 12;
 
     private static final ResourceLocation ICON_MOBS =
             ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/mobs.png");
@@ -24,17 +29,20 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
             ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/players.png");
     private static final ResourceLocation ICON_NEUTRAL =
             ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/neutral.png");
-
-    private static final int FILTER_X = 98;
-    private static final int FILTER_Y = 18;
-    private static final int FILTER_SIZE = 16;
-    private static final int FILTER_SPACING = 18;
+    private static final ResourceLocation ICON_GEAR =
+            ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/filter/gear.png");
 
     private static final int ENERGY_X = 153;
     private static final int ENERGY_Y = 17;
     private static final int ENERGY_W = 14;
     private static final int ENERGY_H = 51;
     private static final int[] ENERGY_FILL_U = {196, 215, 234};
+
+    private static final int FILTER_X = ENERGY_X - BUTTON_SIZE - 2;
+    private static final int FILTER_Y = ENERGY_Y;
+    private static final int FILTER_SPACING = 18;
+
+    private TrustedPlayersGearButton trustedGearButton;
 
     public TurretBaseScreen(TurretBaseMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -67,10 +75,30 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
         addRenderableWidget(new TargetFilterIconButton(x, y, TargetFilter.MOBS, ICON_MOBS));
         addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING, TargetFilter.PLAYERS, ICON_PLAYERS));
         addRenderableWidget(new TargetFilterIconButton(x, y + FILTER_SPACING * 2, TargetFilter.NEUTRAL, ICON_NEUTRAL));
-        addRenderableWidget(Button.builder(
-                Component.translatable("gui.reopenedmodularturrets.trusted_players"),
-                button -> minecraft.setScreen(new TrustedPlayersScreen(menu.getBase().getBlockPos(), this))
-        ).bounds(leftPos + 8, topPos + 56, 88, 16).build());
+
+        trustedGearButton = new TrustedPlayersGearButton(
+                leftPos + FILTER_X - BUTTON_SIZE - 2,
+                topPos + FILTER_Y + FILTER_SPACING,
+                ICON_GEAR,
+                () -> minecraft.setScreen(new TrustedPlayersScreen(menu.getBase().getBlockPos(), this, menu))
+        );
+        addRenderableWidget(trustedGearButton);
+        updateTrustedGearVisibility();
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        updateTrustedGearVisibility();
+        if (menu.getBase() != null) {
+            menu.refreshFilterData();
+        }
+    }
+
+    private void updateTrustedGearVisibility() {
+        if (trustedGearButton != null) {
+            trustedGearButton.visible = menu.getData(3) == 1;
+        }
     }
 
     @Override
@@ -116,15 +144,22 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        super.renderTooltip(graphics, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
         if (isHoveringEnergyBar(mouseX, mouseY)) {
-            graphics.renderTooltip(font, Component.translatable(
-                    "gui.reopenedmodularturrets.energy",
-                    menu.getEnergyStored(),
-                    menu.getMaxEnergy()
-            ), mouseX, mouseY);
+            renderEnergyTooltip(graphics, mouseX, mouseY);
         }
+    }
+
+    private void renderEnergyTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        int max = Math.max(1, menu.getMaxEnergy());
+        int percent = menu.getEnergyStored() * 100 / max;
+        graphics.renderComponentTooltip(font, List.of(Component.translatable(
+                "gui.reopenedmodularturrets.energy",
+                menu.getEnergyStored(),
+                max,
+                percent
+        )), mouseX, mouseY);
     }
 
     private boolean isHoveringEnergyBar(int mouseX, int mouseY) {
@@ -134,48 +169,85 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
                 && mouseY < topPos + ENERGY_Y + ENERGY_H;
     }
 
-    private final class TargetFilterIconButton extends AbstractWidget {
+    private boolean isFilterEnabled(TargetFilter filter) {
+        return switch (filter) {
+            case MOBS -> menu.getData(2) == 1;
+            case PLAYERS -> menu.getData(3) == 1;
+            case NEUTRAL -> menu.getData(4) == 1;
+        };
+    }
+
+    private static void blitIcon(GuiGraphics graphics, ResourceLocation icon, int x, int y) {
+        graphics.blit(icon, x + (BUTTON_SIZE - ICON_SIZE) / 2, y + (BUTTON_SIZE - ICON_SIZE) / 2, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+    }
+
+    private final class TargetFilterIconButton extends AbstractButton {
         private final TargetFilter filter;
         private final ResourceLocation icon;
 
         TargetFilterIconButton(int x, int y, TargetFilter filter, ResourceLocation icon) {
-            super(x, y, FILTER_SIZE, FILTER_SIZE, Component.empty());
+            super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.empty());
             this.filter = filter;
             this.icon = icon;
             this.setTooltip(Tooltip.create(Component.translatable(
                     "gui.reopenedmodularturrets.filter." + filter.name().toLowerCase())));
         }
 
-        private boolean isFilterEnabled() {
-            return switch (filter) {
-                case MOBS -> menu.getData(2) == 1;
-                case PLAYERS -> menu.getData(3) == 1;
-                case NEUTRAL -> menu.getData(4) == 1;
-            };
-        }
-
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            if (!isFilterEnabled()) {
-                graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xAA000000);
-            }
-            if (isFilterEnabled()) {
-                graphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY() + height + 1, 0xAA00AA00);
-            } else if (isHovered()) {
-                graphics.fill(getX() - 1, getY() - 1, getX() + width + 1, getY() + height + 1, 0x66FFFFFF);
-            }
-            graphics.blit(icon, getX(), getY(), 0, 0, width, height, 16, 16);
+            boolean enabled = isFilterEnabled(filter);
+            boolean highlighted = enabled || isHoveredOrFocused();
+            graphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+            RenderSystem.enableBlend();
+            RenderSystem.enableDepthTest();
+            graphics.blitSprite(SPRITES.get(true, highlighted), getX(), getY(), getWidth(), getHeight());
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            blitIcon(graphics, icon, getX(), getY());
         }
 
         @Override
-        public void onClick(double mouseX, double mouseY) {
+        public void onPress() {
+            menu.toggleFilterClient(filter);
+            updateTrustedGearVisibility();
             if (menu.getBase() != null) {
                 ModNetworking.sendToServer(new ToggleTargetFilterPayload(menu.getBase().getBlockPos(), filter));
             }
         }
 
         @Override
-        protected void updateWidgetNarration(NarrationElementOutput output) {
+        public void updateWidgetNarration(NarrationElementOutput output) {
+            defaultButtonNarrationText(output);
+        }
+    }
+
+    private final class TrustedPlayersGearButton extends AbstractButton {
+        private final ResourceLocation icon;
+        private final Runnable onOpen;
+
+        TrustedPlayersGearButton(int x, int y, ResourceLocation icon, Runnable onOpen) {
+            super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.empty());
+            this.icon = icon;
+            this.onOpen = onOpen;
+            this.setTooltip(Tooltip.create(Component.translatable("gui.reopenedmodularturrets.trusted_players")));
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            graphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+            RenderSystem.enableBlend();
+            RenderSystem.enableDepthTest();
+            graphics.blitSprite(SPRITES.get(this.active, isHoveredOrFocused()), getX(), getY(), getWidth(), getHeight());
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            blitIcon(graphics, icon, getX(), getY());
+        }
+
+        @Override
+        public void onPress() {
+            onOpen.run();
+        }
+
+        @Override
+        public void updateWidgetNarration(NarrationElementOutput output) {
             defaultButtonNarrationText(output);
         }
     }

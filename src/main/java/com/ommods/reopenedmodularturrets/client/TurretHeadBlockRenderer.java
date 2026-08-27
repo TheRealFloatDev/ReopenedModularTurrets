@@ -9,7 +9,6 @@ import com.ommods.reopenedmodularturrets.client.model.GunTurretModel;
 import com.ommods.reopenedmodularturrets.client.model.ModEntityTextures;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
 import com.ommods.reopenedmodularturrets.client.model.TurretRenderHelper;
-import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -40,13 +39,14 @@ public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBl
             return;
         }
         TurretKind kind = blockEntity.getKind();
-        float rotationX = 0.0F;
-        float rotationZ = 0.0F;
+        DirectedTurretModelState modelState = DirectedTurretModelState.IDLE;
         if (kind.isDirected()) {
-            rotationX = TurretAimHelper.getRotationXYFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
-            rotationZ = TurretAimHelper.getRotationXZFromYawPitch(blockEntity.getYaw(), blockEntity.getPitch());
+            modelState = DirectedTurretModelState.aimed(
+                    blockEntity.getYaw(),
+                    blockEntity.getPitch(),
+                    blockEntity.getBaseDirection()
+            );
         }
-        DirectedTurretModelState modelState = new DirectedTurretModelState(rotationX, rotationZ);
         RenderType renderType = RenderType.entityCutoutNoCull(ModEntityTextures.forTurret(kind));
         VertexConsumer consumer = buffer.getBuffer(renderType);
         int light = Math.max(packedLight, LightTexture.FULL_BRIGHT);

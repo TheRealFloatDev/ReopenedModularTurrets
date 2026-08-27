@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import com.ommods.reopenedmodularturrets.client.model.ModEntityTextures;
 import com.ommods.reopenedmodularturrets.client.model.ModModelLayers;
 import com.ommods.reopenedmodularturrets.client.model.ProjectileModel;
+import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
 import com.ommods.reopenedmodularturrets.entity.LaserBeamEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -39,13 +40,15 @@ public class LaserBeamRenderer extends EntityRenderer<LaserBeamEntity> {
         if (length < 0.01D) {
             return;
         }
-        float yaw = (float) Math.toDegrees(Math.atan2(delta.z, delta.x));
-        float pitch = (float) Math.toDegrees(Math.atan2(delta.y, Math.sqrt(delta.x * delta.x + delta.z * delta.z)));
+        Vec3 direction = delta.scale(1.0D / length);
+        float yaw = TurretAimHelper.directionToYaw(direction);
+        float pitch = TurretAimHelper.directionToPitch(direction);
 
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
-        poseStack.scale(0.2F, 0.2F, (float) length * 2.0F);
+        poseStack.mulPose(Axis.XP.rotationDegrees(-pitch));
+        poseStack.translate(0.0F, 0.0F, (float) length * 0.5F);
+        poseStack.scale(0.2F, 0.2F, (float) length);
         var consumer = buffer.getBuffer(RenderType.entityTranslucentEmissive(getTextureLocation(entity)));
         model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, LASER_COLOR);
         poseStack.popPose();

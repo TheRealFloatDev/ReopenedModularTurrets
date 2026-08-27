@@ -1,9 +1,6 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "reopenedmodularturrets:block/addon_solar",
-    "model": {
-      "type": "reopenedmodularturrets:addon_solar"
-    }
+    "type": "minecraft:model",
+    "model": "reopenedmodularturrets:item/addon_solar"
   }
 }

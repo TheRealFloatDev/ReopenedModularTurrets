@@ -21,6 +21,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,7 +75,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         this.tier = tier;
         this.baseEnergyCapacity = 20000 * tier * tier;
         int transfer = 200 * tier * tier;
-        this.energyStorage = new EnergyStorage(baseEnergyCapacity, transfer, 0) {
+        this.energyStorage = new EnergyStorage(baseEnergyCapacity, transfer, transfer) {
             @Override
             public int getMaxEnergyStored() {
                 return TurretBaseBlockEntity.this.getEffectiveMaxEnergy();
@@ -85,6 +88,15 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
                     TurretBaseBlockEntity.this.setChanged();
                 }
                 return received;
+            }
+
+            @Override
+            public int extractEnergy(int maxExtract, boolean simulate) {
+                int extracted = super.extractEnergy(maxExtract, simulate);
+                if (!simulate && extracted > 0) {
+                    TurretBaseBlockEntity.this.setChanged();
+                }
+                return extracted;
             }
         };
         this.ammoStorage = new AmmoStorage((int) Math.round(Math.pow(2, tier + 2)) * 128);
@@ -108,6 +120,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     public boolean addTrustedPlayer(String name) {
         if (trustedPlayers.add(name)) {
             setChanged();
+            syncToClients();
             return true;
         }
         return false;
@@ -116,9 +129,16 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     public boolean removeTrustedPlayer(String name) {
         if (trustedPlayers.remove(name)) {
             setChanged();
+            syncToClients();
             return true;
         }
         return false;
+    }
+
+    private void syncToClients() {
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 
     public boolean canAccess(Player player) {
@@ -172,6 +192,27 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             case NEUTRAL -> attackNeutral = !attackNeutral;
         }
         setChanged();
+        syncToClients();
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = super.getUpdateTag(registries);
+        tag.putBoolean("AttackMobs", attackMobs);
+        tag.putBoolean("AttackPlayers", attackPlayers);
+        tag.putBoolean("AttackNeutral", attackNeutral);
+        trustedPlayers.save(tag);
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        loadAdditional(tag, registries);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -311,11 +352,17 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean consumeEnergy(int amount) {
+        if (amount <= 0) {
+            return true;
+        }
         int adjusted = Math.max(1, Math.round(amount * addonState.energyMultiplier()));
         if (energyStorage.getEnergyStored() < adjusted) {
             return false;
         }
-        energyStorage.extractEnergy(adjusted, false);
+        int extracted = energyStorage.extractEnergy(adjusted, false);
+        if (extracted < adjusted) {
+            return false;
+        }
         setChanged();
         return true;
     }

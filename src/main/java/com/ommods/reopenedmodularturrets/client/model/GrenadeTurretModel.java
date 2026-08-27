@@ -8,6 +8,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
 public class GrenadeTurretModel extends PartModel {
+    private final ModelPart base;
+    private final ModelPart pole;
     private final ModelPart boxUnder;
     private final ModelPart boxLeft;
     private final ModelPart boxRight;
@@ -18,6 +20,8 @@ public class GrenadeTurretModel extends PartModel {
 
     public GrenadeTurretModel(ModelPart root) {
         super(root);
+        this.base = root.getChild("base");
+        this.pole = root.getChild("pole");
         this.boxUnder = root.getChild("box_under");
         this.boxLeft = root.getChild("box_left");
         this.boxRight = root.getChild("box_right");
@@ -72,6 +76,12 @@ public class GrenadeTurretModel extends PartModel {
     }
 
     public void setupAnim(DirectedTurretModelState state) {
+        base.xRot = state.baseFitRotationX();
+        base.yRot = state.baseFitRotationZ();
+        pole.xRot = state.baseFitRotationX();
+        pole.yRot = state.baseFitRotationZ();
+        boxUnder.xRot = state.baseFitRotationX();
+
         float rotationX = state.rotationX();
         float rotationZ = state.rotationZ();
         boxUnder.yRot = rotationZ;

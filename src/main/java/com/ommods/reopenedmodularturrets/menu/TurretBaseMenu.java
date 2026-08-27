@@ -3,6 +3,7 @@ package com.ommods.reopenedmodularturrets.menu;
 import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
+import com.ommods.reopenedmodularturrets.core.targeting.TargetFilter;
 import com.ommods.reopenedmodularturrets.item.AmmoItem;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.item.UpgradeItem;
@@ -178,6 +179,24 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
     public int getData(int index) {
         return syncedData[index];
+    }
+
+    public void toggleFilterClient(TargetFilter filter) {
+        int index = switch (filter) {
+            case MOBS -> 2;
+            case PLAYERS -> 3;
+            case NEUTRAL -> 4;
+        };
+        syncedData[index] = syncedData[index] == 1 ? 0 : 1;
+    }
+
+    public void refreshFilterData() {
+        if (base == null) {
+            return;
+        }
+        syncedData[2] = base.isAttackMobs() ? 1 : 0;
+        syncedData[3] = base.isAttackPlayers() ? 1 : 0;
+        syncedData[4] = base.isAttackNeutral() ? 1 : 0;
     }
 
     private int baseSlotCount() {
