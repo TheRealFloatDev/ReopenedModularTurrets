@@ -63,7 +63,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private int powerExpanderBonus = 0;
 
     private final List<TurretHeadBlockEntity> turretHeads = new ArrayList<>();
-    private final List<LootDeleterAddonBlockEntity> lootDeleters = new ArrayList<>();
     private final List<ExpanderInventoryBlockEntity> inventoryExpanders = new ArrayList<>();
 
     public TurretBaseBlockEntity(BlockPos pos, BlockState state, int tier) {
@@ -230,7 +229,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             return;
         }
         turretHeads.clear();
-        lootDeleters.clear();
         inventoryExpanders.clear();
         powerExpanderBonus = 0;
 
@@ -242,9 +240,6 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             if (neighbor instanceof TurretHeadBlockEntity head) {
                 turretHeads.add(head);
                 head.bindBase(this);
-            } else if (neighbor instanceof LootDeleterAddonBlockEntity lootDeleter) {
-                lootDeleters.add(lootDeleter);
-                lootDeleter.bindBase(this);
             } else if (neighbor instanceof ExpanderInventoryBlockEntity expander) {
                 inventoryExpanders.add(expander);
                 expander.bindBase(this);
@@ -276,7 +271,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return new AddonState(
                 tier >= 2 && hasAddonItem(ModItems.SOLAR_ADDON_ITEM.get()),
                 hasAddonItem(ModItems.REDSTONE_REACTOR_ADDON_ITEM.get()),
-                !lootDeleters.isEmpty(),
+                hasAddonItem(ModItems.BASE_ADDON_LOOT_DELETER_ITEM.get()),
                 damageAmp,
                 potentia,
                 recycler,

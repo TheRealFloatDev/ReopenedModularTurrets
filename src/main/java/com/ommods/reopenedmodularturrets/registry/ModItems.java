@@ -38,7 +38,7 @@ public final class ModItems {
     public static final DeferredItem<Item> SOLAR_ADDON_ITEM = registerComponent("addon_solar");
     public static final DeferredItem<Item> REDSTONE_REACTOR_ADDON_ITEM = registerComponent("addon_redstone_reactor");
     public static final DeferredItem<BlockItem> LEVER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("lever_block", ModBlocks.LEVER_BLOCK);
-    public static final DeferredItem<BlockItem> BASE_ADDON_LOOT_DELETER_ITEM = ITEMS.registerSimpleBlockItem("base_addon_loot_deleter", ModBlocks.BASE_ADDON_LOOT_DELETER);
+    public static final DeferredItem<Item> BASE_ADDON_LOOT_DELETER_ITEM = registerComponent("base_addon_loot_deleter");
 
     public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_1_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_1", ModBlocks.EXPANDER_POWER_TIER_1);
     public static final DeferredItem<BlockItem> EXPANDER_POWER_TIER_2_ITEM = ITEMS.registerSimpleBlockItem("expander_power_tier_2", ModBlocks.EXPANDER_POWER_TIER_2);

@@ -5,14 +5,17 @@ import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.registry.ModBlockEntities;
+import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -26,6 +29,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class LeverBlock extends BaseEntityBlock {
@@ -50,6 +56,20 @@ public class LeverBlock extends BaseEntityBlock {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
+    }
+
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return leverShape(state.getValue(ROTATION));
+    }
+
+    @Override
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return leverShape(state.getValue(ROTATION));
     }
 
     @Nullable
@@ -126,6 +146,7 @@ public class LeverBlock extends BaseEntityBlock {
             return InteractionResult.SUCCESS;
         }
         lever.startCrank();
+        level.playSound(null, pos, ModSounds.WINDUP.get(), SoundSource.BLOCKS, 0.75F, 0.85F + level.random.nextFloat() * 0.2F);
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
@@ -143,6 +164,28 @@ public class LeverBlock extends BaseEntityBlock {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
+    }
+
+    public static Direction baseFacingForRotation(int rotation) {
+        return switch (rotation) {
+            case 0 -> Direction.SOUTH;
+            case 4 -> Direction.WEST;
+            case 8 -> Direction.NORTH;
+            case 12 -> Direction.EAST;
+            default -> Direction.SOUTH;
+        };
+    }
+
+    public static VoxelShape leverShape(int rotation) {
+        Direction baseFacing = baseFacingForRotation(rotation);
+        VoxelShape crank = switch (baseFacing) {
+            case SOUTH -> Shapes.box(0.125D, 0.125D, 0.0625D, 0.875D, 0.875D, 0.5625D);
+            case NORTH -> Shapes.box(0.125D, 0.125D, 0.4375D, 0.875D, 0.875D, 0.9375D);
+            case WEST -> Shapes.box(0.0625D, 0.125D, 0.125D, 0.5625D, 0.875D, 0.875D);
+            case EAST -> Shapes.box(0.4375D, 0.125D, 0.125D, 0.9375D, 0.875D, 0.875D);
+            default -> Shapes.box(0.125D, 0.125D, 0.0625D, 0.875D, 0.875D, 0.5625D);
+        };
+        return crank;
     }
 
     private static int rotationForBaseFacing(Direction baseFacing) {

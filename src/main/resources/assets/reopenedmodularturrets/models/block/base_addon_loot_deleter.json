@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "reopenedmodularturrets:block/base_addon_loot_deleter_side"
-  }
-}

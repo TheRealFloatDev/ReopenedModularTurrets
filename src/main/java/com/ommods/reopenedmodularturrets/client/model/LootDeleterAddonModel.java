@@ -24,11 +24,11 @@ public class LootDeleterAddonModel extends PartModel {
         PartDefinition rootDef = mesh.getRoot();
         rootDef.addOrReplaceChild(
                 "body",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, 4.0F, -7.0F, 14.0F, 10.0F, 14.0F),
+                CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -6.0F, -3.0F, 12.0F, 12.0F, 6.0F),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         rootDef.addOrReplaceChild(
                 "top",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, 3.0F, -7.0F, 14.0F, 1.0F, 14.0F),
+                CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -6.0F, 3.0F, 12.0F, 12.0F, 1.0F),
                 PartPose.offset(0.0F, 16.0F, 0.0F));
         return LayerDefinition.create(mesh, 32, 32);
     }

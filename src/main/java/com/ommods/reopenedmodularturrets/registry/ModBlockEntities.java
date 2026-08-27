@@ -3,12 +3,10 @@ package com.ommods.reopenedmodularturrets.registry;
 import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
 import com.ommods.reopenedmodularturrets.block.LeverBlock;
-import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
 import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.LeverBlockEntity;
-import com.ommods.reopenedmodularturrets.blockentity.LootDeleterAddonBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretHeadBlockEntity;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
@@ -38,12 +36,6 @@ public final class ModBlockEntities {
                     TurretHeadBlockEntity::new,
                     turretHeadBlocks()
             ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "turret_head")));
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LootDeleterAddonBlockEntity>> LOOT_DELETER_ADDON =
-            BLOCK_ENTITIES.register("loot_deleter_addon", () -> BlockEntityType.Builder.of(
-                    LootDeleterAddonBlockEntity::new,
-                    ModBlocks.BASE_ADDON_LOOT_DELETER.get()
-            ).build(net.minecraft.Util.fetchChoiceType(References.BLOCK_ENTITY, "loot_deleter_addon")));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LeverBlockEntity>> LEVER_BLOCK =
             BLOCK_ENTITIES.register("lever_block", () -> BlockEntityType.Builder.of(

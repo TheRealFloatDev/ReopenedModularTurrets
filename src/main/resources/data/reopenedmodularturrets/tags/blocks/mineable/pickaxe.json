@@ -61,10 +61,6 @@
       "required": false
     },
     {
-      "id": "reopenedmodularturrets:base_addon_loot_deleter",
-      "required": false
-    },
-    {
       "id": "reopenedmodularturrets:lever_block",
       "required": false
     },

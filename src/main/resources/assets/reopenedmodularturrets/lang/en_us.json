@@ -309,7 +309,7 @@
   "jei.reopenedmodularturrets.turret_base": "Central base block for modular turrets.",
   "jei.reopenedmodularturrets.addon_solar": "Install in a tier 2+ base addon slot. Generates FE in daylight and renders on the turret.",
   "jei.reopenedmodularturrets.addon_redstone_reactor": "Install in a base addon slot. Converts nearby redstone signal into FE and renders on the turret.",
-  "jei.reopenedmodularturrets.base_addon_loot_deleter": "Deletes mob drops from turret kills under the base.",
+  "jei.reopenedmodularturrets.base_addon_loot_deleter": "Install in a base addon slot. Deletes mob drops from turret kills.",
   "jei.reopenedmodularturrets.memory_card": "Shift-use to save filters; use to apply; shift-use air to clear.",
   "jei.reopenedmodularturrets.lever_block": "Right-click to crank FE into adjacent tier-1 bases.",
   "jei.reopenedmodularturrets.upgrade_fire_rate": "Increases turret fire rate when installed in a base.",

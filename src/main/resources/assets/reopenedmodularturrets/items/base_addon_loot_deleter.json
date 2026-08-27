@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "reopenedmodularturrets:item/base_addon_loot_deleter"
+  }
+}

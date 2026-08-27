@@ -40,6 +40,10 @@ public abstract class BaseAttachmentBlock extends BaseEntityBlock {
         return RenderShape.INVISIBLE;
     }
 
+    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
+    }
+
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return attachmentShape(state.getValue(FACING));

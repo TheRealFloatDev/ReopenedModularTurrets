@@ -25,6 +25,7 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RAIL_GUN = register("rail_gun");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAIL_GUN_HIT = register("rail_gun_hit");
     public static final DeferredHolder<SoundEvent, SoundEvent> PLASMA_LAUNCH = register("plasma_launch");
+    public static final DeferredHolder<SoundEvent, SoundEvent> WINDUP = register("windup");
 
     private static DeferredHolder<SoundEvent, SoundEvent> register(String name) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, name);

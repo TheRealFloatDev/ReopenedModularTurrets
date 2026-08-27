@@ -4,7 +4,6 @@ import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.block.ExpanderInventoryBlock;
 import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
 import com.ommods.reopenedmodularturrets.block.LeverBlock;
-import com.ommods.reopenedmodularturrets.block.LootDeleterAddonBlock;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.block.TurretHeadBlock;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
@@ -64,12 +63,7 @@ public final class ModBlocks {
 
     public static final DeferredBlock<LeverBlock> LEVER_BLOCK = BLOCKS.registerBlock(
             "lever_block",
-            props -> new LeverBlock(applyBaseProperties(props, MapColor.STONE))
-    );
-
-    public static final DeferredBlock<LootDeleterAddonBlock> BASE_ADDON_LOOT_DELETER = BLOCKS.registerBlock(
-            "base_addon_loot_deleter",
-            props -> new LootDeleterAddonBlock(applyBaseProperties(props, MapColor.COLOR_BLACK))
+            props -> new LeverBlock(applyAttachmentProperties(props, MapColor.STONE))
     );
 
     public static final DeferredBlock<ExpanderPowerBlock> EXPANDER_POWER_TIER_1 = registerPowerExpander(1);
@@ -111,6 +105,10 @@ public final class ModBlocks {
                 .strength(4.0F, 1200.0F)
                 .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops();
+    }
+
+    private static BlockBehaviour.Properties applyAttachmentProperties(BlockBehaviour.Properties props, MapColor color) {
+        return applyBaseProperties(props, color).noOcclusion();
     }
 
     private static BlockBehaviour.Properties applyTurretHeadProperties(BlockBehaviour.Properties props, MapColor color) {

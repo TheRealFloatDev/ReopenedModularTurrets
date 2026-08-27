@@ -37,7 +37,6 @@ public final class ModClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_HEAD.get(), TurretHeadBlockRenderer::new);
-        event.registerBlockEntityRenderer(ModBlockEntities.LOOT_DELETER_ADDON.get(), LootDeleterAddonBlockRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.LEVER_BLOCK.get(), LeverBlockRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.GRENADE_PROJECTILE.get(), GrenadeProjectileRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LASER_BEAM.get(), LaserBeamRenderer::new);

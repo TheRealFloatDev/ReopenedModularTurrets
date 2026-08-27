@@ -2,6 +2,8 @@ package com.ommods.reopenedmodularturrets.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.core.Direction;
+import com.mojang.math.Axis;
 import org.joml.Quaternionf;
 
 public final class TurretRenderHelper {
@@ -11,6 +13,15 @@ public final class TurretRenderHelper {
     public static void prepareBlockEntityPose(PoseStack poseStack) {
         poseStack.translate(0.5F, 1.5F, 0.5F);
         poseStack.scale(1.0F, -1.0F, -1.0F);
+    }
+
+    public static void prepareAttachmentPose(PoseStack poseStack, Direction facing) {
+        prepareBlockEntityPose(poseStack);
+        poseStack.translate(facing.getStepX() * 0.325F, facing.getStepY() * 0.325F, facing.getStepZ() * 0.325F);
+        poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+        if (facing.getAxis().isVertical()) {
+            poseStack.mulPose(Axis.XP.rotationDegrees(facing == Direction.UP ? -90.0F : 90.0F));
+        }
     }
 
     /**
