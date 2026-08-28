@@ -8,10 +8,15 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record TrustedPlayerPayload(Action action, BlockPos pos, String playerName) implements CustomPacketPayload {
+public record TrustedPlayerPayload(Action action, BlockPos pos, String playerName, int accessLevel) implements CustomPacketPayload {
+    public TrustedPlayerPayload(Action action, BlockPos pos, String playerName) {
+        this(action, pos, playerName, 0);
+    }
+
     public enum Action {
         ADD,
-        REMOVE
+        REMOVE,
+        CHANGE_ACCESS
     }
 
     public static final CustomPacketPayload.Type<TrustedPlayerPayload> TYPE =
@@ -24,7 +29,9 @@ public record TrustedPlayerPayload(Action action, BlockPos pos, String playerNam
             TrustedPlayerPayload::pos,
             ByteBufCodecs.STRING_UTF8,
             TrustedPlayerPayload::playerName,
-            (ordinal, pos, name) -> new TrustedPlayerPayload(Action.values()[ordinal], pos, name)
+            ByteBufCodecs.VAR_INT,
+            TrustedPlayerPayload::accessLevel,
+            (ordinal, pos, name, accessLevel) -> new TrustedPlayerPayload(Action.values()[ordinal], pos, name, accessLevel)
     );
 
     @Override

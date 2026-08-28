@@ -1,6 +1,11 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
-import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
+import com.ommods.reopenedmodularturrets.api.network.IBaseController;
+import com.ommods.reopenedmodularturrets.api.ownership.TrustedPlayer;
+import com.ommods.reopenedmodularturrets.api.targeting.TargetingSettings;
+import com.ommods.reopenedmodularturrets.core.MachineMode;
+import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
+import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
 import com.ommods.reopenedmodularturrets.core.addons.AddonState;
@@ -29,7 +34,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import com.ommods.reopenedmodularturrets.block.ExpanderPowerBlock;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -42,12 +49,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.UUID;
 
 public class TurretBaseBlockEntity extends BlockEntity implements Container {
@@ -65,6 +74,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private boolean attackPlayers = false;
     private boolean attackNeutral = false;
     private boolean multiTargeting = false;
+    private MachineMode machineMode = MachineMode.INVERTED;
+    private boolean redstonePowered = false;
     private boolean active = true;
     private int targetRange = 16;
     private int kills = 0;
@@ -83,6 +94,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
 
     private final List<TurretHeadBlockEntity> turretHeads = new ArrayList<>();
     private final List<ExpanderInventoryBlockEntity> inventoryExpanders = new ArrayList<>();
+    @Nullable
+    private IBaseController controller;
 
     public TurretBaseBlockEntity(BlockPos pos, BlockState state, int tier) {
         super(ModBlockEntities.TURRET_BASE.get(), pos, state);
@@ -145,6 +158,15 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return false;
     }
 
+    public boolean changeTrustedAccessLevel(String name, com.ommods.reopenedmodularturrets.api.ownership.AccessLevel level) {
+        if (trustedPlayers.changeAccessLevel(name, level)) {
+            setChanged();
+            syncToClients();
+            return true;
+        }
+        return false;
+    }
+
     public boolean removeTrustedPlayer(String name) {
         if (trustedPlayers.remove(name)) {
             setChanged();
@@ -169,7 +191,153 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean canAccess(Player player) {
-        return ownedData.canAccess(player);
+        return ownedData.canAccess(player, trustedPlayers);
+    }
+
+    public boolean canView(Player player) {
+        return ownedData.canView(player, trustedPlayers);
+    }
+
+    public boolean registerController(IBaseController controller) {
+        if (this.controller != null) {
+            return false;
+        }
+        this.controller = controller;
+        updateControllerSettings();
+        return true;
+    }
+
+    @Nullable
+    public IBaseController getController() {
+        return controller;
+    }
+
+    public boolean isComputerAccessible() {
+        return tier >= 5 || getAddonState().serialPort();
+    }
+
+    public MachineMode getMachineMode() {
+        return machineMode;
+    }
+
+    public void setMachineMode(MachineMode machineMode) {
+        this.machineMode = machineMode;
+        refreshActiveFromMode(resolveEffectiveMode());
+        setChanged();
+        syncToClients();
+    }
+
+    public void cycleMachineMode() {
+        setMachineMode(machineMode.next());
+    }
+
+    public void updateRedstoneState() {
+        if (level == null) {
+            return;
+        }
+        boolean powered = level.hasNeighborSignal(worldPosition);
+        if (powered != redstonePowered) {
+            redstonePowered = powered;
+            refreshActiveFromMode(resolveEffectiveMode());
+        }
+    }
+
+    public boolean isRedstonePowered() {
+        return redstonePowered;
+    }
+
+    private MachineMode resolveEffectiveMode() {
+        if (controller != null && controller.overridesMode()) {
+            return controller.getOverriddenMode();
+        }
+        return machineMode;
+    }
+
+    private void refreshActiveFromMode(MachineMode mode) {
+        active = switch (mode) {
+            case INVERTED -> !redstonePowered;
+            case NON_INVERTED -> redstonePowered;
+            case ALWAYS_ON -> true;
+            case ALWAYS_OFF -> false;
+        };
+    }
+
+    private void updateControllerSettings() {
+        if (controller == null) {
+            return;
+        }
+        TargetingSettings settings = controller.getTargetingSettings();
+        attackMobs = settings.isTargetMobs();
+        attackPlayers = settings.isTargetPlayers();
+        attackNeutral = settings.isTargetPassive();
+        targetRange = settings.getRange() > 0 ? settings.getRange() : targetRange;
+    }
+
+    public TargetingSettings getTargetingSettings() {
+        return new TargetingSettings(attackPlayers, attackMobs, attackNeutral, targetRange, getMaxAllowedRange());
+    }
+
+    public void applyTargetingSettings(TargetingSettings settings) {
+        attackMobs = settings.isTargetMobs();
+        attackPlayers = settings.isTargetPlayers();
+        attackNeutral = settings.isTargetPassive();
+        targetRange = Math.min(settings.getRange(), getMaxAllowedRange());
+        setChanged();
+        syncToClients();
+    }
+
+    public void setAttackMobs(boolean attackMobs) {
+        this.attackMobs = attackMobs;
+        setChanged();
+        syncToClients();
+    }
+
+    public void setAttackPlayers(boolean attackPlayers) {
+        this.attackPlayers = attackPlayers;
+        setChanged();
+        syncToClients();
+    }
+
+    public void setAttackNeutral(boolean attackNeutral) {
+        this.attackNeutral = attackNeutral;
+        setChanged();
+        syncToClients();
+    }
+
+    public List<LivingEntity> getEntitiesWithinRange() {
+        if (level == null) {
+            return List.of();
+        }
+        double range = targetRange;
+        Vec3 origin = Vec3.atCenterOf(worldPosition);
+        AABB box = new AABB(
+                origin.x - range, origin.y - range, origin.z - range,
+                origin.x + range, origin.y + range, origin.z + range
+        );
+        return level.getEntitiesOfClass(LivingEntity.class, box);
+    }
+
+    private List<String> getTrustedNamesForTargeting() {
+        if (controller != null) {
+            return controller.getTrustedPlayerList().stream().map(TrustedPlayer::getName).toList();
+        }
+        return trustedPlayers.getNames();
+    }
+
+    private Predicate<LivingEntity> controllerTargetFilter(BlockPos aimFrom) {
+        if (controller == null) {
+            return null;
+        }
+        return entity -> controller.isEntityValidTarget(
+                entity,
+                TurretAimHelper.getAimYaw(entity, aimFrom),
+                TurretAimHelper.getAimPitch(entity, aimFrom)
+        );
+    }
+
+    private boolean isEntityValidForController(LivingEntity entity, BlockPos aimFrom) {
+        Predicate<LivingEntity> filter = controllerTargetFilter(aimFrom);
+        return filter == null || filter.test(entity);
     }
 
     public EnergyStorage getEnergyStorage() {
@@ -234,13 +402,12 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean isActive() {
+        refreshActiveFromMode(resolveEffectiveMode());
         return active;
     }
 
     public void toggleActive() {
-        this.active = !active;
-        setChanged();
-        syncToClients();
+        cycleMachineMode();
     }
 
     public int getTargetRange() {
@@ -354,6 +521,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         tag.putBoolean("AttackPlayers", attackPlayers);
         tag.putBoolean("AttackNeutral", attackNeutral);
         tag.putBoolean("MultiTargeting", multiTargeting);
+        tag.putInt("MachineMode", machineMode.ordinal());
+        tag.putBoolean("RedstonePowered", redstonePowered);
         tag.putBoolean("Active", active);
         tag.putInt("TargetRange", targetRange);
         tag.putInt("Kills", kills);
@@ -519,6 +688,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             return;
         }
         ServerLevel serverLevel = (ServerLevel) level;
+        base.updateRedstoneState();
+        base.updateControllerSettings();
         base.addonState = base.scanAddonState();
         base.tickInventoryAddons(serverLevel);
         base.tickTurrets(serverLevel);
@@ -556,7 +727,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             return;
         }
         Vec3 origin = Vec3.atCenterOf(head.getBlockPos());
-        OptionalTarget target = findTargetForTurret(level, origin, head.getKind().getRange(), sharedTarget);
+        OptionalTarget target = findTargetForTurret(level, head, origin, head.getKind().getRange(), sharedTarget);
         head.setConcealed(target == null && head.getCooldown() <= 0);
     }
 
@@ -757,6 +928,47 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return false;
     }
 
+    public boolean consumeArrowAmmo() {
+        for (int slot = BaseSlotIndices.AMMO_START; slot < BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT; slot++) {
+            if (tryConsumeArrow(inventory[slot], slot, this)) {
+                return true;
+            }
+        }
+        for (ExpanderInventoryBlockEntity expander : inventoryExpanders) {
+            for (int slot = 0; slot < expander.getContainerSize(); slot++) {
+                if (tryConsumeArrow(expander.getItem(slot), slot, expander)) {
+                    expander.setChanged();
+                    setChanged();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean tryConsumeArrow(ItemStack stack, int slot, TurretBaseBlockEntity base) {
+        if (stack.is(Items.ARROW)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                base.inventory[slot] = ItemStack.EMPTY;
+            }
+            base.setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean tryConsumeArrow(ItemStack stack, int slot, ExpanderInventoryBlockEntity expander) {
+        if (stack.is(Items.ARROW)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                expander.setItem(slot, ItemStack.EMPTY);
+            }
+            return true;
+        }
+        return false;
+    }
+
     private static boolean tryConsumePotato(ItemStack stack, int slot, TurretBaseBlockEntity base) {
         if (isPotato(stack)) {
             stack.shrink(1);
@@ -774,19 +986,28 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     @Nullable
-    public OptionalTarget findTarget(Level level, Vec3 origin, double range) {
+    public OptionalTarget findTarget(Level level, Vec3 origin, double range, BlockPos aimFrom, TurretKind kind, @Nullable LivingEntity exclude) {
         UUID ownerUuid = ownedData.getOwnerUuid().orElse(null);
         return com.ommods.reopenedmodularturrets.core.targeting.TargetingHelper.findTarget(
                 level,
                 origin,
+                aimFrom,
                 range,
                 ModConfig.TARGETING_DOWN_RANGE.get(),
                 attackMobs,
                 attackPlayers,
                 attackNeutral,
                 ownerUuid,
-                trustedPlayers.getNames()
+                getTrustedNamesForTargeting(),
+                kind,
+                exclude,
+                controllerTargetFilter(aimFrom)
         ).map(OptionalTarget::new).orElse(null);
+    }
+
+    @Nullable
+    public OptionalTarget findTarget(Level level, Vec3 origin, double range) {
+        return findTarget(level, origin, range, BlockPos.containing(origin), TurretKind.GUN, null);
     }
 
     public float getDamageMultiplier() {
@@ -828,6 +1049,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         attackPlayers = tag.getBoolean("AttackPlayers");
         attackNeutral = tag.getBoolean("AttackNeutral");
         multiTargeting = tag.getBoolean("MultiTargeting");
+        machineMode = tag.contains("MachineMode") ? MachineMode.fromOrdinal(tag.getInt("MachineMode")) : MachineMode.INVERTED;
+        redstonePowered = tag.getBoolean("RedstonePowered");
         active = !tag.contains("Active") || tag.getBoolean("Active");
         targetRange = tag.contains("TargetRange") ? tag.getInt("TargetRange") : 16;
         kills = tag.getInt("Kills");
@@ -866,6 +1089,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         tag.putBoolean("AttackPlayers", attackPlayers);
         tag.putBoolean("AttackNeutral", attackNeutral);
         tag.putBoolean("MultiTargeting", multiTargeting);
+        tag.putInt("MachineMode", machineMode.ordinal());
+        tag.putBoolean("RedstonePowered", redstonePowered);
         tag.putBoolean("Active", active);
         tag.putInt("TargetRange", targetRange);
         tag.putInt("Kills", kills);
@@ -915,6 +1140,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         addonState = scanAddonState();
         upgradeModifiers = scanUpgrades();
         if (!addonState.equals(previous)) {
+            invalidateComputerAccess();
             syncToClients();
         } else if (addonState.solar() || addonState.redstoneReactor()) {
             setChanged();
@@ -1004,11 +1230,82 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     @Nullable
-    public OptionalTarget findTargetForTurret(ServerLevel level, Vec3 origin, double turretRange, @Nullable LivingEntity preferred) {
-        if (!multiTargeting && preferred != null && preferred.isAlive()) {
+    public OptionalTarget findTargetForTurret(ServerLevel level, TurretHeadBlockEntity head, Vec3 origin, double turretRange, @Nullable LivingEntity preferred) {
+        BlockPos aimFrom = head.getBlockPos();
+        if (!multiTargeting && preferred != null && preferred.isAlive() && isEntityValidForController(preferred, aimFrom)) {
             return new OptionalTarget(preferred);
         }
-        return findTarget(level, origin, getEffectiveRange(turretRange));
+        return findTarget(level, origin, getEffectiveRange(turretRange), aimFrom, head.getKind(), preferred);
+    }
+
+    public List<TurretHeadBlockEntity> getAttachedTurrets() {
+        return List.copyOf(turretHeads);
+    }
+
+    @Nullable
+    public TurretHeadBlockEntity getTurret(Direction direction) {
+        BlockPos neighbor = worldPosition.relative(direction);
+        if (level != null && level.getBlockEntity(neighbor) instanceof TurretHeadBlockEntity head) {
+            return head;
+        }
+        return null;
+    }
+
+    public void setAllTurretsYawPitch(float yaw, float pitch) {
+        for (TurretHeadBlockEntity head : turretHeads) {
+            head.setYaw(yaw);
+            head.setPitch(pitch);
+        }
+    }
+
+    public boolean setTurretYawPitch(Direction direction, float yaw, float pitch) {
+        TurretHeadBlockEntity head = getTurret(direction);
+        if (head == null) {
+            return false;
+        }
+        head.setYaw(yaw);
+        head.setPitch(pitch);
+        return true;
+    }
+
+    public void setAllTurretsForceFire(boolean state) {
+        for (TurretHeadBlockEntity head : turretHeads) {
+            head.setAutoForceFire(state);
+        }
+    }
+
+    public boolean setTurretForceFire(Direction direction, boolean state) {
+        TurretHeadBlockEntity head = getTurret(direction);
+        if (head == null) {
+            return false;
+        }
+        head.setAutoForceFire(state);
+        return true;
+    }
+
+    public boolean forceShootTurret(Direction direction) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+        TurretHeadBlockEntity head = getTurret(direction);
+        return head != null && head.forceShot(serverLevel, this);
+    }
+
+    public boolean forceShootAllTurrets() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+        boolean fired = false;
+        for (TurretHeadBlockEntity head : turretHeads) {
+            fired |= head.forceShot(serverLevel, this);
+        }
+        return fired;
+    }
+
+    public void invalidateComputerAccess() {
+        if (level != null && !level.isClientSide()) {
+            level.invalidateCapabilities(worldPosition);
+        }
     }
 
     public record OptionalTarget(LivingEntity entity) {}

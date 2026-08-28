@@ -1,5 +1,6 @@
 package com.ommods.reopenedmodularturrets.network;
 
+import com.ommods.reopenedmodularturrets.api.ownership.AccessLevel;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.payload.AdjustLightPayload;
@@ -11,6 +12,11 @@ import com.ommods.reopenedmodularturrets.network.payload.ToggleMultiTargetPayloa
 import com.ommods.reopenedmodularturrets.network.payload.ToggleTargetFilterPayload;
 import com.ommods.reopenedmodularturrets.network.payload.TrustedPlayerPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import com.ommods.reopenedmodularturrets.network.payload.SyncArcLightningPayload;
+import com.ommods.reopenedmodularturrets.network.payload.SyncTurretRayPayload;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -84,6 +90,10 @@ public final class ModNetworking {
                     switch (payload.action()) {
                         case ADD -> base.addTrustedPlayer(payload.playerName());
                         case REMOVE -> base.removeTrustedPlayer(payload.playerName());
+                        case CHANGE_ACCESS -> base.changeTrustedAccessLevel(
+                                payload.playerName(),
+                                AccessLevel.fromLevel(payload.accessLevel())
+                        );
                     }
                     syncOpenMenu(player, base);
                 }
@@ -175,5 +185,29 @@ public final class ModNetworking {
 
     public static void sendToServer(CustomPacketPayload payload) {
         PacketDistributor.sendToServer(payload);
+    }
+
+    public static void sendArcLightning(ServerLevel level, BlockPos source, Vec3 from, Vec3 to) {
+        PacketDistributor.sendToPlayersNear(
+                level,
+                null,
+                source.getX() + 0.5,
+                source.getY() + 0.5,
+                source.getZ() + 0.5,
+                128.0,
+                new SyncArcLightningPayload(source, from, to)
+        );
+    }
+
+    public static void sendTurretRay(ServerLevel level, BlockPos source, Vec3 from, Vec3 to, int red, int green, int blue) {
+        PacketDistributor.sendToPlayersNear(
+                level,
+                null,
+                source.getX() + 0.5,
+                source.getY() + 0.5,
+                source.getZ() + 0.5,
+                128.0,
+                new SyncTurretRayPayload(source, from, to, red, green, blue)
+        );
     }
 }

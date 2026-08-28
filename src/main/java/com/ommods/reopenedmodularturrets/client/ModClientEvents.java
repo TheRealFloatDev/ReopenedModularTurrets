@@ -56,6 +56,9 @@ public final class ModClientEvents {
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_BASE.get(), TurretBaseBlockRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.LEVER_BLOCK.get(), LeverBlockRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.GRENADE_PROJECTILE.get(), GrenadeProjectileRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.BULLET_PROJECTILE.get(), BulletProjectileRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.PLASMA_PROJECTILE.get(), PlasmaProjectileRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.TURRET_ARROW.get(), TurretArrowRenderer::new);
         event.registerEntityRenderer(ModEntityTypes.LASER_BEAM.get(), LaserBeamRenderer::new);
     }
 

@@ -73,6 +73,10 @@ public final class ModConfig {
             .comment("Additional blocks below the turret origin to search for targets")
             .defineInRange("targeting.downRange", 4, 0, 32);
 
+    public static final ModConfigSpec.IntValue TARGETING_MAX_SEE_THROUGH = BUILDER
+            .comment("Maximum non-solid blocks a turret can see through when checking line of sight")
+            .defineInRange("targeting.maxSeeThroughBlocks", 100, 0, 256);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private ModConfig() {}

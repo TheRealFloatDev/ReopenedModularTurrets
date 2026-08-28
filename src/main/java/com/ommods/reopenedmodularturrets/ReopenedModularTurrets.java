@@ -26,6 +26,7 @@ public class ReopenedModularTurrets {
     public ReopenedModularTurrets(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(ModNetworking::register);
+        modEventBus.addListener(com.ommods.reopenedmodularturrets.client.ClientNetworking::registerClient);
         modEventBus.addListener(ModCapabilityEvents::registerCapabilities);
         modEventBus.addListener(ReopenedModularTurretsClient::registerScreens);
 

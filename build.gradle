@@ -36,6 +36,21 @@ repositories {
             includeGroup 'curse.maven'
         }
     }
+    maven {
+        name = 'CC-Tweaked'
+        url = 'https://maven.squiddev.cc'
+        content {
+            includeGroup 'cc.tweaked'
+        }
+    }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+            includeGroup 'snownee.jade'
+        }
+    }
 }
 
 base {
@@ -100,6 +115,12 @@ dependencies {
     localRuntime "curse.maven:powah-${powah_project_id}:${powah_file_id}"
     localRuntime "curse.maven:cloth-config-348521:5729127"
     localRuntime "org.appliedenergistics:guideme:21.1.17"
+
+    compileOnly "cc.tweaked:cc-tweaked-${minecraft_version}-core-api:${cc_tweaked_version}"
+    compileOnly "cc.tweaked:cc-tweaked-${minecraft_version}-forge-api:${cc_tweaked_version}"
+    localRuntime "cc.tweaked:cc-tweaked-${minecraft_version}-forge:${cc_tweaked_version}"
+
+    compileOnly "maven.modrinth:jade:${jade_version}"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

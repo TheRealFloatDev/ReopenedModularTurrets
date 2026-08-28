@@ -1,6 +1,7 @@
 package com.ommods.reopenedmodularturrets.blockentity;
 
 import com.ommods.reopenedmodularturrets.core.targeting.TurretAimHelper;
+import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -25,13 +26,28 @@ public abstract class DirectedTurretBlockEntity extends BlockEntity {
         return yaw;
     }
 
+    public void setYaw(float yaw) {
+        if (this.yaw != yaw) {
+            this.yaw = yaw;
+            setChanged();
+        }
+    }
+
+    public void setPitch(float pitch) {
+        if (this.pitch != pitch) {
+            this.pitch = pitch;
+            setChanged();
+        }
+    }
+
     public float getPitch() {
         return pitch;
     }
 
     public void updateAim(ServerLevel level, TurretBaseBlockEntity base, double range) {
         Vec3 origin = Vec3.atCenterOf(worldPosition);
-        TurretBaseBlockEntity.OptionalTarget target = base.findTarget(level, origin, range);
+        TurretKind kind = this instanceof TurretHeadBlockEntity head ? head.getKind() : TurretKind.GUN;
+        TurretBaseBlockEntity.OptionalTarget target = base.findTarget(level, origin, range, worldPosition, kind, null);
         if (target == null) {
             return;
         }

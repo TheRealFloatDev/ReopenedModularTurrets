@@ -15,12 +15,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
     private int cooldown = 0;
     private boolean concealed = false;
+    private boolean autoForceFire = false;
     @Nullable
     private TurretBaseBlockEntity base;
 
@@ -94,6 +97,51 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         }
     }
 
+    public boolean isAutoForceFire() {
+        return autoForceFire;
+    }
+
+    public void setAutoForceFire(boolean autoForceFire) {
+        this.autoForceFire = autoForceFire;
+        setChanged();
+    }
+
+    public boolean forceShot(ServerLevel level, TurretBaseBlockEntity baseEntity) {
+        if (cooldown > 0) {
+            return false;
+        }
+        TurretKind kind = getKind();
+        if (!kind.isEnabled() || baseEntity.getTier() < kind.getMinTier()) {
+            return false;
+        }
+        Vec3 origin = Vec3.atCenterOf(worldPosition);
+        float yawRad = (float) Math.toRadians(getYaw());
+        float pitchRad = (float) Math.toRadians(getPitch());
+        double dx = -Math.sin(yawRad) * Math.cos(pitchRad);
+        double dy = -Math.sin(pitchRad);
+        double dz = Math.cos(yawRad) * Math.cos(pitchRad);
+        Vec3 direction = new Vec3(dx, dy, dz).normalize();
+        Vec3 targetPos = origin.add(direction.scale(kind.getRange()));
+        AABB searchBox = new AABB(origin, targetPos).inflate(1.0);
+        EntityHitResult hit = net.minecraft.world.entity.projectile.ProjectileUtil.getEntityHitResult(
+                level,
+                null,
+                origin,
+                targetPos,
+                searchBox,
+                entity -> entity instanceof LivingEntity living && living.isAlive() && !living.isSpectator()
+        );
+        if (hit != null && hit.getEntity() instanceof LivingEntity living) {
+            float damage = kind.getDamage() * baseEntity.getDamageMultiplier();
+            if (consumeAmmoForKind(kind, baseEntity) && baseEntity.consumeEnergy(kind.getEnergyPerShot())) {
+                kind.fire(this, level, baseEntity, living, damage);
+                cooldown = kind.getMachineGunCooldown(baseEntity);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void tickCombat(ServerLevel level, TurretBaseBlockEntity baseEntity) {
         TurretKind kind = getKind();
         if (!kind.isEnabled() || !baseEntity.isActive()) {
@@ -105,6 +153,10 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         double range = baseEntity.getEffectiveRange(kind.getRange());
         if (kind.isDirected()) {
             updateAim(level, baseEntity, range);
+        }
+        if (autoForceFire) {
+            forceShot(level, baseEntity);
+            return;
         }
         tryFire(level, baseEntity);
     }
@@ -118,6 +170,7 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         double range = baseEntity.getEffectiveRange(kind.getRange());
         TurretBaseBlockEntity.OptionalTarget target = baseEntity.findTargetForTurret(
                 level,
+                this,
                 origin,
                 kind.getRange(),
                 baseEntity.getSharedTarget()
@@ -152,7 +205,7 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         if (!target.entity().isAlive()) {
             baseEntity.handleKill(target.entity());
         }
-        cooldown = baseEntity.getUpgradeModifiers().applyCooldown(kind.getCooldown());
+        cooldown = kind.getMachineGunCooldown(baseEntity);
         setChanged();
     }
 
@@ -160,6 +213,7 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         return switch (kind) {
             case DISPOSABLE_ITEM -> baseEntity.consumeDisposableAmmo();
             case POTATO_CANNON -> baseEntity.consumePotatoAmmo();
+            case CROSSBOW -> baseEntity.consumeArrowAmmo();
             default -> {
                 AmmoType ammo = kind.getAmmoType();
                 yield baseEntity.consumeAmmo(ammo, ammo != null ? 1 : 0);
@@ -177,6 +231,7 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
     ) {
         TurretBaseBlockEntity.OptionalTarget secondary = baseEntity.findTargetForTurret(
                 level,
+                this,
                 origin,
                 getKind().getRange(),
                 primary
@@ -204,11 +259,13 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         concealed = tag.getBoolean("Concealed");
+        autoForceFire = tag.getBoolean("AutoForceFire");
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putBoolean("Concealed", concealed);
+        tag.putBoolean("AutoForceFire", autoForceFire);
     }
 }

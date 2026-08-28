@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TurretBaseMenu extends AbstractContainerMenu {
-    public static final int DATA_COUNT = 22;
+    public static final int DATA_COUNT = 23;
 
     private static final int ENERGY_STORED = 0;
     private static final int MAX_ENERGY = 1;
@@ -48,6 +48,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     private static final int PLAYER_KILLS = 19;
     private static final int LIGHT_VALUE = 20;
     private static final int LIGHT_OPACITY = 21;
+    private static final int MACHINE_MODE = 22;
 
     private final TurretBaseBlockEntity base;
     private final int[] syncedData = new int[DATA_COUNT];
@@ -178,6 +179,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         syncedData[PLAYER_KILLS] = base.getPlayerKills();
         syncedData[LIGHT_VALUE] = base.getLightValue();
         syncedData[LIGHT_OPACITY] = base.getLightOpacity();
+        syncedData[MACHINE_MODE] = base.getMachineMode().ordinal();
     }
 
     private void addPlayerInventory(Inventory playerInventory, int left, int top) {
@@ -222,6 +224,10 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
     public boolean isActive() {
         return syncedData[ACTIVE] == 1;
+    }
+
+    public int getMachineModeOrdinal() {
+        return syncedData[MACHINE_MODE];
     }
 
     public void toggleFilterClient(TargetFilter filter) {

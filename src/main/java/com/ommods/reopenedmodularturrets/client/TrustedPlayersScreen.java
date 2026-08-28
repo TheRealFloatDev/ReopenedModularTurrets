@@ -1,5 +1,7 @@
 package com.ommods.reopenedmodularturrets.client;
 
+import com.ommods.reopenedmodularturrets.api.ownership.AccessLevel;
+import com.ommods.reopenedmodularturrets.api.ownership.TrustedPlayer;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
@@ -17,31 +19,31 @@ import java.util.List;
 import java.util.Map;
 
 public class TrustedPlayersScreen extends Screen {
-    private static final Map<BlockPos, List<String>> CLIENT_TRUSTED_CACHE = new HashMap<>();
+    private static final Map<BlockPos, List<TrustedPlayer>> CLIENT_TRUSTED_CACHE = new HashMap<>();
 
     private final BlockPos basePos;
     private final Screen parent;
     private final TurretBaseMenu menu;
-    private final List<String> displayNames = new ArrayList<>();
+    private final List<TrustedPlayer> displayPlayers = new ArrayList<>();
     private EditBox nameField;
 
     public TrustedPlayersScreen(BlockPos basePos, Screen parent, TurretBaseMenu menu) {
         this(basePos, parent, menu, null);
     }
 
-    public TrustedPlayersScreen(BlockPos basePos, Screen parent, TurretBaseMenu menu, List<String> initialNames) {
+    public TrustedPlayersScreen(BlockPos basePos, Screen parent, TurretBaseMenu menu, List<TrustedPlayer> initialPlayers) {
         super(Component.translatable("gui.reopenedmodularturrets.trusted_players"));
         this.basePos = basePos;
         this.parent = parent;
         this.menu = menu;
-        if (initialNames != null) {
-            displayNames.addAll(initialNames);
+        if (initialPlayers != null) {
+            displayPlayers.addAll(initialPlayers);
         }
     }
 
     @Override
     protected void init() {
-        if (displayNames.isEmpty()) {
+        if (displayPlayers.isEmpty()) {
             reloadFromSource();
         }
         int centerX = width / 2;
@@ -49,7 +51,6 @@ public class TrustedPlayersScreen extends Screen {
 
         nameField = new EditBox(font, centerX - 80, height - 52, 120, 18, Component.translatable("gui.reopenedmodularturrets.add_trusted_player"));
         nameField.setMaxLength(16);
-        nameField.setResponder(value -> {});
         addRenderableWidget(nameField);
         setInitialFocus(nameField);
 
@@ -61,10 +62,13 @@ public class TrustedPlayersScreen extends Screen {
                 .bounds(centerX - 40, height - 28, 80, 20).build());
 
         int y = listTop;
-        for (String name : displayNames) {
-            String entry = name;
-            addRenderableWidget(Button.builder(Component.literal(entry), button -> removePlayer(entry))
-                    .bounds(centerX - 100, y, 200, 18).build());
+        for (TrustedPlayer player : displayPlayers) {
+            TrustedPlayer entry = player;
+            String label = entry.getName() + " [" + entry.getAccessLevel().getLevel() + "]";
+            addRenderableWidget(Button.builder(Component.literal(label), button -> cycleAccess(entry))
+                    .bounds(centerX - 100, y, 160, 18).build());
+            addRenderableWidget(Button.builder(Component.literal("x"), button -> removePlayer(entry.getName()))
+                    .bounds(centerX + 64, y, 20, 18).build());
             y += 20;
             if (y > height - 72) {
                 break;
@@ -73,17 +77,17 @@ public class TrustedPlayersScreen extends Screen {
     }
 
     private void reloadFromSource() {
-        displayNames.clear();
-        List<String> cached = CLIENT_TRUSTED_CACHE.get(basePos);
+        displayPlayers.clear();
+        List<TrustedPlayer> cached = CLIENT_TRUSTED_CACHE.get(basePos);
         if (cached != null && !cached.isEmpty()) {
-            displayNames.addAll(cached);
+            displayPlayers.addAll(cached);
         }
         if (minecraft != null && minecraft.level != null) {
             if (minecraft.level.getBlockEntity(basePos) instanceof TurretBaseBlockEntity base) {
-                List<String> fromBase = base.getTrustedPlayers().getNames();
+                List<TrustedPlayer> fromBase = base.getTrustedPlayers().getPlayers();
                 if (!fromBase.isEmpty()) {
-                    displayNames.clear();
-                    displayNames.addAll(fromBase);
+                    displayPlayers.clear();
+                    displayPlayers.addAll(fromBase);
                     updateCache();
                 }
             }
@@ -91,7 +95,11 @@ public class TrustedPlayersScreen extends Screen {
     }
 
     private void updateCache() {
-        CLIENT_TRUSTED_CACHE.put(basePos, new ArrayList<>(displayNames));
+        List<TrustedPlayer> copy = new ArrayList<>();
+        for (TrustedPlayer player : displayPlayers) {
+            copy.add(new TrustedPlayer(player.getName(), player.getAccessLevel()));
+        }
+        CLIENT_TRUSTED_CACHE.put(basePos, copy);
     }
 
     private void addPlayer() {
@@ -99,12 +107,12 @@ public class TrustedPlayersScreen extends Screen {
         if (name.isEmpty()) {
             return;
         }
-        boolean alreadyListed = displayNames.stream().anyMatch(existing -> existing.equalsIgnoreCase(name));
+        boolean alreadyListed = displayPlayers.stream().anyMatch(existing -> existing.getName().equalsIgnoreCase(name));
         if (alreadyListed) {
             return;
         }
         ModNetworking.sendToServer(new TrustedPlayerPayload(TrustedPlayerPayload.Action.ADD, basePos, name));
-        displayNames.add(name);
+        displayPlayers.add(new TrustedPlayer(name, AccessLevel.NONE));
         updateCache();
         nameField.setValue("");
         rebuild();
@@ -119,14 +127,31 @@ public class TrustedPlayersScreen extends Screen {
 
     private void removePlayer(String name) {
         ModNetworking.sendToServer(new TrustedPlayerPayload(TrustedPlayerPayload.Action.REMOVE, basePos, name));
-        displayNames.removeIf(existing -> existing.equalsIgnoreCase(name));
+        displayPlayers.removeIf(existing -> existing.getName().equalsIgnoreCase(name));
+        updateCache();
+        rebuild();
+    }
+
+    private void cycleAccess(TrustedPlayer player) {
+        AccessLevel next = player.getAccessLevel().next();
+        ModNetworking.sendToServer(new TrustedPlayerPayload(
+                TrustedPlayerPayload.Action.CHANGE_ACCESS,
+                basePos,
+                player.getName(),
+                next.getLevel()
+        ));
+        player.setAccessLevel(next);
         updateCache();
         rebuild();
     }
 
     private void rebuild() {
         if (minecraft != null) {
-            minecraft.setScreen(new TrustedPlayersScreen(basePos, parent, menu, new ArrayList<>(displayNames)));
+            List<TrustedPlayer> copy = new ArrayList<>();
+            for (TrustedPlayer player : displayPlayers) {
+                copy.add(new TrustedPlayer(player.getName(), player.getAccessLevel()));
+            }
+            minecraft.setScreen(new TrustedPlayersScreen(basePos, parent, menu, copy));
         }
     }
 
@@ -135,7 +160,8 @@ public class TrustedPlayersScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(font, title, width / 2, 12, 0xFFFFFF);
         graphics.drawString(font, Component.translatable("gui.reopenedmodularturrets.add_trusted_player"), width / 2 - 80, height - 64, 0xA0A0A0, false);
-        if (displayNames.isEmpty()) {
+        graphics.drawCenteredString(font, Component.translatable("gui.reopenedmodularturrets.trusted_access_hint"), width / 2, 24, 0x808080);
+        if (displayPlayers.isEmpty()) {
             graphics.drawCenteredString(font, Component.translatable("gui.reopenedmodularturrets.trusted_none"), width / 2, 48, 0x808080);
         }
     }

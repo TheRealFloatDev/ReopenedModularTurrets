@@ -1,10 +1,13 @@
 package com.ommods.reopenedmodularturrets.item;
 
+import com.ommods.reopenedmodularturrets.api.ownership.TrustedPlayer;
 import com.ommods.reopenedmodularturrets.block.TurretBaseBlock;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
+import com.ommods.reopenedmodularturrets.core.MachineMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MemoryCardItem extends Item {
+    private static final int FORMAT_VERSION = 2;
+
     public MemoryCardItem(Properties properties) {
         super(properties);
     }
@@ -71,37 +76,43 @@ public class MemoryCardItem extends Item {
     private static void writeBaseToCard(ItemStack card, TurretBaseBlockEntity base) {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("HasData", true);
+        tag.putInt("FormatVersion", FORMAT_VERSION);
         tag.putBoolean("AttackMobs", base.isAttackMobs());
         tag.putBoolean("AttackPlayers", base.isAttackPlayers());
         tag.putBoolean("AttackNeutral", base.isAttackNeutral());
-        base.getOwnedData().save(tag);
+        tag.putBoolean("MultiTargeting", base.isMultiTargeting());
+        tag.putInt("TargetRange", base.getTargetRange());
+        tag.putInt("MachineMode", base.getMachineMode().ordinal());
+        base.getTargetingSettings().writeToNbt(tag);
+        ListTag trusted = new ListTag();
+        for (TrustedPlayer trustedPlayer : base.getTrustedPlayers().getPlayers()) {
+            trusted.add(trustedPlayer.toNbt());
+        }
+        tag.put("TrustedPlayersV2", trusted);
         card.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
     private static void applyCardToBase(ItemStack card, TurretBaseBlockEntity base) {
         CompoundTag tag = card.get(DataComponents.CUSTOM_DATA).copyTag();
-        if (tag.getBoolean("AttackMobs")) {
-            if (!base.isAttackMobs()) {
-                base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.MOBS);
-            }
-        } else if (base.isAttackMobs()) {
-            base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.MOBS);
+        base.applyTargetingSettings(com.ommods.reopenedmodularturrets.api.targeting.TargetingSettings.readFromNbt(tag));
+        base.setMultiTargeting(tag.getBoolean("MultiTargeting"));
+        base.setMachineMode(MachineMode.fromOrdinal(tag.getInt("MachineMode")));
+        int range = tag.getInt("TargetRange");
+        while (base.getTargetRange() < range) {
+            base.adjustTargetRange(1);
         }
-        if (tag.getBoolean("AttackPlayers")) {
-            if (!base.isAttackPlayers()) {
-                base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.PLAYERS);
-            }
-        } else if (base.isAttackPlayers()) {
-            base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.PLAYERS);
+        while (base.getTargetRange() > range) {
+            base.adjustTargetRange(-1);
         }
-        if (tag.getBoolean("AttackNeutral")) {
-            if (!base.isAttackNeutral()) {
-                base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.NEUTRAL);
+        if (tag.contains("TrustedPlayersV2")) {
+            ListTag list = tag.getList("TrustedPlayersV2", CompoundTag.TAG_COMPOUND);
+            java.util.List<TrustedPlayer> players = new java.util.ArrayList<>();
+            for (net.minecraft.nbt.Tag entry : list) {
+                players.add(TrustedPlayer.fromNbt((CompoundTag) entry));
             }
-        } else if (base.isAttackNeutral()) {
-            base.toggleFilter(com.ommods.reopenedmodularturrets.core.targeting.TargetFilter.NEUTRAL);
+            base.getTrustedPlayers().setPlayers(players);
         }
-        base.getOwnedData().load(tag);
         base.setChanged();
+        base.getLevel().sendBlockUpdated(base.getBlockPos(), base.getBlockState(), base.getBlockState(), 3);
     }
 }

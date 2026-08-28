@@ -1,6 +1,7 @@
 package com.ommods.reopenedmodularturrets.client;
 
 import com.ommods.reopenedmodularturrets.ModConstants;
+import com.ommods.reopenedmodularturrets.core.MachineMode;
 import com.ommods.reopenedmodularturrets.menu.TurretBaseMenu;
 import com.ommods.reopenedmodularturrets.network.ModNetworking;
 import com.ommods.reopenedmodularturrets.network.payload.AdjustRangePayload;
@@ -98,12 +99,15 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     }
 
     private Component modeLabel() {
-        String stateKey = menu.isActive()
-                ? "text.reopenedmodularturrets.gui.on"
-                : "text.reopenedmodularturrets.gui.off";
+        MachineMode mode = MachineMode.fromOrdinal(menu.getMachineModeOrdinal());
         return Component.translatable("text.reopenedmodularturrets.gui.mode")
                 .append(": ")
-                .append(Component.translatable(stateKey));
+                .append(Component.translatable("text.reopenedmodularturrets.machine_mode." + mode.getName()))
+                .append(" (")
+                .append(Component.translatable(menu.isActive()
+                        ? "text.reopenedmodularturrets.gui.on"
+                        : "text.reopenedmodularturrets.gui.off"))
+                .append(")");
     }
 
     private Component targetLabel() {

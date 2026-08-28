@@ -1,5 +1,7 @@
 package com.ommods.reopenedmodularturrets.core.ownership;
 
+import com.ommods.reopenedmodularturrets.api.ownership.AccessLevel;
+import com.ommods.reopenedmodularturrets.api.ownership.TrustedPlayer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,6 +25,33 @@ public final class OwnedData {
     public void setOwner(Player player) {
         this.ownerUuid = player.getUUID();
         this.ownerName = player.getName().getString();
+    }
+
+    public boolean isOwner(Player player) {
+        return ownerUuid != null && player.getUUID().equals(ownerUuid);
+    }
+
+    public AccessLevel getPlayerAccessLevel(Player player, TrustedPlayers trustedPlayers) {
+        if (ownerUuid == null) {
+            return AccessLevel.ADMIN;
+        }
+        if (player instanceof ServerPlayer serverPlayer && serverPlayer.hasPermissions(2)) {
+            return AccessLevel.ADMIN;
+        }
+        if (player.getUUID().equals(ownerUuid)) {
+            return AccessLevel.ADMIN;
+        }
+        return trustedPlayers.getTrusted(player.getName().getString())
+                .map(TrustedPlayer::getAccessLevel)
+                .orElse(AccessLevel.NONE);
+    }
+
+    public boolean canAccess(Player player, TrustedPlayers trustedPlayers) {
+        return getPlayerAccessLevel(player, trustedPlayers).getLevel() >= AccessLevel.MODIFY.getLevel();
+    }
+
+    public boolean canView(Player player, TrustedPlayers trustedPlayers) {
+        return getPlayerAccessLevel(player, trustedPlayers).getLevel() >= AccessLevel.ACCESS.getLevel();
     }
 
     public boolean canAccess(Player player) {

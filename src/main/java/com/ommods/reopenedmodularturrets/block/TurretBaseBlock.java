@@ -153,6 +153,7 @@ public class TurretBaseBlock extends BaseEntityBlock {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TurretBaseBlockEntity base) {
             base.refreshNeighbors();
+            base.updateRedstoneState();
         }
     }
 
