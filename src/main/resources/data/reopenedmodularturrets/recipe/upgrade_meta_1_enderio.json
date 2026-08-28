@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:itemVibrantCrystal"
+    },
+    "B": {
+      "tag": "c:skullEnderResonator"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_efficiency"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

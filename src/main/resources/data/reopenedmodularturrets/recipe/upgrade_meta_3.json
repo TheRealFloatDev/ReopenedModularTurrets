@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gems/quartz"
+    },
+    "B": {
+      "tag": "c:gems/diamond"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_accuracy"
+  }
+}

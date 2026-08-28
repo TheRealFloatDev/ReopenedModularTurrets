@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gearVibrant"
+    },
+    "B": {
+      "tag": "c:itemVibrantCrystal"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_range"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

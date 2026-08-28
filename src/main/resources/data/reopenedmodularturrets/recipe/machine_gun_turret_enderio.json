@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "CAC",
+    "DBD"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_2"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_2"
+    },
+    "C": {
+      "tag": "c:ingotElectricalSteel"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:gun_turret"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

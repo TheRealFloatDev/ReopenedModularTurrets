@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    " BC",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:cobblestones"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_1"
+  }
+}

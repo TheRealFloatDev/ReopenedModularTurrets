@@ -26,3 +26,12 @@ forge*changelog.txt
 
 # Local dev files
 dev
+
+# Accidental EMI jar extract (never commit)
+/META-INF/
+/assets/
+/net/
+/emi*.json
+/emi.accesswidener
+/pack.mcmeta
+/icon.png

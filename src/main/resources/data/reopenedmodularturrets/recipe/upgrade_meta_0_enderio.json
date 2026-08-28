@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gearDark"
+    },
+    "B": {
+      "tag": "c:ingotEnergeticAlloy"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:upgrade_fire_rate"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

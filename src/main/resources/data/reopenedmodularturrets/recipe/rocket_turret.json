@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "ABA",
+    "EDE"
+  ],
+  "key": {
+    "A": {
+      "item": "reopenedmodularturrets:barrel_tier_4"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_4"
+    },
+    "C": {
+      "tag": "c:gems/quartz"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "E": {
+      "tag": "c:gems/diamond"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:rocket_turret"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "ABA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingotConductiveIron"
+    },
+    "B": {
+      "item": "minecraft:gunpowder"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 32,
+    "id": "reopenedmodularturrets:ferro_slug"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

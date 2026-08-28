@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "BAB",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gems/quartz"
+    },
+    "B": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_recycler"
+  }
+}

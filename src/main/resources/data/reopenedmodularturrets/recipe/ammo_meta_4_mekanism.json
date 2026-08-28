@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/tin"
+    },
+    "B": {
+      "item": "minecraft:tnt"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 32,
+    "id": "reopenedmodularturrets:rocket"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

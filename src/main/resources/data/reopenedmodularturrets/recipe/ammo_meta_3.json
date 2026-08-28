@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "ABA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:gunpowder"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 32,
+    "id": "reopenedmodularturrets:ferro_slug"
+  }
+}

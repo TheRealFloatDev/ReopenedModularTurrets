@@ -28,12 +28,6 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
-modId="emi"
-type="optional"
-ordering="NONE"
-side="CLIENT"
-
-[[dependencies.${mod_id}]]
 modId="jei"
 type="optional"
 ordering="NONE"

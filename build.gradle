@@ -30,13 +30,6 @@ repositories {
         }
     }
     maven {
-        name = 'TerraformersMC'
-        url = 'https://maven.terraformersmc.com/releases/'
-        content {
-            includeGroup 'dev.emi'
-        }
-    }
-    maven {
         name = 'CurseMaven'
         url = 'https://www.cursemaven.com'
         content {
@@ -103,9 +96,6 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     annotationProcessor "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
-
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    localRuntime "dev.emi:emi-neoforge:${emi_version}"
 
     localRuntime "curse.maven:powah-${powah_project_id}:${powah_file_id}"
     localRuntime "curse.maven:cloth-config-348521:5729127"

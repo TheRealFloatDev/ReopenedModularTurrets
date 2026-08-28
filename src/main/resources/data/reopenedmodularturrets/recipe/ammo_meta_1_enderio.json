@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    " B ",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingotElectricalSteel"
+    },
+    "B": {
+      "item": "minecraft:gunpowder"
+    },
+    "C": {
+      "tag": "c:ingotConductiveIron"
+    }
+  },
+  "result": {
+    "count": 64,
+    "id": "reopenedmodularturrets:grenade"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

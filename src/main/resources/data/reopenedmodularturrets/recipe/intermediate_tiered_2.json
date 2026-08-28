@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/gold"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:sensor_tier_2"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_3"
+  }
+}

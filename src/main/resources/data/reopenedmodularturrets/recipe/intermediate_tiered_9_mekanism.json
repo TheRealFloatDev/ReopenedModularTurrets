@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    " BC",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:atomicalloy"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_4"
+    },
+    "C": {
+      "tag": "c:ingots/refined_obsidian"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_5"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

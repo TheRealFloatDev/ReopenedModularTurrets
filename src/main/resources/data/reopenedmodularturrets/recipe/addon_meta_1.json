@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:ender_eye"
+    },
+    "C": {
+      "tag": "c:storage_blocks/redstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:addon_redstone_reactor"
+  }
+}

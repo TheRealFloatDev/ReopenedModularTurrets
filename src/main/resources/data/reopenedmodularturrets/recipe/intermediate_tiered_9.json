@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ADA",
+    " BC",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:obsidians"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_4"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "D": {
+      "tag": "c:gems/quartz"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_5"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    " B ",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:cobblestones"
+    },
+    "B": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_1"
+  }
+}

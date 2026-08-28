@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    " B ",
+    "CAC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:gems/diamond"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:barrel_tier_3"
+    },
+    "C": {
+      "tag": "c:ingotSoularium"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:barrel_tier_4"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CBC",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:flint"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 16,
+    "id": "reopenedmodularturrets:blazing_clay"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ADA",
+    "CBC",
+    "EDE"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/gold"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:sensor_tier_4"
+    },
+    "C": {
+      "tag": "reopenedmodularturrets:io_bus"
+    },
+    "D": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "E": {
+      "tag": "c:obsidians"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:sensor_tier_5"
+  }
+}

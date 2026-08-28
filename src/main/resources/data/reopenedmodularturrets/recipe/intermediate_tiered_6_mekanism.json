@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    " BC",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:enrichediron"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_1"
+    },
+    "C": {
+      "tag": "c:ingots/tin"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_2"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

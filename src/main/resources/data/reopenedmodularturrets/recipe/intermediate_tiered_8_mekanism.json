@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ACA",
+    " BC",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "mekanism:reinforcedalloy"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:chamber_tier_3"
+    },
+    "C": {
+      "tag": "c:ingots/refined_glowstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:chamber_tier_4"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ]
+}

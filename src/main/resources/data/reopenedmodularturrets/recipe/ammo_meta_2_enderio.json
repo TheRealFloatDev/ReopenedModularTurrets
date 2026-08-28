@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "CBC",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingotDarkSteel"
+    },
+    "B": {
+      "item": "minecraft:flint"
+    },
+    "C": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "count": 16,
+    "id": "reopenedmodularturrets:blazing_clay"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderio"
+    }
+  ]
+}

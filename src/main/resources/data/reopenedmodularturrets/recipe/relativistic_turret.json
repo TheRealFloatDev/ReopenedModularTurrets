@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CDC"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:ender_pearl"
+    },
+    "B": {
+      "item": "reopenedmodularturrets:sensor_tier_3"
+    },
+    "C": {
+      "tag": "c:ingots/gold"
+    },
+    "D": {
+      "tag": "reopenedmodularturrets:io_bus"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "reopenedmodularturrets:relativistic_turret"
+  }
+}
