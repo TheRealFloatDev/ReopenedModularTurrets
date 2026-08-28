@@ -204,9 +204,8 @@ public enum TurretKind {
             case MELEE -> target.hurt(level.damageSources().mobAttack(null), damage);
             case ARC -> { /* chain handled below */ }
             case INCENDIARY -> {
-                target.hurt(level.damageSources().mobAttack(null), damage);
                 target.igniteForSeconds(4);
-                spawnProjectile(level, origin, target, damage, 0.9F, inaccuracy, false, "ammo_blazing_clay", true);
+                spawnProjectile(level, turret, target, damage, 0.9F, inaccuracy, false, "ammo_blazing_clay", true);
             }
             case RELATIVISTIC -> {
                 target.hurt(level.damageSources().mobAttack(null), damage);
@@ -220,8 +219,8 @@ public enum TurretKind {
                     target.teleportTo(target.getX(), target.getY() + 8.0, target.getZ());
                 }
             }
-            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, inaccuracy, false, "ammo_grenade", true);
-            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, inaccuracy, false, "ammo_rocket", true);
+            case GRENADE -> spawnProjectile(level, turret, target, damage, 0.8F, inaccuracy, false, "ammo_grenade", true);
+            case ROCKET -> spawnProjectile(level, turret, target, damage, 1.4F, inaccuracy, false, "ammo_rocket", true);
             case PLASMA -> spawnPlasma(level, origin, target, damage, 1.0F, inaccuracy);
         }
         if (this == ARC) {
@@ -329,7 +328,7 @@ public enum TurretKind {
 
     private static void spawnProjectile(
             ServerLevel level,
-            Vec3 origin,
+            TurretHeadBlockEntity turret,
             LivingEntity target,
             float damage,
             float speed,
@@ -338,6 +337,7 @@ public enum TurretKind {
             String texture,
             boolean explosive
     ) {
+        Vec3 origin = TurretAimHelper.getLaserOrigin(turret.getBlockPos(), turret.getYaw(), turret.getPitch());
         Vec3 targetPos = target.position().add(0, target.getBbHeight() * 0.5, 0);
         Vec3 direction = targetPos.subtract(origin).normalize();
         GrenadeProjectileEntity projectile = new GrenadeProjectileEntity(level);
