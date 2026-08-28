@@ -5,15 +5,24 @@ import com.ommods.reopenedmodularturrets.registry.ModItems;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
@@ -25,6 +34,7 @@ public class EmiCompat implements EmiPlugin {
     @Override
     public void register(EmiRegistry registry) {
         registry.addAlias(EmiIngredient.of(IO_BUS_TAG), Component.translatable("tag.reopenedmodularturrets.io_bus"));
+        registerCraftingRecipes(registry);
 
         describe(registry, ModItems.GUN_TURRET_ITEM.get(), "gun_turret", "jei.reopenedmodularturrets.gun_turret");
         describe(registry, ModItems.GRENADE_TURRET_ITEM.get(), "grenade_turret", "jei.reopenedmodularturrets.grenade_turret");
@@ -59,15 +69,42 @@ public class EmiCompat implements EmiPlugin {
         }
     }
 
+    private static void registerCraftingRecipes(EmiRegistry registry) {
+        registry.addDeferredRecipes(emitter -> {
+            HolderLookup.Provider registries = resolveRegistries();
+            for (RecipeHolder<CraftingRecipe> holder : registry.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+                if (!ModConstants.MOD_ID.equals(holder.id().getNamespace())) {
+                    continue;
+                }
+                CraftingRecipe recipe = holder.value();
+                List<EmiIngredient> inputs = recipe.getIngredients().stream().map(EmiIngredient::of).toList();
+                EmiStack output = EmiStack.of(recipe.getResultItem(registries));
+                emitter.accept(new EmiCraftingRecipe(
+                        inputs,
+                        output,
+                        holder.id(),
+                        recipe instanceof ShapelessRecipe
+                ));
+            }
+        });
+    }
+
+    private static HolderLookup.Provider resolveRegistries() {
+        if (Minecraft.getInstance().level != null) {
+            return Minecraft.getInstance().level.registryAccess();
+        }
+        return RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+    }
+
     private static void describe(EmiRegistry registry, Item item, String path, String key) {
         registry.addRecipe(new EmiInfoRecipe(
                 List.of(EmiStack.of(new ItemStack(item))),
                 List.of(Component.translatable(key)),
-                syntheticId("info/" + path)
+                infoId(path)
         ));
     }
 
-    private static ResourceLocation syntheticId(String path) {
-        return ResourceLocation.parse(ModConstants.MOD_ID + ":/" + path);
+    private static ResourceLocation infoId(String path) {
+        return ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "info/" + path);
     }
 }

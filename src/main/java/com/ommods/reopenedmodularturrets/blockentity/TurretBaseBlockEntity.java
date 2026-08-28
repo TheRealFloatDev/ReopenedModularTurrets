@@ -37,7 +37,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.LightLayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -96,12 +96,17 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             }
 
             @Override
-            public int receiveEnergy(int maxReceive, boolean simulate) {
-                int received = super.receiveEnergy(maxReceive, simulate);
-                if (!simulate && received > 0) {
+            public int receiveEnergy(int toReceive, boolean simulate) {
+                if (!canReceive() || toReceive <= 0) {
+                    return 0;
+                }
+                int effectiveCapacity = getMaxEnergyStored();
+                int energyReceived = Mth.clamp(effectiveCapacity - energy, 0, Math.min(maxReceive, toReceive));
+                if (!simulate && energyReceived > 0) {
+                    energy += energyReceived;
                     TurretBaseBlockEntity.this.setChanged();
                 }
-                return received;
+                return energyReceived;
             }
 
             @Override
@@ -513,15 +518,16 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (level.isClientSide()) {
             return;
         }
-        base.tickTurrets((ServerLevel) level);
+        ServerLevel serverLevel = (ServerLevel) level;
+        base.addonState = base.scanAddonState();
+        base.tickInventoryAddons(serverLevel);
+        base.tickTurrets(serverLevel);
     }
 
     private void tickTurrets(ServerLevel level) {
         if (turretHeads.isEmpty()) {
             refreshNeighbors();
         }
-        addonState = scanAddonState();
-        tickInventoryAddons(level);
         if (!active) {
             sharedTarget = null;
             for (TurretHeadBlockEntity head : turretHeads) {
@@ -568,11 +574,11 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
 
     private void tickInventoryAddons(ServerLevel level) {
         boolean changed = false;
-        if (addonState.solar() && hasSunlight(level)) {
-            changed |= receiveGeneratedEnergy(ModConfig.SOLAR_GENERATION.get());
+        if (addonState.solar() && canGenerateSolarPower(level)) {
+            changed |= injectGeneratedEnergy(ModConfig.SOLAR_GENERATION.get());
         }
         if (addonState.redstoneReactor() && hasRedstoneFuel()) {
-            changed |= receiveGeneratedEnergy(ModConfig.REDSTONE_REACTOR_GENERATION.get());
+            changed |= injectGeneratedEnergy(ModConfig.REDSTONE_REACTOR_GENERATION.get());
             int interval = ModConfig.REDSTONE_REACTOR_CONSUME_INTERVAL.get();
             if (interval > 0 && level.getGameTime() % interval == 0L) {
                 changed |= consumeRedstoneFuel(1);
@@ -584,15 +590,12 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         }
     }
 
-    private boolean hasSunlight(Level level) {
-        if (!level.isDay()) {
-            return false;
-        }
-        int skyLight = level.getBrightness(LightLayer.SKY, worldPosition);
-        if (skyLight < 12) {
-            return false;
-        }
-        return !level.isRainingAt(worldPosition) || skyLight >= 14 || level.canSeeSky(worldPosition);
+    // Original OMT: isDaytime && !isRaining && canBlockSeeSky(base.up(2))
+    private boolean canGenerateSolarPower(Level level) {
+        return tier >= 2
+                && level.isDay()
+                && !level.isRaining()
+                && level.canSeeSky(worldPosition.above(2));
     }
 
     private boolean hasRedstoneFuel() {
@@ -646,17 +649,16 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         return false;
     }
 
-    private boolean receiveGeneratedEnergy(int amount) {
+    private boolean injectGeneratedEnergy(int amount) {
         if (amount <= 0) {
             return false;
         }
-        int current = energyStorage.getEnergyStored();
+        int current = getEnergyStorage().getEnergyStored();
         int capacity = getEffectiveMaxEnergy();
         if (current >= capacity) {
             return false;
         }
-        int received = energyStorage.receiveEnergy(Math.min(capacity - current, amount), false);
-        return received > 0;
+        return getEnergyStorage().receiveEnergy(Math.min(capacity - current, amount), false) > 0;
     }
 
     public boolean consumeEnergy(int amount) {
@@ -914,6 +916,8 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         upgradeModifiers = scanUpgrades();
         if (!addonState.equals(previous)) {
             syncToClients();
+        } else if (addonState.solar() || addonState.redstoneReactor()) {
+            setChanged();
         }
     }
 

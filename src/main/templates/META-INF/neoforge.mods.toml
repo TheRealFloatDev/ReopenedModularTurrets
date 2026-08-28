@@ -7,7 +7,7 @@ license="${mod_license}"
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-authors="ReopenedModularTurrets Team"
+authors="FloatDev"
 description='''
 Revival of OpenModularTurrets for NeoForge 1.21.1. Modular automated defense turrets with energy, ammo, and targeting.
 Source code MIT; art assets CC-BY-NC where applicable.
@@ -29,6 +29,12 @@ side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="emi"
+type="optional"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.${mod_id}]]
+modId="jei"
 type="optional"
 ordering="NONE"
 side="CLIENT"

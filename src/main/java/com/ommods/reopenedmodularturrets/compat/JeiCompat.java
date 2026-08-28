@@ -4,13 +4,21 @@ import com.ommods.reopenedmodularturrets.ModConstants;
 import com.ommods.reopenedmodularturrets.registry.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredHolder;
+
+import java.util.List;
 
 @JeiPlugin
 public class JeiCompat implements IModPlugin {
@@ -21,6 +29,8 @@ public class JeiCompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        registerCraftingRecipes(registration);
+
         info(registration, ModItems.GUN_TURRET_ITEM.get(), "jei.reopenedmodularturrets.gun_turret");
         info(registration, ModItems.GRENADE_TURRET_ITEM.get(), "jei.reopenedmodularturrets.grenade_turret");
         info(registration, ModItems.ROCKET_TURRET_ITEM.get(), "jei.reopenedmodularturrets.rocket_turret");
@@ -51,6 +61,20 @@ public class JeiCompat implements IModPlugin {
             if (path.startsWith("expander_")) {
                 info(registration, holder.get(), "jei.reopenedmodularturrets.expander");
             }
+        }
+    }
+
+    private static void registerCraftingRecipes(IRecipeRegistration registration) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null) {
+            return;
+        }
+        RecipeManager manager = minecraft.level.getRecipeManager();
+        List<RecipeHolder<CraftingRecipe>> recipes = manager.getAllRecipesFor(RecipeType.CRAFTING).stream()
+                .filter(holder -> ModConstants.MOD_ID.equals(holder.id().getNamespace()))
+                .toList();
+        if (!recipes.isEmpty()) {
+            registration.addRecipes(RecipeTypes.CRAFTING, recipes);
         }
     }
 
