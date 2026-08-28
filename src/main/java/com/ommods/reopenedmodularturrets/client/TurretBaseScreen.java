@@ -15,6 +15,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,12 +216,35 @@ public class TurretBaseScreen extends AbstractContainerScreen<TurretBaseMenu> {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
+        renderSlotItemsOnTop(graphics);
         renderTooltip(graphics, mouseX, mouseY);
         if (isHoveringEnergyBar(mouseX, mouseY)) {
             renderEnergyTooltip(graphics, mouseX, mouseY);
         }
         if (isHoveringInfoPanel(mouseX, mouseY)) {
             renderInfoTooltip(graphics, mouseX, mouseY);
+        }
+    }
+
+    /**
+     * Re-draws slot items on top of widgets/overlays. NeoForge 1.21 can paint GUI layers over the default slot pass.
+     */
+    public void renderSlotItemsOnTop(GuiGraphics graphics) {
+        for (Slot slot : menu.slots) {
+            if (!slot.isActive()) {
+                continue;
+            }
+            ItemStack stack = slot.getItem();
+            if (stack.isEmpty()) {
+                continue;
+            }
+            int x = leftPos + slot.x;
+            int y = topPos + slot.y;
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0F, 0.0F, 232.0F);
+            graphics.renderItem(stack, x, y, slot.x + slot.y * imageWidth);
+            graphics.renderItemDecorations(font, stack, x, y);
+            graphics.pose().popPose();
         }
     }
 

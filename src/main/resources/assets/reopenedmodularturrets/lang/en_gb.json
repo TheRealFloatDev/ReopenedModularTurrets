@@ -250,5 +250,6 @@
   "text.reopenedmodularturrets.turret.upgrade.stacks": "Stacks up to 4 times.",
   "text.reopenedmodularturrets.turret.upgrade.turretinfo": "For effects see tooltips of turrets.",
   "text.reopenedmodularturrets.upgrade_slot": "Upgrades for the modular turret.",
-  "text.reopenedmodularturrets:turret_limit": "Turret Limittext.openmodularturrets.gui.damage=Damage"
+  "text.reopenedmodularturrets:turret_limit": "Turret Limit",
+  "tag.reopenedmodularturrets.io_bus": "I/O Bus"
 }

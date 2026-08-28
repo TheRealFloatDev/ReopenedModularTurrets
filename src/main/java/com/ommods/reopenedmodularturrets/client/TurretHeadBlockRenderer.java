@@ -40,7 +40,7 @@ public class TurretHeadBlockRenderer implements BlockEntityRenderer<TurretHeadBl
             int packedLight,
             int packedOverlay
     ) {
-        if (blockEntity.getBase() != null && blockEntity.getBase().getAddonState().concealer()) {
+        if (blockEntity.isConcealed()) {
             return;
         }
         TurretKind kind = blockEntity.getKind();

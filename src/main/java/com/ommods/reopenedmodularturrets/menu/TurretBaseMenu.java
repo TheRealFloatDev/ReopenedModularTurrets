@@ -2,12 +2,13 @@ package com.ommods.reopenedmodularturrets.menu;
 
 import com.ommods.reopenedmodularturrets.blockentity.ExpanderInventoryBlockEntity;
 import com.ommods.reopenedmodularturrets.blockentity.TurretBaseBlockEntity;
+import com.ommods.reopenedmodularturrets.config.ModConfig;
 import com.ommods.reopenedmodularturrets.core.addons.AddonItems;
 import com.ommods.reopenedmodularturrets.core.targeting.TargetFilter;
 import com.ommods.reopenedmodularturrets.item.AmmoItem;
 import com.ommods.reopenedmodularturrets.item.AmmoType;
 import com.ommods.reopenedmodularturrets.item.UpgradeItem;
-import com.ommods.reopenedmodularturrets.menu.slot.FilteredSlot;
+import com.ommods.reopenedmodularturrets.menu.slot.LimitedStackSlot;
 import com.ommods.reopenedmodularturrets.registry.ModMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -104,15 +105,15 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 int slot = BaseSlotIndices.AMMO_START + col + row * 3;
-                this.addSlot(new FilteredSlot(blockEntity, slot, 8 + col * 18, 17 + row * 18, TurretBaseMenu::isAmmoSlotItem));
+                this.addSlot(new LimitedStackSlot(blockEntity, slot, 8 + col * 18, 17 + row * 18, TurretBaseMenu::isAmmoSlotItem, 64));
             }
         }
         if (tier >= 2) {
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START, 72, 18, AddonItems::isAddonItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 92, 18, AddonItems::isAddonItem));
-            this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 72, 52, stack -> stack.getItem() instanceof UpgradeItem));
+            this.addSlot(new LimitedStackSlot(blockEntity, BaseSlotIndices.ADDON_START, 72, 18, AddonItems::isAddonItem, 1));
+            this.addSlot(new LimitedStackSlot(blockEntity, BaseSlotIndices.ADDON_START + 1, 92, 18, AddonItems::isAddonItem, 1));
+            this.addSlot(new LimitedStackSlot(blockEntity, BaseSlotIndices.UPGRADE_START, 72, 52, stack -> stack.getItem() instanceof UpgradeItem, ModConfig.UPGRADE_MAX_STACK.get()));
             if (tier >= 5) {
-                this.addSlot(new FilteredSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem));
+                this.addSlot(new LimitedStackSlot(blockEntity, BaseSlotIndices.UPGRADE_START + 1, 92, 52, stack -> stack.getItem() instanceof UpgradeItem, ModConfig.UPGRADE_MAX_STACK.get()));
             }
         }
     }
@@ -267,7 +268,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
             if (!this.moveItemStackTo(stack, baseSlots, this.slots.size(), true)) {
                 return ItemStack.EMPTY;
             }
-        } else if (stack.getItem() instanceof AmmoItem) {
+        } else if (stack.getItem() instanceof AmmoItem || stack.is(net.minecraft.world.item.Items.REDSTONE)) {
             if (!this.moveItemStackTo(stack, BaseSlotIndices.AMMO_START, BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT, false)
                     && !this.moveItemStackTo(stack, BaseSlotIndices.BASE_SLOT_COUNT, baseSlots, false)) {
                 return ItemStack.EMPTY;
@@ -300,6 +301,7 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     private static boolean isAmmoSlotItem(ItemStack stack) {
         return stack.isEmpty()
                 || stack.getItem() instanceof AmmoItem
+                || stack.is(net.minecraft.world.item.Items.REDSTONE)
                 || stack.is(net.minecraft.world.item.Items.POTATO)
                 || stack.is(net.minecraft.world.item.Items.BAKED_POTATO)
                 || stack.is(net.minecraft.world.item.Items.POISONOUS_POTATO);

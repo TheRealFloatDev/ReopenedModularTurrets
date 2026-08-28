@@ -168,6 +168,7 @@ public enum TurretKind {
             float damage
     ) {
         Vec3 origin = Vec3.atCenterOf(turret.getBlockPos());
+        float inaccuracy = base.getUpgradeModifiers().applySpread(1.0F);
         switch (this) {
             case GUN, POTATO_CANNON, DISPOSABLE_ITEM, CROSSBOW -> applyHitscan(level, target, damage);
             case LASER -> applyLaserHit(level, target, damage, turret);
@@ -176,7 +177,7 @@ public enum TurretKind {
             case INCENDIARY -> {
                 target.hurt(level.damageSources().mobAttack(null), damage);
                 target.igniteForSeconds(4);
-                spawnProjectile(level, origin, target, damage, 0.9F, false, "ammo_blazing_clay", true);
+                spawnProjectile(level, origin, target, damage, 0.9F, inaccuracy, false, "ammo_blazing_clay", true);
             }
             case RELATIVISTIC -> {
                 target.hurt(level.damageSources().mobAttack(null), damage);
@@ -188,9 +189,9 @@ public enum TurretKind {
                     target.teleportTo(target.getX(), target.getY() + 8.0, target.getZ());
                 }
             }
-            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, false, "ammo_grenade", true);
-            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, false, "ammo_rocket", true);
-            case PLASMA -> spawnProjectile(level, origin, target, damage, 1.0F, true, "plasma", false);
+            case GRENADE -> spawnProjectile(level, origin, target, damage, 0.8F, inaccuracy, false, "ammo_grenade", true);
+            case ROCKET -> spawnProjectile(level, origin, target, damage, 1.4F, inaccuracy, false, "ammo_rocket", true);
+            case PLASMA -> spawnProjectile(level, origin, target, damage, 1.0F, inaccuracy, true, "plasma", false);
         }
     }
 
@@ -217,6 +218,7 @@ public enum TurretKind {
             LivingEntity target,
             float damage,
             float speed,
+            float inaccuracy,
             boolean directHit,
             String texture,
             boolean explosive
@@ -225,7 +227,7 @@ public enum TurretKind {
         Vec3 direction = targetPos.subtract(origin).normalize();
         GrenadeProjectileEntity projectile = new GrenadeProjectileEntity(level);
         projectile.setPos(origin.x, origin.y, origin.z);
-        projectile.shoot(direction.x, direction.y, direction.z, speed, 1.0F);
+        projectile.shoot(direction.x, direction.y, direction.z, speed, inaccuracy);
         projectile.setDamage(damage);
         projectile.setDirectHit(directHit);
         projectile.setProjectileTexture(texture);

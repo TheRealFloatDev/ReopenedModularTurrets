@@ -170,7 +170,7 @@ public final class ItemTooltipHelper {
         addDescription(tooltip, "turret.addon.label");
         tooltip.add(Component.translatable(PREFIX + "turret.addon.redstone.a")
                 .withStyle(DESCRIPTION)
-                .append(Component.literal(" 4 FE/t ")
+                .append(Component.literal(" " + ModConfig.REDSTONE_REACTOR_GENERATION.get() + " ")
                         .withStyle(STAT_VALUE))
                 .append(Component.translatable(PREFIX + "turret.addon.redstone.b").withStyle(DESCRIPTION))
                 .append(Component.translatable(PREFIX + "turret.addon.redstone.c").withStyle(DESCRIPTION)));

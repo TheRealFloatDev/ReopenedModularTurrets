@@ -7,16 +7,20 @@ import com.ommods.reopenedmodularturrets.registry.ModSounds;
 import com.ommods.reopenedmodularturrets.turret.TurretKind;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
     private int cooldown = 0;
+    private boolean concealed = false;
     @Nullable
     private TurretBaseBlockEntity base;
 
@@ -37,7 +41,38 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
 
     @Nullable
     public TurretBaseBlockEntity getBase() {
-        return base;
+        return base != null ? base : resolveBase();
+    }
+
+    @Nullable
+    public TurretBaseBlockEntity resolveBase() {
+        if (level == null) {
+            return null;
+        }
+        for (Direction direction : Direction.values()) {
+            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof TurretBaseBlockEntity found) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    public boolean isConcealed() {
+        return concealed;
+    }
+
+    public void setConcealed(boolean concealed) {
+        if (this.concealed != concealed) {
+            this.concealed = concealed;
+            setChanged();
+            if (level != null && !level.isClientSide()) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+            }
+        }
+    }
+
+    public int getCooldown() {
+        return cooldown;
     }
 
     @Nullable
@@ -108,7 +143,7 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         kind.fire(this, level, baseEntity, target.entity(), damage);
         if (baseEntity.getUpgradeModifiers().scatterShot()) {
             LivingEntity scatterTarget = findScatterTarget(level, baseEntity, origin, range, target.entity());
-            if (scatterTarget != null) {
+            if (scatterTarget != null && consumeAmmoForKind(kind, baseEntity)) {
                 kind.fire(this, level, baseEntity, scatterTarget, damage * 0.75F);
             }
         }
@@ -163,5 +198,17 @@ public class TurretHeadBlockEntity extends DirectedTurretBlockEntity {
         if (sound != null) {
             level.playSound(null, worldPosition, sound, SoundSource.BLOCKS, 0.8F, 1.0F);
         }
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        concealed = tag.getBoolean("Concealed");
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putBoolean("Concealed", concealed);
     }
 }

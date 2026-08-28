@@ -37,6 +37,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -76,6 +77,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     private LivingEntity sharedTarget;
 
     private AddonState addonState = AddonState.EMPTY;
+    private AddonState clientAddonState = AddonState.EMPTY;
     private UpgradeModifiers upgradeModifiers = UpgradeModifiers.NONE;
     private int powerExpanderBonus = 0;
 
@@ -174,6 +176,9 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     public AddonState getAddonState() {
+        if (level != null && level.isClientSide()) {
+            return clientAddonState;
+        }
         return addonState;
     }
 
@@ -354,12 +359,46 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
             tag.put("CamoState", net.minecraft.nbt.NbtUtils.writeBlockState(camoState));
         }
         trustedPlayers.save(tag);
+        tag.put("Energy", energyStorage.serializeNBT(registries));
+        writeAddonState(tag, scanAddonState());
         return tag;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
         loadAdditional(tag, registries);
+        if (level != null && level.isClientSide()) {
+            clientAddonState = readAddonState(tag);
+        }
+    }
+
+    private void writeAddonState(CompoundTag tag, AddonState state) {
+        tag.putBoolean("AddonSolar", state.solar());
+        tag.putBoolean("AddonReactor", state.redstoneReactor());
+        tag.putBoolean("AddonLootDeleter", state.lootDeleter());
+        tag.putBoolean("AddonDamageAmp", state.damageAmp());
+        tag.putBoolean("AddonPotentia", state.potentia());
+        tag.putBoolean("AddonRecycler", state.recycler());
+        tag.putBoolean("AddonConcealer", state.concealer());
+        tag.putBoolean("AddonFakeDrops", state.fakeDrops());
+        tag.putBoolean("AddonSerialPort", state.serialPort());
+    }
+
+    private AddonState readAddonState(CompoundTag tag) {
+        if (!tag.contains("AddonSolar")) {
+            return scanAddonState();
+        }
+        return new AddonState(
+                tag.getBoolean("AddonSolar"),
+                tag.getBoolean("AddonReactor"),
+                tag.getBoolean("AddonLootDeleter"),
+                tag.getBoolean("AddonDamageAmp"),
+                tag.getBoolean("AddonPotentia"),
+                tag.getBoolean("AddonRecycler"),
+                tag.getBoolean("AddonConcealer"),
+                tag.getBoolean("AddonFakeDrops"),
+                tag.getBoolean("AddonSerialPort")
+        );
     }
 
     @Override
@@ -426,7 +465,7 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         boolean fakeDrops = hasAddonItem(ModItems.ADDON_FAKE_DROPS.get());
         boolean serialPort = hasAddonItem(ModItems.ADDON_SERIAL_PORT.get());
         return new AddonState(
-                tier >= 2 && hasAddonItem(ModItems.SOLAR_ADDON_ITEM.get()),
+                hasAddonItem(ModItems.SOLAR_ADDON_ITEM.get()),
                 hasAddonItem(ModItems.REDSTONE_REACTOR_ADDON_ITEM.get()),
                 hasAddonItem(ModItems.BASE_ADDON_LOOT_DELETER_ITEM.get()),
                 damageAmp,
@@ -457,11 +496,12 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         for (int slot = BaseSlotIndices.UPGRADE_START; slot < BaseSlotIndices.UPGRADE_START + BaseSlotIndices.UPGRADE_COUNT; slot++) {
             ItemStack stack = inventory[slot];
             if (stack.getItem() instanceof UpgradeItem upgrade) {
+                int count = Math.min(stack.getCount(), ModConfig.UPGRADE_MAX_STACK.get());
                 switch (upgrade.getType()) {
-                    case FIRE_RATE -> fireRate += 0.25F;
-                    case EFFICIENCY -> energy *= 0.85F;
-                    case RANGE -> range += 0.20F;
-                    case ACCURACY -> accuracy += 0.25F;
+                    case FIRE_RATE -> fireRate += 0.25F * count;
+                    case EFFICIENCY -> energy *= (float) Math.pow(0.85F, count);
+                    case RANGE -> range += 0.20F * count;
+                    case ACCURACY -> accuracy += 0.25F * count;
                     case SCATTER_SHOT -> scatter = true;
                 }
             }
@@ -480,11 +520,15 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         if (turretHeads.isEmpty()) {
             refreshNeighbors();
         }
+        addonState = scanAddonState();
+        tickInventoryAddons(level);
         if (!active) {
             sharedTarget = null;
+            for (TurretHeadBlockEntity head : turretHeads) {
+                updateConcealerState(level, head);
+            }
             return;
         }
-        tickInventoryAddons(level);
         if (!multiTargeting) {
             sharedTarget = findSharedTarget(level);
         } else {
@@ -492,7 +536,22 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         }
         for (TurretHeadBlockEntity head : turretHeads) {
             head.tickCombat(level, this);
+            updateConcealerState(level, head);
         }
+    }
+
+    private void updateConcealerState(ServerLevel level, TurretHeadBlockEntity head) {
+        if (!addonState.concealer()) {
+            head.setConcealed(false);
+            return;
+        }
+        if (!active) {
+            head.setConcealed(true);
+            return;
+        }
+        Vec3 origin = Vec3.atCenterOf(head.getBlockPos());
+        OptionalTarget target = findTargetForTurret(level, origin, head.getKind().getRange(), sharedTarget);
+        head.setConcealed(target == null && head.getCooldown() <= 0);
     }
 
     @Nullable
@@ -508,23 +567,96 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     private void tickInventoryAddons(ServerLevel level) {
-        if (addonState.solar() && level.canSeeSky(worldPosition.above())) {
-            int generation = ModConfig.SOLAR_GENERATION.get();
-            int current = energyStorage.getEnergyStored();
-            int capacity = getEffectiveMaxEnergy();
-            energyStorage.receiveEnergy(Math.min(capacity - current, generation), false);
-            setChanged();
+        boolean changed = false;
+        if (addonState.solar() && hasSunlight(level)) {
+            changed |= receiveGeneratedEnergy(ModConfig.SOLAR_GENERATION.get());
         }
-        if (addonState.redstoneReactor()) {
-            int signal = level.getBestNeighborSignal(worldPosition);
-            if (signal > 0) {
-                int generation = signal * 4;
-                int current = energyStorage.getEnergyStored();
-                int capacity = getEffectiveMaxEnergy();
-                energyStorage.receiveEnergy(Math.min(capacity - current, generation), false);
-                setChanged();
+        if (addonState.redstoneReactor() && hasRedstoneFuel()) {
+            changed |= receiveGeneratedEnergy(ModConfig.REDSTONE_REACTOR_GENERATION.get());
+            int interval = ModConfig.REDSTONE_REACTOR_CONSUME_INTERVAL.get();
+            if (interval > 0 && level.getGameTime() % interval == 0L) {
+                changed |= consumeRedstoneFuel(1);
             }
         }
+        if (changed) {
+            setChanged();
+            syncToClients();
+        }
+    }
+
+    private boolean hasSunlight(Level level) {
+        if (!level.isDay()) {
+            return false;
+        }
+        int skyLight = level.getBrightness(LightLayer.SKY, worldPosition);
+        if (skyLight < 12) {
+            return false;
+        }
+        return !level.isRainingAt(worldPosition) || skyLight >= 14 || level.canSeeSky(worldPosition);
+    }
+
+    private boolean hasRedstoneFuel() {
+        for (int slot = BaseSlotIndices.AMMO_START; slot < BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT; slot++) {
+            if (inventory[slot].is(Items.REDSTONE)) {
+                return true;
+            }
+        }
+        for (ExpanderInventoryBlockEntity expander : inventoryExpanders) {
+            for (int slot = 0; slot < expander.getContainerSize(); slot++) {
+                if (expander.getItem(slot).is(Items.REDSTONE)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean consumeRedstoneFuel(int amount) {
+        for (int slot = BaseSlotIndices.AMMO_START; slot < BaseSlotIndices.AMMO_START + BaseSlotIndices.AMMO_COUNT; slot++) {
+            if (tryConsumeRedstone(inventory[slot], slot, this)) {
+                return true;
+            }
+        }
+        for (ExpanderInventoryBlockEntity expander : inventoryExpanders) {
+            for (int slot = 0; slot < expander.getContainerSize(); slot++) {
+                ItemStack stack = expander.getItem(slot);
+                if (stack.is(Items.REDSTONE)) {
+                    stack.shrink(amount);
+                    if (stack.isEmpty()) {
+                        expander.setItem(slot, ItemStack.EMPTY);
+                    }
+                    expander.setChanged();
+                    setChanged();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean tryConsumeRedstone(ItemStack stack, int slot, TurretBaseBlockEntity base) {
+        if (stack.is(Items.REDSTONE)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
+                base.inventory[slot] = ItemStack.EMPTY;
+            }
+            base.setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean receiveGeneratedEnergy(int amount) {
+        if (amount <= 0) {
+            return false;
+        }
+        int current = energyStorage.getEnergyStored();
+        int capacity = getEffectiveMaxEnergy();
+        if (current >= capacity) {
+            return false;
+        }
+        int received = energyStorage.receiveEnergy(Math.min(capacity - current, amount), false);
+        return received > 0;
     }
 
     public boolean consumeEnergy(int amount) {
@@ -712,9 +844,13 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
         for (int i = 0; i < inventory.length; i++) {
             if (tag.contains("Item" + i)) {
                 inventory[i] = ItemStack.parseOptional(registries, tag.getCompound("Item" + i));
-            } else {
-                inventory[i] = ItemStack.EMPTY;
             }
+        }
+        if (level != null && level.isClientSide()) {
+            clientAddonState = readAddonState(tag);
+        } else {
+            addonState = scanAddonState();
+            upgradeModifiers = scanUpgrades();
         }
     }
 
@@ -773,8 +909,12 @@ public class TurretBaseBlockEntity extends BlockEntity implements Container {
     }
 
     private void refreshItemDerivedState() {
+        AddonState previous = addonState;
         addonState = scanAddonState();
         upgradeModifiers = scanUpgrades();
+        if (!addonState.equals(previous)) {
+            syncToClients();
+        }
     }
 
     private static boolean isAmmoSlot(int slot) {

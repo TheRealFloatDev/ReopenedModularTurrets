@@ -6,9 +6,12 @@ import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiInfoRecipe;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,8 +20,12 @@ import java.util.List;
 
 @EmiEntrypoint
 public class EmiCompat implements EmiPlugin {
+    private static final TagKey<Item> IO_BUS_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "io_bus"));
+
     @Override
     public void register(EmiRegistry registry) {
+        registry.addAlias(EmiIngredient.of(IO_BUS_TAG), Component.translatable("tag.reopenedmodularturrets.io_bus"));
+
         describe(registry, ModItems.GUN_TURRET_ITEM.get(), "gun_turret", "jei.reopenedmodularturrets.gun_turret");
         describe(registry, ModItems.GRENADE_TURRET_ITEM.get(), "grenade_turret", "jei.reopenedmodularturrets.grenade_turret");
         describe(registry, ModItems.ROCKET_TURRET_ITEM.get(), "rocket_turret", "jei.reopenedmodularturrets.rocket_turret");
@@ -56,7 +63,11 @@ public class EmiCompat implements EmiPlugin {
         registry.addRecipe(new EmiInfoRecipe(
                 List.of(EmiStack.of(new ItemStack(item))),
                 List.of(Component.translatable(key)),
-                ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "info/" + path)
+                syntheticId("info/" + path)
         ));
+    }
+
+    private static ResourceLocation syntheticId(String path) {
+        return ResourceLocation.parse(ModConstants.MOD_ID + ":/" + path);
     }
 }

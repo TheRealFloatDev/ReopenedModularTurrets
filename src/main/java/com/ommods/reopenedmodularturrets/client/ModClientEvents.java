@@ -63,6 +63,9 @@ public final class ModClientEvents {
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(lazy(TurretItemRenderer::create), turretItems());
         event.registerItem(lazy(LeverItemRenderer::create), ModItems.LEVER_BLOCK_ITEM.get());
+        event.registerItem(lazy(SolarItemRenderer::create), ModItems.SOLAR_ADDON_ITEM.get());
+        event.registerItem(lazy(RedstoneReactorItemRenderer::create), ModItems.REDSTONE_REACTOR_ADDON_ITEM.get());
+        event.registerItem(lazy(LootDeleterItemRenderer::create), ModItems.BASE_ADDON_LOOT_DELETER_ITEM.get());
     }
 
     private static IClientItemExtensions lazy(java.util.function.Supplier<BlockEntityWithoutLevelRenderer> supplier) {
